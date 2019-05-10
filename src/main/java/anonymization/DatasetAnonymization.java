@@ -1,12 +1,21 @@
 package anonymization;
 
+import anonymization.generalization.graph.GeneralizationTree;
 import dataset.Attribute;
 import dataset.type.QuasiIdentifier;
 
 import java.util.ArrayList;
 
 public class DatasetAnonymization {
+    private GeneralizationTree placeHierarchy;
 
+    public DatasetAnonymization () {
+
+    }
+
+    private void initGeneralizationHierarchies () {
+
+    }
     public ArrayList<ArrayList<String>> getDatasetAnonymized (ArrayList<ArrayList<String>> dataset) {
         return null;
     }
@@ -37,6 +46,8 @@ public class DatasetAnonymization {
 
     private String dateGeneralization (int levelOfGeneralization, String value) {
         String dateGeneralized = "";
+
+
 
         return dateGeneralized;
     }

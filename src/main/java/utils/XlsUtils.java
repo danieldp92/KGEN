@@ -4,6 +4,7 @@ import dataset.Attribute;
 import dataset.Dataset;
 import dataset.DatasetRow;
 import org.apache.commons.compress.compressors.FileNameUtil;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
@@ -12,6 +13,7 @@ import org.w3c.dom.Attr;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 
 public class XlsUtils {
@@ -60,10 +62,18 @@ public class XlsUtils {
                     DatasetRow datasetRow = new DatasetRow();
                     for (int i = 0; i < header.size(); i++) {
                         Cell cell = currentRow.getCell(i);
-                        String value = "";
+                        Object value = null;
 
                         if (cell != null) {
-                            value = cell.toString();
+                            CellType type = cell.getCellType();
+
+                            if (type.equals(CellType.NUMERIC) && HSSFDateUtil.isCellDateFormatted(cell)) {
+                                value = cell.getDateCellValue();
+                            } else {
+                                value = cell.toString();
+                            }
+                        } else {
+                            value = "";
                         }
 
                         Attribute headerAttribute = (Attribute) header.get(i);
