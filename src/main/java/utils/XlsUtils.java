@@ -3,6 +3,9 @@ package utils;
 import dataset.Attribute;
 import dataset.Dataset;
 import dataset.DatasetRow;
+import org.apache.commons.compress.compressors.FileNameUtil;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.w3c.dom.Attr;
@@ -18,9 +21,20 @@ public class XlsUtils {
         DatasetRow header = new DatasetRow();
         ArrayList<DatasetRow> data = new ArrayList<DatasetRow>();
 
+        File excelFile = new File(path);
+
         try {
-            FileInputStream excelFile = new FileInputStream(new File(path));
-            Workbook workbook = new XSSFWorkbook(excelFile);
+            FileInputStream excelIS = new FileInputStream(excelFile);
+
+            String fileExtension = FileUtils.getFileExtension(excelFile);
+
+            Workbook workbook = null;
+            if (fileExtension.equals("xlsx")) {
+                workbook = new XSSFWorkbook(excelIS);
+            } else {
+                workbook = new HSSFWorkbook(excelIS);
+            }
+
             Sheet datatypeSheet = workbook.getSheetAt(0);
             Iterator<Row> iterator = datatypeSheet.iterator();
 
@@ -55,16 +69,17 @@ public class XlsUtils {
                         Attribute headerAttribute = (Attribute) header.get(i);
                         datasetRow.add(new Attribute(headerAttribute.getName(), value));
                     }
+
+                    data.add(datasetRow);
                 }
-
-
-                dataset.add(datasetRow);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        dataset = new Dataset(header, data);
 
         return dataset;
     }

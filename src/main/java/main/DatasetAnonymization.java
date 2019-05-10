@@ -1,5 +1,8 @@
 package main;
 
+import anonymization.generalization.generator.GeneralizationGraphGenerator;
+import anonymization.generalization.graph.GeneralizationTree;
+import anonymization.generalization.graph.Node;
 import dataset.Attribute;
 import dataset.Dataset;
 import dataset.DatasetRow;
@@ -20,16 +23,17 @@ public class DatasetAnonymization {
         String anonymizedPath = System.getProperty("user.dir") + File.separator + "anonymized" + File.separator +
                 "F2_Dataset_Anonymized.xlsx";
 
+        
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String line = null;
 
         Dataset dataset = XlsUtils.readXlsx(datasetPath);
-        DatasetRow attributeRow = (DatasetRow) dataset.get(0);
+        DatasetRow header = dataset.getHeader();
         ArrayList<Boolean> attributeIdentifiers = new ArrayList<Boolean>();
 
 
         System.out.println("Identifier/Quasi identifier attributes\n");
-        for (Object attributeObj : attributeRow) {
+        for (Object attributeObj : header) {
             Attribute attribute = (Attribute) attributeObj;
 
             boolean repeat = false;
