@@ -2,6 +2,7 @@ package utils;
 
 import dataset.Attribute;
 import dataset.Dataset;
+import dataset.DatasetColumn;
 import dataset.DatasetRow;
 import org.apache.commons.compress.compressors.FileNameUtil;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -21,7 +22,7 @@ public class XlsUtils {
     public static Dataset readXlsx(String path) {
         Dataset dataset = null;
         DatasetRow header = new DatasetRow();
-        ArrayList<DatasetRow> data = new ArrayList<DatasetRow>();
+        ArrayList<DatasetColumn> columns = new ArrayList<DatasetColumn>();
 
         File excelFile = new File(path);
 
@@ -53,6 +54,7 @@ public class XlsUtils {
                         String value = currentCell.toString();
 
                         header.add(new Attribute(value, null));
+                        columns.add(new DatasetColumn());
                     }
 
                     attributeRow = false;
@@ -67,8 +69,12 @@ public class XlsUtils {
                         if (cell != null) {
                             CellType type = cell.getCellType();
 
-                            if (type.equals(CellType.NUMERIC) && HSSFDateUtil.isCellDateFormatted(cell)) {
-                                value = cell.getDateCellValue();
+                            if (type.equals(CellType.NUMERIC)) {
+                                if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                                    value = cell.getDateCellValue();
+                                } else {
+                                    value = (int)cell.getNumericCellValue();
+                                }
                             } else {
                                 value = cell.toString();
                             }
@@ -77,10 +83,9 @@ public class XlsUtils {
                         }
 
                         Attribute headerAttribute = (Attribute) header.get(i);
-                        datasetRow.add(new Attribute(headerAttribute.getName(), value));
+                        Attribute newAttribute = new Attribute(headerAttribute.getName(), value);
+                        columns.get(i).add(newAttribute);
                     }
-
-                    data.add(datasetRow);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -89,7 +94,7 @@ public class XlsUtils {
             e.printStackTrace();
         }
 
-        dataset = new Dataset(header, data);
+        dataset = new Dataset(header, columns);
 
         return dataset;
     }

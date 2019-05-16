@@ -16,11 +16,18 @@
             <version>4.1.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/jgraph/jgraph -->
+        <!-- https://mvnrepository.com/artifact/org.uma.jmetal/jmetal-core -->
         <dependency>
-            <groupId>jgraph</groupId>
-            <artifactId>jgraph</artifactId>
-            <version>5.13.0.0</version>
+            <groupId>org.uma.jmetal</groupId>
+            <artifactId>jmetal-core</artifactId>
+            <version>5.7</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.uma.jmetal/jmetal-problem -->
+        <dependency>
+            <groupId>org.uma.jmetal</groupId>
+            <artifactId>jmetal-problem</artifactId>
+            <version>5.7</version>
         </dependency>
 
 

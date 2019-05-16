@@ -1,19 +1,20 @@
 package anonymization.generalization.type;
 
+import anonymization.generalization.exception.LevelNotValidException;
 import anonymization.generalization.generator.GeneralizationGraphGenerator;
 import anonymization.generalization.graph.GeneralizationTree;
 import anonymization.generalization.graph.Node;
 
 import java.io.File;
 
-public class GeneralizationPlace implements IGeneralization{
+public class PlaceGeneralization implements IGeneralization{
     private GeneralizationTree placeHierarchy;
 
-    public GeneralizationPlace () {
+    public PlaceGeneralization() {
         this.placeHierarchy = GeneralizationGraphGenerator.generatePlaceHierarchy();
     }
 
-    public String generalize(int level, Object value) {
+    public String generalize(int level, Object value) throws LevelNotValidException {
         String place = (String) value;
         String generalizedPlace = null;
 
@@ -31,6 +32,9 @@ public class GeneralizationPlace implements IGeneralization{
                 break;
             case 2 :
                 generalizedPlace = placeHierarchy.getNode(0).getValue();
+                break;
+            default:
+                throw new LevelNotValidException();
         }
 
         return generalizedPlace;
