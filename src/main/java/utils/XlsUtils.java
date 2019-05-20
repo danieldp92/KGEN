@@ -78,8 +78,6 @@ public class XlsUtils {
                             } else {
                                 value = cell.toString();
                             }
-                        } else {
-                            value = "";
                         }
 
                         Attribute headerAttribute = (Attribute) header.get(i);

@@ -32,17 +32,18 @@ public class GeneralizationGraphGenerator {
             for (Object attributeObj : row) {
                 Attribute attribute = (Attribute) attributeObj;
 
-                if (attribute.getName().toLowerCase().equals("plaats")) {
-                    plaat = ((String) attribute.getValue()).toLowerCase();
-                }
+                if (attribute.getValue() != null) {
+                    if (attribute.getName().toLowerCase().equals("plaats")) {
+                        plaat = ((String) attribute.getValue()).toLowerCase();
+                    }
 
-                else if (attribute.getName().toLowerCase().equals("provincie")) {
-                    provincie = ((String) attribute.getValue()).toLowerCase();
+                    else if (attribute.getName().toLowerCase().equals("provincie")) {
+                        provincie = ((String) attribute.getValue()).toLowerCase();
+                    }
                 }
             }
 
-            if (plaat != null && provincie != null &&
-                    !plaat.equals("") && !provincie.equals("")) {
+            if (plaat != null && provincie != null) {
                 tmpPlaceMap.put(plaat, provincie);
             }
 

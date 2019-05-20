@@ -1,6 +1,6 @@
 package geneticalgorithm.operator;
 
-import anonymization.DatasetAnonymization;
+import anonymization.KAnonymity;
 import anonymization.generalization.exception.LevelNotValidException;
 import dataset.Dataset;
 import geneticalgorithm.encoding.Chromosome;
@@ -9,9 +9,9 @@ import java.util.ArrayList;
 
 public class Crossover {
     private static final int K_LEVEL = 5;
-    private DatasetAnonymization datasetAnonymization;
+    private KAnonymity datasetAnonymization;
 
-    public Crossover (DatasetAnonymization datasetAnonymization) {
+    public Crossover (KAnonymity datasetAnonymization) {
         this.datasetAnonymization = datasetAnonymization;
     }
 

@@ -15,8 +15,9 @@ public class PlaceGeneralization implements IGeneralization{
     }
 
     public String generalize(int level, Object value) throws LevelNotValidException {
-        String place = (String) value;
         String generalizedPlace = null;
+
+        String place = (String) value;
 
         switch (level) {
             case 0:
@@ -36,6 +37,7 @@ public class PlaceGeneralization implements IGeneralization{
             default:
                 throw new LevelNotValidException();
         }
+
 
         return generalizedPlace;
     }

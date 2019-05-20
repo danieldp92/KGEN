@@ -1,12 +1,8 @@
 package utils;
 
-import anonymization.generalization.exception.LevelNotValidException;
-import anonymization.generalization.type.DateGeneralization;
-import anonymization.generalization.type.NumericGeneralization;
-import anonymization.generalization.type.PlaceGeneralization;
-import anonymization.generalization.type.StringGeneralization;
 import dataset.Attribute;
 import dataset.Dataset;
+import dataset.DatasetColumn;
 import dataset.DatasetRow;
 import dataset.type.Identifier;
 import dataset.type.QuasiIdentifier;
@@ -30,6 +26,21 @@ public class DatasetUtils {
                 setAttributeType(attribute, attributeIdentifiers.get(j));
             }
         }
+    }
+
+    public static ArrayList<Integer> getHashColumn (DatasetColumn datasetColumn) {
+        ArrayList<Integer> hashColumn = new ArrayList<Integer>();
+
+        for (Object attributeObj : datasetColumn) {
+            Attribute attribute = (Attribute) attributeObj;
+            if (attribute.getValue() == null) {
+                hashColumn.add(null);
+            } else {
+                hashColumn.add(attribute.getValue().hashCode());
+            }
+        }
+
+        return hashColumn;
     }
 
     private void setAttributeType (Attribute attribute, boolean identifier) {
@@ -69,4 +80,6 @@ public class DatasetUtils {
             }
         }
     }
+
+
 }

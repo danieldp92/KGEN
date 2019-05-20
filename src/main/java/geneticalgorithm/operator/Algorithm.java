@@ -1,11 +1,12 @@
 package geneticalgorithm.operator;
 
-import anonymization.DatasetAnonymization;
+import anonymization.KAnonymity;
 import anonymization.generalization.exception.LevelNotValidException;
 import dataset.Dataset;
 import geneticalgorithm.encoding.Chromosome;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Algorithm {
     private static final int POPULATION_SIZE = 100;
@@ -18,39 +19,51 @@ public class Algorithm {
     private Mutation mutation;
 
     private Dataset dataset;
+    private ArrayList<Integer> lowerBounds;
     private ArrayList<Integer> upperBounds;
-    private DatasetAnonymization datasetAnonymization;
+    private KAnonymity kAnonymity;
 
 
-    public Algorithm (Dataset dataset, ArrayList<Integer> upperBounds) {
+    public Algorithm (Dataset dataset) {
         this.dataset = dataset;
         this.upperBounds = upperBounds;
-        this.datasetAnonymization = new DatasetAnonymization(dataset);
+        this.kAnonymity = new KAnonymity(dataset);
 
         //Operators
         this.selection = new Selection();
-        this.crossover = new Crossover(datasetAnonymization);
+        this.crossover = new Crossover(kAnonymity);
         this.mutation = new Mutation();
+
+        //UpperBounds and lowerBounds of solution
+        this.lowerBounds = kAnonymity.lowerBounds();
+        this.upperBounds = kAnonymity.upperBounds();
     }
 
-    private void generatePopulation (ArrayList<Integer> upperBounds) {
+    private void generatePopulation () {
         this.population = new ArrayList<Chromosome>();
 
-        //Set lowerBounds to 0
-        ArrayList<Integer> lowerBounds = new ArrayList<Integer>();
-        for (int i = 0; i < upperBounds.size(); i++)
-            lowerBounds.add(0);
+        long startTime;
 
-
-        System.out.println("Chromosomes generated : 0");
         for (int i = 0; i < POPULATION_SIZE; i++) {
+            System.out.println("Chromosome : " + (i+1));
+            startTime = System.currentTimeMillis();
             Chromosome newChromosome = generateRandomChromosome(lowerBounds, upperBounds);
             this.population.add(newChromosome);
 
-            System.out.println("Chromosomes generated : " + (i+1));
+            System.out.println("\tGeneration time: " + (System.currentTimeMillis() - startTime));
+            System.out.println("\tLowerbound array");
+            System.out.println("\t\t" + lowerBounds.toString());
+            System.out.println("\tFinal chromosome array");
+            System.out.println("\t\t" + newChromosome.toString());
+            System.out.println("\tUpperbound array");
+            System.out.println("\t\t" + upperBounds.toString());
             double distanceFromMaxLatticeNode = 0;
             for (int j = 0; j < newChromosome.size(); j++) {
-                distanceFromMaxLatticeNode += newChromosome.get(j)/newChromosome.getUpperBound(j);
+                if (newChromosome.getUpperBound(j) > 0) {
+                    distanceFromMaxLatticeNode += newChromosome.get(j)/newChromosome.getUpperBound(j);
+                } else {
+                    distanceFromMaxLatticeNode++;
+                }
             }
             distanceFromMaxLatticeNode /= newChromosome.size();
             System.out.println("\tDistance from max node: " + (1-distanceFromMaxLatticeNode));
@@ -61,26 +74,18 @@ public class Algorithm {
 
     private Chromosome generateRandomChromosome (ArrayList<Integer> lowerBounds, ArrayList<Integer> upperBounds) {
         Chromosome newChromosome = new Chromosome(lowerBounds, upperBounds);
-        boolean validChromosome = false;
 
         for (int j = 0; j < upperBounds.size(); j++) {
             int randomValue = (int) ((Math.random() * (upperBounds.get(j) - lowerBounds.get(j) + 1)) + lowerBounds.get(j));
             newChromosome.add(randomValue);
         }
 
-        do {
-            Dataset datasetAnonymized = this.datasetAnonymization.anonymize(newChromosome);
-            validChromosome = this.datasetAnonymization.kAnonymityTest(datasetAnonymized, 5);
+        System.out.println("\tStarting chromosome array");
+        System.out.println("\t\t" + newChromosome.toString());
 
-            if (!validChromosome) {
-                try {
-                    validateSolution(newChromosome);
-                } catch (LevelNotValidException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        } while (!validChromosome);
+        try {
+            validateSolution(newChromosome);
+        } catch (LevelNotValidException e) {}
 
         return newChromosome;
     }
@@ -89,7 +94,7 @@ public class Algorithm {
         //Generate starting population
         long startTime = System.currentTimeMillis();
 
-        generatePopulation(upperBounds);
+        generatePopulation();
         System.out.println("Population generation time: " + (System.currentTimeMillis() - startTime));
 
 
@@ -120,8 +125,7 @@ public class Algorithm {
 
     //STUB
     public double evaluate (Chromosome chromosome) throws LevelNotValidException {
-        Dataset chromosomeDataset = datasetAnonymization.anonymize(chromosome);
-        boolean kAnonymized = datasetAnonymization.kAnonymityTest(chromosomeDataset, K_LEVEL);
+        boolean kAnonymized = kAnonymity.kAnonymityTest(chromosome, K_LEVEL);
 
         if (!kAnonymized)
             return 0;
@@ -131,12 +135,22 @@ public class Algorithm {
 
     private void validateSolution (Chromosome chromosome) throws LevelNotValidException {
         ArrayList<Integer> upperBounds = chromosome.getUpperBounds();
-        Dataset anonymizedDataset = null;
-        boolean kAnonymized = false;
+        boolean kAnonymized = this.kAnonymity.kAnonymityTest(chromosome, K_LEVEL);
 
+        int numberOfIter = 0;
         while (!kAnonymized) {
+            ArrayList<Integer> indexToChoose = new ArrayList<Integer>();
+            for (int i = 0; i < chromosome.size(); i++) {
+                if (chromosome.getUpperBound(i) > chromosome.get(i)) {
+                    indexToChoose.add(i);
+                }
+            }
+
+            Collections.shuffle(indexToChoose);
+
+
             //Find the most distante value from the end of lattice
-            int indexMinPercentage = 0;
+            /*int indexMinPercentage = 0;
             double minValueOfPercentage = 1;
 
             for (int i = 0; i < chromosome.size(); i++) {
@@ -147,13 +161,17 @@ public class Algorithm {
                         indexMinPercentage = i;
                     }
                 }
-            }
+            }*/
 
             //Increase its value
-            chromosome.set(indexMinPercentage, chromosome.get(indexMinPercentage)+1);
+            int randomIndex = indexToChoose.remove(0);
+            chromosome.set(randomIndex, chromosome.get(randomIndex)+1);
 
-            anonymizedDataset = this.datasetAnonymization.anonymize(chromosome);
-            kAnonymized = this.datasetAnonymization.kAnonymityTest(anonymizedDataset, K_LEVEL);
+            kAnonymized = this.kAnonymity.kAnonymityTest(chromosome, K_LEVEL);
+
+            numberOfIter++;
         }
+
+        System.out.println("\tNumber of validation: " + numberOfIter);
     }
 }
