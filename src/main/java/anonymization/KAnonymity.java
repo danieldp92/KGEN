@@ -19,7 +19,7 @@ import utils.DatasetUtils;
 import java.util.*;
 
 public class KAnonymity {
-    private static final int K_LEVEL = 5;
+    private static final int MIN_K_LEVEL = 5;
 
     private PlaceGeneralization placeGeneralization;
     private DateGeneralization dateGeneralization;
@@ -31,7 +31,7 @@ public class KAnonymity {
     private ArrayList<Integer> upperBounds;
     private LinkedHashMap<Integer, ArrayList<DatasetColumn>> anonymizationMap;
     private LinkedHashMap<Integer, Object> quasiIdentifierMedianMap;
-    private LinkedHashMap<String, Boolean> kAnonymizedHistoryMap;
+    private LinkedHashMap<String, Integer> kAnonymizedHistoryMap;
 
     private MultiThreadAnonymization multiThreadAnonymization;
 
@@ -53,7 +53,7 @@ public class KAnonymity {
 
         this.lowerBounds = lowerBounds();
         this.upperBounds = upperBounds();
-        this.kAnonymizedHistoryMap = new LinkedHashMap<String, Boolean>();
+        this.kAnonymizedHistoryMap = new LinkedHashMap<String, Integer>();
     }
 
     //INIT
@@ -157,8 +157,65 @@ public class KAnonymity {
     }
 
     /**
-     * Run k-anonymity test with the level of generalizion of atributes.
-     * It creates the relative dataset and check it.
+     * Run k-anonymity test with the level of generalizion of attributes.
+     * @param levelOfAnonymization: the level of anonymization of all attributes of a given dataset
+     * @return: the level of k-anonymization of dataset. 1 if it's not anonymized
+     */
+    public int kAnonymityTest (ArrayList<Integer> levelOfAnonymization) {
+        String key = "";
+        for (int index : levelOfAnonymization) {
+            key += index + "-";
+        }
+
+        Integer kValue = kAnonymizedHistoryMap.get(key);
+        if (kValue != null) {
+            return kValue;
+        }
+
+        int kLevelMin = 1;
+        int kLevelMax = 2;
+
+        while (kLevelMax < dataset.getDatasetSize() && kAnonymityTest(levelOfAnonymization, (kLevelMax))) {
+            kLevelMin = kLevelMax;
+            kLevelMax *= 2;
+        }
+
+        if (kLevelMin > dataset.getDatasetSize()) {
+            kLevelMin = dataset.getDatasetSize();
+        } else {
+            //Set the upperBound to the max number of rows
+            if (kLevelMax > dataset.getDatasetSize()) {
+                kLevelMax = dataset.getDatasetSize();
+            }
+
+            int multiplier = 1;
+
+            while (kLevelMin != kLevelMax) {
+                multiplier = 1;
+
+                while (kLevelMin < kLevelMax && kAnonymityTest(levelOfAnonymization, kLevelMin)) {
+                    kLevelMin += multiplier;
+                    multiplier *= 2;
+
+                }
+
+                multiplier /= 2;
+
+                if (kLevelMax != kLevelMin) {
+                    kLevelMax = kLevelMin;
+                    kLevelMin -= multiplier;
+                }
+            }
+        }
+
+        kAnonymizedHistoryMap.put(key, kLevelMin);
+
+        return kLevelMin;
+    }
+
+    /**
+     * Run k-anonymity test with the level of generalizion of attributes.
+     * Check if the generated dataset is kLevel-anonymized
      * @param levelOfAnonymization: the level of anonymization of all attributes of a given dataset
      * @param kLevel: the level of k-anonymity
      * @return: true, if the dataset is k-anonymized, false otherwise
@@ -171,17 +228,16 @@ public class KAnonymity {
             key += index + "-";
         }
 
-        Boolean value = this.kAnonymizedHistoryMap.get(key);
+        Integer value = this.kAnonymizedHistoryMap.get(key);
 
         if (value == null) {
             //I run kAnonymityTest only if I didn't do it before -> value == null
             Dataset anonymizedDataset = anonymize(levelOfAnonymization);
             anonymizedDataset = datasetReduction(anonymizedDataset);
             kAnonymized = kAnonymityTest(anonymizedDataset, kLevel);
-
-            this.kAnonymizedHistoryMap.put(key, kAnonymized);
         } else {
-            kAnonymized = value;
+            if (value == 1)
+                kAnonymized = false;
         }
 
         return kAnonymized;
@@ -194,19 +250,41 @@ public class KAnonymity {
      * @return: true, if the dataset is k-anonymized, false otherwise
      */
     public boolean kAnonymityTest (Dataset dataset, int kLevel) {
-        boolean kAnonymized = true;
-        int [] numberOfEqualsRows = numberOfEqualsRow(dataset, kLevel);
-        //int [] numberOfEqualsRows = this.multiThreadAnonymization.numberOfEqualsRow(dataset, kLevel);
+        if (kLevel == 1) {
+            return false;
+        }
 
-
+        int [] numberOfEqualsRows = new int[dataset.getDatasetSize()];
         for (int i = 0; i < numberOfEqualsRows.length; i++) {
-            if (numberOfEqualsRows[i] < kLevel) {
-                kAnonymized = false;
-                break;
+            numberOfEqualsRows[i] = 1;
+        }
+
+        for (int i = 0; i < dataset.getDatasetSize(); i++) {
+            for (int j = 0; j < dataset.getDatasetSize(); j++) {
+                if (i != j) {
+                    boolean equals = equalsRows(dataset, i, j);
+
+                    if (equals) {
+                        numberOfEqualsRows[i] = numberOfEqualsRows[i] + 1;
+
+                        if (numberOfEqualsRows[i] >= kLevel) {
+                            break;
+                        }
+                    }
+                }
             }
         }
 
-        return kAnonymized;
+        List tmpList = new ArrayList<Integer>();
+        for (int i : numberOfEqualsRows)
+            tmpList.add(i);
+
+        Integer min = (Integer) Collections.min(tmpList);
+
+        if (min < kLevel)
+            return false;
+
+        return true;
     }
 
     public int [] numberOfEqualsRow (Dataset dataset, int kLevel) {
@@ -248,7 +326,7 @@ public class KAnonymity {
                     columns.add(anonymizationColumnsOfAttribute.get(j));
 
                     Dataset tmpDataset = new Dataset(header, columns);
-                    isAnonymized = kAnonymityTest(tmpDataset, K_LEVEL);
+                    isAnonymized = kAnonymityTest(tmpDataset, MIN_K_LEVEL);
 
                     if (isAnonymized) {
                         lowerBounds.add(j);

@@ -19,7 +19,6 @@ public class DatasetUtils {
         }
 
         for (int i = 0; i < dataset.getData().size(); i++) {
-
             DatasetRow datasetRow = dataset.getData().get(i);
             for (int j = 0; j < datasetRow.size(); j++) {
                 Attribute attribute = (Attribute) datasetRow.get(j);

@@ -1,5 +1,7 @@
 package utils;
 
+import jmetal.core.SolutionSet;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -14,7 +16,7 @@ public class FileUtils {
         return split[split.length-1];
     }
 
-    public static void saveTxt (ArrayList<String> txt, String path) throws FileNotFoundException {
+    public static void saveFile (ArrayList<String> txt, String path) throws FileNotFoundException {
         PrintWriter pw = new PrintWriter(new File(path));
 
         for (String line : txt) {

@@ -13,7 +13,7 @@ public class StringGeneralization implements IGeneralization {
         String stringValue = (String) value;
 
         if (stringValue.length() - level <= 0) {
-            for (int i = 0; i < stringValue.length(); i++) {
+            for (int i = 0; i < level; i++) {
                 stringGeneralized += "*";
             }
         } else {

@@ -1,16 +1,18 @@
 package main;
 
-import anonymization.KAnonymity;
 import anonymization.generalization.exception.LevelNotValidException;
-import anonymization.generalization.generator.GeneralizationGraphGenerator;
-import anonymization.generalization.graph.GeneralizationTree;
 import dataset.Attribute;
 import dataset.Dataset;
-import dataset.DatasetColumn;
 import dataset.DatasetRow;
-import dataset.type.QuasiIdentifier;
-import geneticalgorithm.operator.Algorithm;
+import geneticalgorithm.encoding.Chromosome;
+import approaches.geneticalgorithm.AnonymizationAlgorithm;
+import approaches.geneticalgorithm.AnonymizationProblem;
+import approaches.geneticalgorithm.AnonymizationSetting;
+import jmetal.core.SolutionSet;
+import jmetal.util.JMException;
+import results.CSVResultGenerator;
 import utils.DatasetUtils;
+import utils.FileUtils;
 import utils.XlsUtils;
 
 import java.io.*;
@@ -20,21 +22,24 @@ public class Main {
     private static final String datasetPath = System.getProperty("user.dir") + File.separator + "dataset" + File.separator + "F2_Dataset.xlsx";
     private static final String anonymizedPath = System.getProperty("user.dir") + File.separator + "anonymized" + File.separator + "F2_Dataset_Anonymized.xlsx";
     private static final String configPath = System.getProperty("user.dir") + File.separator + "config" + File.separator + "configIdentifier.txt";
+    private static final String resultsPath = System.getProperty("user.dir") + File.separator + "results" + File.separator + "resultsMO4.csv";
 
 
-    public static void main (String [] args) throws IOException, LevelNotValidException {
+    public static void main (String [] args) throws IOException, LevelNotValidException, JMException, ClassNotFoundException {
         DatasetUtils datasetUtils = new DatasetUtils();
         Dataset dataset = XlsUtils.readXlsx(datasetPath);
-        dataset.getData();
 
         //Load and set identifiers in our dataset
         ArrayList<Boolean> attributeIdentifiers = loadIdentifier(dataset);
         datasetUtils.setAttributeTypes(dataset, attributeIdentifiers);
 
-        generateCompleteAnonymizedDataset(dataset);
+        AnonymizationProblem problem = new AnonymizationProblem(dataset);
+        AnonymizationSetting setting = new AnonymizationSetting(problem);
+        AnonymizationAlgorithm algorithm = (AnonymizationAlgorithm) setting.configure();
 
-        Algorithm anonymizationAlgorithm = new Algorithm(dataset);
-        anonymizationAlgorithm.execute();
+        SolutionSet bestSolutions = algorithm.execute();
+        ArrayList<String> csvTxt = CSVResultGenerator.csvResultGenerator(bestSolutions, dataset.getHeader());
+        FileUtils.saveFile(csvTxt, resultsPath);
     }
 
     private static ArrayList<Boolean> loadIdentifier (Dataset dataset) throws IOException {
@@ -95,140 +100,4 @@ public class Main {
 
         return attributeIdentifiers;
     }
-
-    private static int getMaxAttributNumber(DatasetColumn column) {
-        int maxNumber = 0;
-
-        for (Object attributeObj : column) {
-            Attribute attribute = (Attribute) attributeObj;
-            if (attribute.getValue() != null) {
-                Integer number = (Integer) attribute.getValue();
-
-                if (Math.abs(number) > maxNumber) {
-                    maxNumber = Math.abs(number);
-                }
-            }
-        }
-
-        return maxNumber;
-    }
-
-    private static int getMaxAttributeStringLenght(DatasetColumn columns) {
-        int maxLenght = 0;
-
-        for (Object attributeObj : columns) {
-            Attribute attribute = (Attribute) attributeObj;
-
-            if (attribute.getValue() != null) {
-                String value = (String) attribute.getValue();
-
-                if (value.length() > maxLenght) {
-                    maxLenght = value.length();
-                }
-            }
-        }
-
-
-        return maxLenght;
-    }
-
-    private static ArrayList<Integer> upperBounds (Dataset dataset) {
-        ArrayList<Integer> upperBounds = new ArrayList<Integer>();
-
-        GeneralizationTree generalizationTree = GeneralizationGraphGenerator.generatePlaceHierarchy();
-
-        //Max level of anonymity of every attribute
-        for (int i = 0; i < dataset.getHeader().size(); i++) {
-            Attribute attribute = (Attribute) dataset.getHeader().get(i);
-
-            if (attribute.getType() instanceof QuasiIdentifier) {
-                QuasiIdentifier qiAttribute = (QuasiIdentifier) attribute.getType();
-
-                switch (qiAttribute.type) {
-                    case QuasiIdentifier.TYPE_PLACE:
-                        upperBounds.add(generalizationTree.getHeight());
-                        break;
-                    case QuasiIdentifier.TYPE_NUMERIC:
-                        int maxValue = getMaxAttributNumber(dataset.getColumns().get(i));
-                        int heightHierarchy = 0;
-
-                        int tmpMax = maxValue;
-                        while (tmpMax > 0) {
-                            heightHierarchy++;
-                            tmpMax = tmpMax/10;
-                        }
-
-                        upperBounds.add(heightHierarchy);
-                        break;
-                    case QuasiIdentifier.TYPE_DATE:
-                        upperBounds.add(2);
-                        break;
-                    case QuasiIdentifier.TYPE_STRING:
-                        upperBounds.add(getMaxAttributeStringLenght(dataset.getColumns().get(i)));
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        return upperBounds;
-    }
-
-    private static void generateCompleteAnonymizedDataset (Dataset dataset) {
-        KAnonymity kAnonymity = new KAnonymity(dataset);
-        ArrayList<Integer> upperBounds = upperBounds(dataset);
-
-        long startTime = System.currentTimeMillis();
-        Dataset anon = kAnonymity.anonymize(upperBounds);
-        System.out.println("Anonymization time: " + (System.currentTimeMillis() - startTime));
-
-        startTime = System.currentTimeMillis();
-        int [] kAnonymityRows = kAnonymity.numberOfEqualsRow(anon, 5);
-
-        ArrayList<Integer> indexRowsToRemove = new ArrayList<Integer>();
-        for (int i = 0; i < kAnonymityRows.length; i++) {
-            if (kAnonymityRows[i] < 5) {
-                indexRowsToRemove.add(i);
-            }
-        }
-
-        boolean isAnonymized = false;
-        if (indexRowsToRemove.isEmpty()) {
-            isAnonymized = true;
-        }
-
-        System.out.println("K-Anonymization test time: " + (System.currentTimeMillis() - startTime));
-        System.out.println("Results: " + isAnonymized);
-        System.out.println("Number of rows not k-anonymized: " + indexRowsToRemove.size());
-
-
-        System.out.println("Transformation of dataset anonymized in a k-anonymized dataset");
-        kAnonymity.deleteNotKAnonymizedRows(dataset, indexRowsToRemove);
-
-        //Anonymization of new dataset
-        startTime = System.currentTimeMillis();
-        anon = kAnonymity.anonymize(upperBounds);
-        System.out.println("Anonymization time: " + (System.currentTimeMillis() - startTime));
-
-        startTime = System.currentTimeMillis();
-        kAnonymityRows = kAnonymity.numberOfEqualsRow(anon, 5);
-        indexRowsToRemove = new ArrayList<Integer>();
-        for (int i = 0; i < kAnonymityRows.length; i++) {
-            if (kAnonymityRows[i] < 5) {
-                indexRowsToRemove.add(i);
-            }
-        }
-
-        isAnonymized = false;
-        if (indexRowsToRemove.isEmpty()) {
-            isAnonymized = true;
-        }
-
-        System.out.println("K-Anonymization test time: " + (System.currentTimeMillis() - startTime));
-        System.out.println("Results: " + isAnonymized);
-
-        System.out.println("Number of rows not k-anonymized: " + indexRowsToRemove.size());
-    }
-
 }

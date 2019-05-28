@@ -97,27 +97,33 @@ public class XlsUtils {
         return dataset;
     }
 
-    public static void writeXlsx(String path, ArrayList<ArrayList<String>> data, ArrayList<CellType> attributeTypes) {
+    public static void writeXlsx(String path, Dataset dataset) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Zoekresultaten");
 
-        if (!data.isEmpty()) {
-            ArrayList<String> columns = data.get(0);
+        if (!dataset.getColumns().isEmpty()) {
+            ArrayList<Attribute> header = dataset.getHeader();
 
             // Create attribute Row
             Row headerRow = sheet.createRow(0);
 
-            for (int i = 0; i < columns.size(); i++) {
+            for (int i = 0; i < header.size(); i++) {
                 Cell cell = headerRow.createCell(i);
-                cell.setCellValue(columns.get(i));
+                cell.setCellValue(((Attribute)header.get(i)).getName());
             }
 
-            for (int i = 1; i < data.size(); i++) {
+            for (int i = 1; i < dataset.getColumns().get(0).size(); i++) {
                 Row dataRow = sheet.createRow(i);
 
-                for (int j = 0; j < data.get(i).size(); j++) {
+                for (int j = 0; j < dataset.getColumns().size(); j++) {
                     Cell cell = dataRow.createCell(j);
-                    cell.setCellValue(data.get(i).get(j));
+                    Object value = ((Attribute)dataset.getColumns().get(j).get(i)).getValue();
+
+                    if (value == null) {
+                        cell.setCellValue("");
+                    } else {
+                        cell.setCellValue((String)value);
+                    }
                 }
             }
 
