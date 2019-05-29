@@ -1,5 +1,6 @@
 package approaches.geneticalgorithm;
 
+import approaches.geneticalgorithm.utils.SolutionUtils;
 import jmetal.core.*;
 import jmetal.util.JMException;
 
@@ -19,6 +20,8 @@ public class AnonymizationAlgorithm extends Algorithm {
     }
 
     public SolutionSet execute() throws JMException, ClassNotFoundException {
+        long startTime = 0;
+        int evaluation = 0;
         selection = operators_.get("selection");
         crossover = operators_.get("crossover");
         mutation = operators_.get("mutation");
@@ -33,7 +36,7 @@ public class AnonymizationAlgorithm extends Algorithm {
 
 
         //Starting population
-        int evaluation = 0;
+        startTime = System.currentTimeMillis();
         System.out.print("Population: " + evaluation);
         for (int i = 0; i < populationSize; i++) {
             newSolution = new Solution(problem_);
@@ -42,10 +45,10 @@ public class AnonymizationAlgorithm extends Algorithm {
             System.out.print("\rPopulation: " + ++evaluation);
         }
 
-        System.out.println("Starting population\n");
-        printPopulation(population);
+        System.out.println("\nGeneration time: " + (double)(System.currentTimeMillis() - startTime)/1000 + "s\n");
 
 
+        startTime = System.currentTimeMillis();
         evaluation = 0;
         System.out.print("Evaluation: " + evaluation);
         for (int i = 0; i < maxEvaluations; i++) {
@@ -70,8 +73,8 @@ public class AnonymizationAlgorithm extends Algorithm {
                     mutation.execute(offspring[1]);
 
                     //Validate solution
-                    ((AnonymizationProblem)problem_).validateSolution(offspring[0]);
-                    ((AnonymizationProblem)problem_).validateSolution(offspring[1]);
+                    //((AnonymizationProblem)problem_).validateSolution(offspring[0]);
+                    //((AnonymizationProblem)problem_).validateSolution(offspring[1]);
 
                     problem_.evaluate(offspring[0]);
                     problem_.evaluate(offspring[1]);
@@ -98,9 +101,8 @@ public class AnonymizationAlgorithm extends Algorithm {
             union.clear();
         }
 
-
-        System.out.println("\nFinal population\n");
-        printPopulation(population);
+        SolutionUtils.printPopulation(population);
+        System.out.println("\nExecution time: " + (double)(System.currentTimeMillis() - startTime)/1000 + "s\n");
 
         return population;
     }
@@ -119,57 +121,5 @@ public class AnonymizationAlgorithm extends Algorithm {
         }
     }
 
-    private void printPopulation (SolutionSet population) {
-        System.out.println("Print population\n");
 
-        for (int i = 0; i < population.size(); i++) {
-            System.out.println("Solution " + (i+1));
-            printLL(population);
-            printSolution(population.get(i));
-            printUL(population);
-            System.out.println("Fitness function LOG: " + population.get(i).getObjective(0));
-            //System.out.println("Fitness function ND: " + population.get(i).getObjective(1));
-            //System.out.println("Fitness function KLEV: " + population.get(i).getObjective(2));
-            System.out.println();
-        }
-    }
-
-    private void printLL (SolutionSet population) {
-        System.out.print("[");
-        for (int i = 0; i < population.get(i).getDecisionVariables().length; i++) {
-            System.out.print(problem_.getLowerLimit(i));
-            if (i < population.get(i).getDecisionVariables().length-1)
-                System.out.print(", ");
-            else {
-                System.out.print("]");
-            }
-        }
-        System.out.println();
-    }
-
-    private void printUL (SolutionSet population) {
-        System.out.print("[");
-        for (int i = 0; i < population.get(i).getDecisionVariables().length; i++) {
-            System.out.print(problem_.getUpperLimit(i));
-            if (i < population.get(i).getDecisionVariables().length-1)
-                System.out.print(", ");
-            else {
-                System.out.print("]");
-            }
-        }
-        System.out.println();
-    }
-
-    private void printSolution (Solution solution) {
-        System.out.print("[");
-        for (int i = 0; i < solution.getDecisionVariables().length; i++) {
-            System.out.print(solution.getDecisionVariables()[i]);
-            if (i < solution.getDecisionVariables().length-1)
-                System.out.print(", ");
-            else {
-                System.out.print("]");
-            }
-        }
-        System.out.println();
-    }
 }

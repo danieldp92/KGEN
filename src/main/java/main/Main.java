@@ -4,7 +4,6 @@ import anonymization.generalization.exception.LevelNotValidException;
 import dataset.Attribute;
 import dataset.Dataset;
 import dataset.DatasetRow;
-import geneticalgorithm.encoding.Chromosome;
 import approaches.geneticalgorithm.AnonymizationAlgorithm;
 import approaches.geneticalgorithm.AnonymizationProblem;
 import approaches.geneticalgorithm.AnonymizationSetting;
@@ -22,10 +21,10 @@ public class Main {
     private static final String datasetPath = System.getProperty("user.dir") + File.separator + "dataset" + File.separator + "F2_Dataset.xlsx";
     private static final String anonymizedPath = System.getProperty("user.dir") + File.separator + "anonymized" + File.separator + "F2_Dataset_Anonymized.xlsx";
     private static final String configPath = System.getProperty("user.dir") + File.separator + "config" + File.separator + "configIdentifier.txt";
-    private static final String resultsPath = System.getProperty("user.dir") + File.separator + "results" + File.separator + "resultsMO4.csv";
+    private static final String resultsPath = System.getProperty("user.dir") + File.separator + "results" + File.separator + "results1.csv";
 
 
-    public static void main (String [] args) throws IOException, LevelNotValidException, JMException, ClassNotFoundException {
+    public static void main (String [] args) throws IOException, JMException, ClassNotFoundException {
         DatasetUtils datasetUtils = new DatasetUtils();
         Dataset dataset = XlsUtils.readXlsx(datasetPath);
 
@@ -40,6 +39,7 @@ public class Main {
         SolutionSet bestSolutions = algorithm.execute();
         ArrayList<String> csvTxt = CSVResultGenerator.csvResultGenerator(bestSolutions, dataset.getHeader());
         FileUtils.saveFile(csvTxt, resultsPath);
+
     }
 
     private static ArrayList<Boolean> loadIdentifier (Dataset dataset) throws IOException {

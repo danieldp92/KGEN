@@ -8,6 +8,9 @@ import anonymization.generalization.type.NumericGeneralization;
 import anonymization.generalization.type.PlaceGeneralization;
 import anonymization.generalization.type.StringGeneralization;
 import anonymization.multithread.MultiThreadAnonymization;
+import anonymization.support.GeneralizationMap;
+import anonymization.support.LOGMap;
+import anonymization.support.SupportMap;
 import dataset.Attribute;
 import dataset.Dataset;
 import dataset.DatasetColumn;
@@ -19,7 +22,7 @@ import utils.DatasetUtils;
 import java.util.*;
 
 public class KAnonymity {
-    private static final int MIN_K_LEVEL = 5;
+    private static final int MIN_K_LEVEL = 2;
 
     private PlaceGeneralization placeGeneralization;
     private DateGeneralization dateGeneralization;
@@ -29,6 +32,10 @@ public class KAnonymity {
     private Dataset dataset;
     private ArrayList<Integer> lowerBounds;
     private ArrayList<Integer> upperBounds;
+
+
+    private List<Integer> quasiIdentifierIndex;
+    private GeneralizationMap generalizationMap;
     private LinkedHashMap<Integer, ArrayList<DatasetColumn>> anonymizationMap;
     private LinkedHashMap<Integer, Object> quasiIdentifierMedianMap;
     private LinkedHashMap<String, Integer> kAnonymizedHistoryMap;
@@ -45,10 +52,12 @@ public class KAnonymity {
 
         this.dataset = dataset;
 
+        initQuasiIdentifierIndex(this.dataset);
         initMedianMap();
 
         try {
             initAnonymizationMap();
+            initGeneralizationMap(this.dataset);
         } catch (LevelNotValidException e) {}
 
         this.lowerBounds = lowerBounds();
@@ -57,6 +66,19 @@ public class KAnonymity {
     }
 
     //INIT
+    private void initQuasiIdentifierIndex (Dataset dataset) {
+        this.quasiIdentifierIndex = new ArrayList<Integer>();
+
+        DatasetRow header = dataset.getHeader();
+
+        for (int i = 0; i < header.size(); i++) {
+            Attribute attribute = (Attribute) header.get(i);
+            if (attribute.getType() instanceof QuasiIdentifier) {
+                this.quasiIdentifierIndex.add(i);
+            }
+        }
+    }
+
     private void initAnonymizationMap () throws LevelNotValidException {
         this.anonymizationMap = new LinkedHashMap<Integer, ArrayList<DatasetColumn>>();
 
@@ -108,54 +130,72 @@ public class KAnonymity {
         }
     }
 
-    //GENERATION
-    public void deleteNotKAnonymizedRows (Dataset dataset, ArrayList<Integer> indexRows) {
-        for (int i = 0; i < dataset.getColumns().size(); i++) {
-            Collection<Attribute> attributesToRemove = new ArrayList<Attribute>();
-            for (int indexRow : indexRows) {
-                attributesToRemove.add((Attribute) dataset.getColumns().get(i).get(indexRow));
-            }
-
-            dataset.getColumns().get(i).removeAll(attributesToRemove);
-        }
-    }
-
-    //ANONYMIZATION METHODS
-    public Dataset anonymize (ArrayList<Integer> levelOfAnonymization) {
-        Dataset datasetAnonimyzed = null;
-
+    /**
+     * Generate generalization map
+     * Example
+     * Quasi Id Attribute Index | LOG Map
+     * 0                          LOG | Attribute that are differents
+     *                            0     Attribute Value | List<Integer> rows
+     *                                  01/02/2018        <1, 5, 23, 246, 1577>
+     *                                  01/02/2018        <4, 6, 21, 300>
+     * @param dataset
+     */
+    private void initGeneralizationMap (Dataset dataset) {
         DatasetRow header = dataset.getHeader();
-        ArrayList<DatasetColumn> columnsAnonymized = new ArrayList<DatasetColumn>();
 
-        int indexQuasiIdentifier = 0;
-        for (int i = 0; i < header.size(); i++) {
-            Attribute attribute = (Attribute) header.get(i);
-            ArrayList<DatasetColumn> allGeneralizationOfAttribute = anonymizationMap.get(i);
-            DatasetColumn columnAnonymized = null;
+        //GeneralizationMap
+        this.generalizationMap = new GeneralizationMap();
+        for (int indexHeader = 0; indexHeader < header.size(); indexHeader++) {
+            Attribute headerAttribute = (Attribute) header.get(indexHeader);
 
-            if (attribute.getType() instanceof QuasiIdentifier) {
-                try {
-                    columnAnonymized = allGeneralizationOfAttribute.get(levelOfAnonymization.get(indexQuasiIdentifier++));
-                } catch (IndexOutOfBoundsException ex) {
-                    //Chromosome bounds = (Chromosome) levelOfAnonymization;
-                    //ArrayList<Integer> upperBounds = bounds.getUpperBounds();
+            if (headerAttribute.getType() instanceof QuasiIdentifier) {
+                ArrayList<DatasetColumn> anonymizedColumns = anonymizationMap.get(indexHeader);
 
-                    //System.out.println(ex.getMessage());
-                    ex.printStackTrace();
+                //LOGMap
+                LOGMap tmpLOGMap = new LOGMap();
+                for (int indexLOG = 0; indexLOG < anonymizedColumns.size(); indexLOG++) {
+                    DatasetColumn anonymizedColumn = anonymizedColumns.get(indexLOG);
+
+                    //Get all different values
+                    Set<String> attributeValues = new HashSet<String>();
+                    for (Object attributeObj : anonymizedColumn) {
+                        Attribute attribute = (Attribute) attributeObj;
+                        String value = null;
+                        if (attribute.getValue() instanceof String) {
+                            value = (String) attribute.getValue();
+                        } else {
+                            value = String.valueOf(attribute.getValue());
+
+                        }
+                        attributeValues.add(value);
+                    }
+
+                    //SupportMap
+                    SupportMap tmpSupportMap = new SupportMap();
+                    for (String attributeValue : attributeValues) {
+                        //For each value, check in which rows it's available
+                        Collection<Integer> rows = new ArrayList<Integer>();
+                        for (int i = 0; i < anonymizedColumn.size(); i++) {
+                            Attribute attribute = (Attribute) anonymizedColumn.get(i);
+                            if ((attributeValue == null && attribute.getValue() == null) ||
+                                    ((attributeValue != null && attribute.getValue() != null && attributeValue.equals(attribute.getValue())))) {
+                                rows.add(i);
+                            }
+                        }
+
+                        tmpSupportMap.put(attributeValue, rows);
+                    }
+
+                    tmpLOGMap.put(indexLOG, tmpSupportMap);
                 }
 
-            } else {
-                columnAnonymized = allGeneralizationOfAttribute.get(0);
+                this.generalizationMap.put(indexHeader, tmpLOGMap);
             }
-
-            columnsAnonymized.add(columnAnonymized);
         }
-
-        datasetAnonimyzed = new Dataset(header, columnsAnonymized);
-
-        return datasetAnonimyzed;
     }
 
+
+    //ANONYMIZATION METHODS
     /**
      * Run k-anonymity test with the level of generalizion of attributes.
      * @param levelOfAnonymization: the level of anonymization of all attributes of a given dataset
@@ -171,6 +211,7 @@ public class KAnonymity {
         if (kValue != null) {
             return kValue;
         }
+
 
         int kLevelMin = 1;
         int kLevelMax = 2;
@@ -213,13 +254,6 @@ public class KAnonymity {
         return kLevelMin;
     }
 
-    /**
-     * Run k-anonymity test with the level of generalizion of attributes.
-     * Check if the generated dataset is kLevel-anonymized
-     * @param levelOfAnonymization: the level of anonymization of all attributes of a given dataset
-     * @param kLevel: the level of k-anonymity
-     * @return: true, if the dataset is k-anonymized, false otherwise
-     */
     public boolean kAnonymityTest (ArrayList<Integer> levelOfAnonymization, int kLevel) {
         boolean kAnonymized = true;
 
@@ -231,10 +265,51 @@ public class KAnonymity {
         Integer value = this.kAnonymizedHistoryMap.get(key);
 
         if (value == null) {
-            //I run kAnonymityTest only if I didn't do it before -> value == null
-            Dataset anonymizedDataset = anonymize(levelOfAnonymization);
-            anonymizedDataset = datasetReduction(anonymizedDataset);
-            kAnonymized = kAnonymityTest(anonymizedDataset, kLevel);
+            int minNumberOfRows = dataset.getDatasetSize() + 1;
+
+            //SupportMaps
+            //index -> qi attribute
+            //supportMap -> supportmap of a log given by levelOfAnonymization variable
+            List<SupportMap> supportMaps = new ArrayList<SupportMap>();
+            for (int i = 0; i < levelOfAnonymization.size(); i++) {
+                int qiIndex = this.quasiIdentifierIndex.get(i);
+                int log = levelOfAnonymization.get(i);
+
+                //Take a supportMap of a given LOG of qiIndex-attribute
+                SupportMap tmpLOGSupportMap = generalizationMap.get(qiIndex).get(log);
+                supportMaps.add(tmpLOGSupportMap);
+            }
+
+            List<Integer> maxVector = new ArrayList<Integer>();
+            for (int i = 0; i < supportMaps.size(); i++) {
+                maxVector.add(supportMaps.get(i).size()-1);
+            }
+
+            List<List<Integer>> allCombinations = getAllCombinations(maxVector);
+
+            for (List<Integer> combination : allCombinations) {
+                List<Collection<Integer>> rowsOfEveryLOG = new ArrayList<Collection<Integer>>();
+                for (int i = 0; i < combination.size(); i++) {
+                    rowsOfEveryLOG.add(supportMaps.get(i).getRows(combination.get(i)));
+                }
+
+                for (int i = 1; i < rowsOfEveryLOG.size(); i++) {
+                    rowsOfEveryLOG.get(0).retainAll(rowsOfEveryLOG.get(i));
+                }
+
+                if (rowsOfEveryLOG.get(0).size() > 0 && rowsOfEveryLOG.get(0).size() < minNumberOfRows) {
+                    minNumberOfRows = rowsOfEveryLOG.get(0).size();
+                }
+            }
+
+            if (minNumberOfRows == dataset.getDatasetSize() + 1) {
+                minNumberOfRows = 1;
+            }
+
+            if (minNumberOfRows < kLevel) {
+                kAnonymized = false;
+            }
+
         } else {
             if (value == 1)
                 kAnonymized = false;
@@ -287,25 +362,6 @@ public class KAnonymity {
         return true;
     }
 
-    public int [] numberOfEqualsRow (Dataset dataset, int kLevel) {
-        int [] numberOfEqualsRows = new int[dataset.getDatasetSize()];
-        for (int i = 0; i < numberOfEqualsRows.length; i++) {
-            numberOfEqualsRows[i] = 1;
-        }
-
-        for (int i = 0; i < dataset.getDatasetSize(); i++) {
-            for (int j = i+1; j < dataset.getDatasetSize(); j++) {
-                boolean equals = equalsRows(dataset, i, j);
-
-                if (equals) {
-                    numberOfEqualsRows[i] = numberOfEqualsRows[i] + 1;
-                    numberOfEqualsRows[j] = numberOfEqualsRows[j] + 1;
-                }
-            }
-        }
-
-        return numberOfEqualsRows;
-    }
 
     //ANONYMIZATION BOUNDS
     public ArrayList<Integer> lowerBounds () {
@@ -529,6 +585,109 @@ public class KAnonymity {
         return median;
     }
 
+    private List<List<Integer>> getAllCombinations (List<Integer> maxVector) {
+        List<List<Integer>> allCombinations = new ArrayList<List<Integer>>();
+
+        int actualPos = maxVector.size()-1;
+
+        //Inizialize combination
+        List<Integer> combination = new ArrayList<Integer>();
+        for (int i = 0; i < maxVector.size(); i++) {
+            combination.add(0);
+        }
+
+        allCombinations.add(new ArrayList<Integer>(combination));
+
+        while (actualPos >= 0) {
+            actualPos = maxVector.size()-1;
+            while (actualPos >= 0 && combination.get(actualPos) == maxVector.get(actualPos)) {
+                combination.set(actualPos, 0);
+                actualPos--;
+            }
+
+            if (actualPos >= 0) {
+                combination.set(actualPos, combination.get(actualPos)+1);
+                allCombinations.add(new ArrayList<Integer>(combination));
+            }
+        }
+
+        return allCombinations;
+    }
+
+
+
+
+
+
+
+    //GENERATION
+    public void deleteNotKAnonymizedRows (Dataset dataset, ArrayList<Integer> indexRows) {
+        for (int i = 0; i < dataset.getColumns().size(); i++) {
+            Collection<Attribute> attributesToRemove = new ArrayList<Attribute>();
+            for (int indexRow : indexRows) {
+                attributesToRemove.add((Attribute) dataset.getColumns().get(i).get(indexRow));
+            }
+
+            dataset.getColumns().get(i).removeAll(attributesToRemove);
+        }
+    }
+
+
+    public Dataset anonymize (ArrayList<Integer> levelOfAnonymization) {
+        Dataset datasetAnonimyzed = null;
+
+        DatasetRow header = dataset.getHeader();
+        ArrayList<DatasetColumn> columnsAnonymized = new ArrayList<DatasetColumn>();
+
+        int indexQuasiIdentifier = 0;
+        for (int i = 0; i < header.size(); i++) {
+            Attribute attribute = (Attribute) header.get(i);
+            ArrayList<DatasetColumn> allGeneralizationOfAttribute = anonymizationMap.get(i);
+            DatasetColumn columnAnonymized = null;
+
+            if (attribute.getType() instanceof QuasiIdentifier) {
+                try {
+                    columnAnonymized = allGeneralizationOfAttribute.get(levelOfAnonymization.get(indexQuasiIdentifier++));
+                } catch (IndexOutOfBoundsException ex) {
+                    //Chromosome bounds = (Chromosome) levelOfAnonymization;
+                    //ArrayList<Integer> upperBounds = bounds.getUpperBounds();
+
+                    //System.out.println(ex.getMessage());
+                    ex.printStackTrace();
+                }
+
+            } else {
+                columnAnonymized = allGeneralizationOfAttribute.get(0);
+            }
+
+            columnsAnonymized.add(columnAnonymized);
+        }
+
+        datasetAnonimyzed = new Dataset(header, columnsAnonymized);
+
+        return datasetAnonimyzed;
+    }
+
+    public int [] numberOfEqualsRow (Dataset dataset, int kLevel) {
+        int [] numberOfEqualsRows = new int[dataset.getDatasetSize()];
+        for (int i = 0; i < numberOfEqualsRows.length; i++) {
+            numberOfEqualsRows[i] = 1;
+        }
+
+        for (int i = 0; i < dataset.getDatasetSize(); i++) {
+            for (int j = i+1; j < dataset.getDatasetSize(); j++) {
+                boolean equals = equalsRows(dataset, i, j);
+
+                if (equals) {
+                    numberOfEqualsRows[i] = numberOfEqualsRows[i] + 1;
+                    numberOfEqualsRows[j] = numberOfEqualsRows[j] + 1;
+                }
+            }
+        }
+
+        return numberOfEqualsRows;
+    }
+
     private Dataset datasetReduction (Dataset dataset) {
         DatasetRow newHeader = new DatasetRow();
         ArrayList<DatasetColumn> newColumns = new ArrayList<DatasetColumn>();
@@ -549,4 +708,34 @@ public class KAnonymity {
 
         return newDataset;
     }
+
+    /**
+     * Run k-anonymity test with the level of generalizion of attributes.
+     * Check if the generated dataset is kLevel-anonymized
+     * @param levelOfAnonymization: the level of anonymization of all attributes of a given dataset
+     * @param kLevel: the level of k-anonymity
+     * @return: true, if the dataset is k-anonymized, false otherwise
+     */
+    /*public boolean kAnonymityTest (ArrayList<Integer> levelOfAnonymization, int kLevel) {
+        boolean kAnonymized = true;
+
+        String key = "";
+        for (int index : levelOfAnonymization) {
+            key += index + "-";
+        }
+
+        Integer value = this.kAnonymizedHistoryMap.get(key);
+
+        if (value == null) {
+            //I run kAnonymityTest only if I didn't do it before -> value == null
+            Dataset anonymizedDataset = anonymize(levelOfAnonymization);
+            anonymizedDataset = datasetReduction(anonymizedDataset);
+            kAnonymized = kAnonymityTest(anonymizedDataset, kLevel);
+        } else {
+            if (value == 1)
+                kAnonymized = false;
+        }
+
+        return kAnonymized;
+    }*/
 }

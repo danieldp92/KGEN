@@ -2,7 +2,6 @@ package approaches.geneticalgorithm;
 
 import anonymization.KAnonymity;
 import dataset.Dataset;
-import geneticalgorithm.encoding.Chromosome;
 import jmetal.core.Problem;
 import jmetal.core.Solution;
 import jmetal.core.Variable;
@@ -56,8 +55,6 @@ public class AnonymizationProblem extends Problem {
 
         double ffKLV = evaluateKLEV(solution);
         solution.setObjective(2, ffKLV);
-
-        //solution.setFitness(ffLOG);
     }
 
     private double evaluateND (Solution solution) throws JMException {
