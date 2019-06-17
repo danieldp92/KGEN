@@ -1,9 +1,8 @@
-package dataset;
+package dataset.beans;
 
 import java.util.ArrayList;
-import java.util.Date;
 
-public class DatasetRow extends ArrayList{
+public class DatasetColumn extends ArrayList {
 
     @Override
     public Object set(int index, Object element) {

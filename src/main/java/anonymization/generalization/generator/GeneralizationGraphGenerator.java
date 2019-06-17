@@ -3,15 +3,13 @@ package anonymization.generalization.generator;
 import anonymization.generalization.graph.Edge;
 import anonymization.generalization.graph.GeneralizationTree;
 import anonymization.generalization.graph.Node;
-import dataset.Attribute;
-import dataset.Dataset;
-import dataset.DatasetRow;
+import dataset.beans.Attribute;
+import dataset.beans.Dataset;
+import dataset.beans.DatasetRow;
 import utils.XlsUtils;
 
 import java.io.File;
 import java.util.*;
-
-import static utils.XlsUtils.readXlsx;
 
 public class GeneralizationGraphGenerator {
     private static final String PLACEINFO_XLS_PATH = System.getProperty("user.dir") + File.separator + "dataset" + File.separator +

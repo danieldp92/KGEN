@@ -1,4 +1,4 @@
-package dataset;
+package dataset.beans;
 
 import java.util.ArrayList;
 
@@ -56,6 +56,10 @@ public class Dataset {
     }
 
     public int getDatasetSize () {
-        return columns.get(0).size();
+        if (!columns.isEmpty()) {
+            return columns.get(0).size();
+        }
+
+        return 0;
     }
 }

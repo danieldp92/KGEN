@@ -1,10 +1,8 @@
 package results;
 
-import dataset.Attribute;
-import dataset.Dataset;
-import dataset.DatasetRow;
+import dataset.beans.Attribute;
+import dataset.beans.DatasetRow;
 import dataset.type.QuasiIdentifier;
-import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 import jmetal.core.Variable;
 import jmetal.util.JMException;

@@ -1,9 +1,8 @@
 package anonymization.multithread;
 
-import dataset.Dataset;
+import dataset.beans.Dataset;
 
 import java.util.ArrayList;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class MultiThreadAnonymization {
 

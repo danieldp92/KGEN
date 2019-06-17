@@ -11,10 +11,10 @@ import anonymization.multithread.MultiThreadAnonymization;
 import anonymization.support.GeneralizationMap;
 import anonymization.support.LOGMap;
 import anonymization.support.SupportMap;
-import dataset.Attribute;
-import dataset.Dataset;
-import dataset.DatasetColumn;
-import dataset.DatasetRow;
+import dataset.beans.Attribute;
+import dataset.beans.Dataset;
+import dataset.beans.DatasetColumn;
+import dataset.beans.DatasetRow;
 import dataset.type.Identifier;
 import dataset.type.QuasiIdentifier;
 import utils.DatasetUtils;
@@ -212,6 +212,11 @@ public class KAnonymity {
             return kValue;
         }
 
+        if (!kAnonymityTest(levelOfAnonymization, 2)) {
+            kAnonymizedHistoryMap.put(key, 1);
+            return 1;
+        }
+
 
         int kLevelMin = 1;
         int kLevelMax = 2;
@@ -255,6 +260,10 @@ public class KAnonymity {
     }
 
     public boolean kAnonymityTest (ArrayList<Integer> levelOfAnonymization, int kLevel) {
+        if (kLevel == 1) {
+            return true;
+        }
+
         boolean kAnonymized = true;
 
         String key = "";
@@ -411,7 +420,7 @@ public class KAnonymity {
                     case QuasiIdentifier.TYPE_PLACE:
                         upperBounds.add(generalizationTree.getHeight());
                         break;
-                    case QuasiIdentifier.TYPE_NUMERIC:
+                    case QuasiIdentifier.TYPE_INT:
                         int maxValue = getMaxAttributNumber(dataset.getColumns().get(i));
                         int heightHierarchy = 0;
 
@@ -464,7 +473,7 @@ public class KAnonymity {
                     case QuasiIdentifier.TYPE_PLACE:
                         valueAnonymized = placeGeneralization.generalize(levelOfAnonymization, valueToGeneralize);
                         break;
-                    case QuasiIdentifier.TYPE_NUMERIC:
+                    case QuasiIdentifier.TYPE_INT:
                         valueAnonymized = numericGeneralization.generalize(levelOfAnonymization, valueToGeneralize);
                         break;
                     case QuasiIdentifier.TYPE_DATE:
@@ -575,7 +584,7 @@ public class KAnonymity {
         } else {
             QuasiIdentifier qiAttribute = (QuasiIdentifier) ((Attribute)column.get(0)).getType();
 
-            if (qiAttribute.type == QuasiIdentifier.TYPE_NUMERIC) {
+            if (qiAttribute.type == QuasiIdentifier.TYPE_INT) {
                 median = 0;
             } else {
                 median = "*****";

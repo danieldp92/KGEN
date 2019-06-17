@@ -1,7 +1,7 @@
 package anonymization.multithread;
 
-import dataset.Attribute;
-import dataset.Dataset;
+import dataset.beans.Attribute;
+import dataset.beans.Dataset;
 
 public class AnonymizationThread extends Thread {
     private Dataset dataset;

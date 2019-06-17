@@ -2,10 +2,9 @@ package utils;
 
 import jmetal.core.SolutionSet;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtils {
 
@@ -24,5 +23,28 @@ public class FileUtils {
         }
 
         pw.close();
+    }
+
+    public static List<String> loadFile (String path) throws IOException {
+        List<String> txt = null;
+        BufferedReader br = null;
+
+        try {
+            txt = new ArrayList<String>();
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+
+            String line = null;
+
+            while ((line = br.readLine()) != null) {
+                txt.add(line);
+            }
+
+        } finally {
+            if (br != null) {
+                br.close();
+            }
+        }
+
+        return txt;
     }
 }

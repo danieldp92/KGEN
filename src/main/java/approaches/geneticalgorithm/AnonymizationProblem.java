@@ -1,7 +1,7 @@
 package approaches.geneticalgorithm;
 
 import anonymization.KAnonymity;
-import dataset.Dataset;
+import dataset.beans.Dataset;
 import jmetal.core.Problem;
 import jmetal.core.Solution;
 import jmetal.core.Variable;
@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class AnonymizationProblem extends Problem {
-    private static final int K_LEVEL = 2;
+    private static final int MIN_K_LEVEL = 2;
     private Dataset dataset;
     private KAnonymity kAnonymity;
 
@@ -27,7 +27,7 @@ public class AnonymizationProblem extends Problem {
 
         //Problem variables
         this.numberOfVariables_ = tmpLowerBounds.size();
-        this.numberOfObjectives_ = 3;
+        this.numberOfObjectives_ = 2;
         this.numberOfConstraints_ = 0;
 
         this.problemName_ = "F2_Anonymization";
@@ -45,16 +45,16 @@ public class AnonymizationProblem extends Problem {
         this.solutionType_ = new IntSolutionType(this);
     }
 
+    public KAnonymity getkAnonymity () {
+        return kAnonymity;
+    }
 
     public void evaluate(Solution solution) throws JMException {
         double ffLOG = evaluateLOG(solution);
-        solution.setObjective(0, ffLOG);
-
-        double ffND = evaluateND(solution);
-        solution.setObjective(1, ffND);
+        solution.setObjective(0, 1-ffLOG);
 
         double ffKLV = evaluateKLEV(solution);
-        solution.setObjective(2, ffKLV);
+        solution.setObjective(1, ffKLV);
     }
 
     private double evaluateND (Solution solution) throws JMException {
@@ -73,17 +73,17 @@ public class AnonymizationProblem extends Problem {
 
     private double evaluateLOG (Solution solution) throws JMException {
         double sum = 0;
+        int maxVariable = 0;
 
         for (int i = 0; i < numberOfVariables_; i++) {
             if (upperLimit_[i] != lowerLimit_[i]) {
                 double value = solution.getDecisionVariables()[i].getValue();
-                sum += ((value-lowerLimit_[i])/(upperLimit_[i]-lowerLimit_[i]));
-            } else {
-                sum++;
+                sum += ((value - lowerLimit_[i]) / (upperLimit_[i] - lowerLimit_[i]));
+                maxVariable++;
             }
         }
 
-        return sum/numberOfVariables_;
+        return sum/maxVariable;
     }
 
     private double evaluateKLEV (Solution solution) throws JMException {
@@ -104,7 +104,7 @@ public class AnonymizationProblem extends Problem {
             chromosome.add((int) var.getValue());
         }
 
-        boolean kAnonymized = this.kAnonymity.kAnonymityTest(chromosome, K_LEVEL);
+        boolean kAnonymized = this.kAnonymity.kAnonymityTest(chromosome, MIN_K_LEVEL);
 
         int numberOfIter = 0;
         while (!kAnonymized) {
@@ -122,7 +122,7 @@ public class AnonymizationProblem extends Problem {
             int randomIndex = indexToChoose.remove(0);
             chromosome.set(randomIndex, chromosome.get(randomIndex)+1);
 
-            kAnonymized = this.kAnonymity.kAnonymityTest(chromosome, K_LEVEL);
+            kAnonymized = this.kAnonymity.kAnonymityTest(chromosome, MIN_K_LEVEL);
 
             numberOfIter++;
         }

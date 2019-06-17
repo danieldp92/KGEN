@@ -1,5 +1,8 @@
 package approaches.geneticalgorithm;
 
+import approaches.geneticalgorithm.operator.KAnonymizationMutation;
+import approaches.geneticalgorithm.operator.LatticeCrossover;
+import approaches.geneticalgorithm.operator.MultiObjectiveRouletteSelection;
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
 import jmetal.core.Problem;
@@ -16,6 +19,7 @@ public class AnonymizationSetting extends Settings {
     protected int maxEvaluations;
     protected double crossoverProbability;
     protected double mutationProbability;
+    protected double kAnonymizationMutationProbability;
 
 
     public AnonymizationSetting (Problem problem) {
@@ -24,7 +28,8 @@ public class AnonymizationSetting extends Settings {
         this.populationSize = 100;
         this.maxEvaluations = 2000;
         this.crossoverProbability = 0.9;
-        this.mutationProbability = 0.1;
+        this.mutationProbability = 1;
+        this.kAnonymizationMutationProbability = 1;
     }
 
 
@@ -32,19 +37,22 @@ public class AnonymizationSetting extends Settings {
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         AnonymizationAlgorithm algorithm = new AnonymizationAlgorithm(this.problem_);
 
-
         algorithm.setInputParameter("crossover", crossoverProbability);
         algorithm.setInputParameter("mutation", mutationProbability);
 
-        Operator selection = SelectionFactory.getSelectionOperator("BinaryTournament", parameters);
+        Operator selection = new MultiObjectiveRouletteSelection(parameters);
         parameters.put("probability", crossoverProbability);
-        Operator crossover = CrossoverFactory.getCrossoverOperator("SinglePointCrossover", parameters);
+        Operator crossover = new LatticeCrossover(parameters);
         parameters.put("probability", mutationProbability);
         Operator mutation = MutationFactory.getMutationOperator("BitFlipMutation", parameters);
+        parameters.put("probability", kAnonymizationMutationProbability);
+        parameters.put("kanonyminity", ((AnonymizationProblem)problem_).getkAnonymity());
+        Operator kAnonymizationMutation = new KAnonymizationMutation(parameters);
 
         algorithm.addOperator("selection", selection);
         algorithm.addOperator("crossover", crossover);
         algorithm.addOperator("mutation", mutation);
+        algorithm.addOperator("kAnonymizationMutation", kAnonymizationMutation);
 
         algorithm.setInputParameter("populationSize", populationSize);
         algorithm.setInputParameter("maxEvaluations", maxEvaluations);

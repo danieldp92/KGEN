@@ -1,20 +1,16 @@
 package utils;
 
-import dataset.Attribute;
-import dataset.Dataset;
-import dataset.DatasetColumn;
-import dataset.DatasetRow;
-import org.apache.commons.compress.compressors.FileNameUtil;
+import dataset.beans.Attribute;
+import dataset.beans.Dataset;
+import dataset.beans.DatasetColumn;
+import dataset.beans.DatasetRow;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.w3c.dom.Attr;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 
 public class XlsUtils {
@@ -68,12 +64,13 @@ public class XlsUtils {
 
                         if (cell != null) {
                             CellType type = cell.getCellType();
+                            value = cell.toString();
 
                             if (type.equals(CellType.NUMERIC)) {
                                 if (HSSFDateUtil.isCellDateFormatted(cell)) {
                                     value = cell.getDateCellValue();
                                 } else {
-                                    value = (int)cell.getNumericCellValue();
+                                    value = cell.getNumericCellValue();
                                 }
                             } else {
                                 value = cell.toString();

@@ -1,12 +1,12 @@
 package main;
 
-import anonymization.generalization.exception.LevelNotValidException;
-import dataset.Attribute;
-import dataset.Dataset;
-import dataset.DatasetRow;
+import dataset.beans.Attribute;
+import dataset.beans.Dataset;
+import dataset.beans.DatasetRow;
 import approaches.geneticalgorithm.AnonymizationAlgorithm;
 import approaches.geneticalgorithm.AnonymizationProblem;
 import approaches.geneticalgorithm.AnonymizationSetting;
+import dataset.database.DatasetMySQL;
 import jmetal.core.SolutionSet;
 import jmetal.util.JMException;
 import results.CSVResultGenerator;
@@ -15,19 +15,27 @@ import utils.FileUtils;
 import utils.XlsUtils;
 
 import java.io.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Main {
+    private static final boolean CREATE_DB = true;
     private static final String datasetPath = System.getProperty("user.dir") + File.separator + "dataset" + File.separator + "F2_Dataset.xlsx";
     private static final String anonymizedPath = System.getProperty("user.dir") + File.separator + "anonymized" + File.separator + "F2_Dataset_Anonymized.xlsx";
     private static final String configPath = System.getProperty("user.dir") + File.separator + "config" + File.separator + "configIdentifier.txt";
-    private static final String resultsPath = System.getProperty("user.dir") + File.separator + "results" + File.separator + "results1.csv";
+    private static final String resultsPath = System.getProperty("user.dir") + File.separator + "results" + File.separator + "results5.csv";
 
 
-    public static void main (String [] args) throws IOException, JMException, ClassNotFoundException {
-        DatasetUtils datasetUtils = new DatasetUtils();
+    public static void main (String [] args) throws IOException, JMException, ClassNotFoundException, SQLException {
+        DatasetMySQL datasetMySQL = new DatasetMySQL();
         Dataset dataset = XlsUtils.readXlsx(datasetPath);
+        DatasetUtils.loadProperties(dataset, configPath);
 
+        if (CREATE_DB) {
+            datasetMySQL.createDatabase(dataset, "anon");
+        }
+
+        /*
         //Load and set identifiers in our dataset
         ArrayList<Boolean> attributeIdentifiers = loadIdentifier(dataset);
         datasetUtils.setAttributeTypes(dataset, attributeIdentifiers);
@@ -37,9 +45,10 @@ public class Main {
         AnonymizationAlgorithm algorithm = (AnonymizationAlgorithm) setting.configure();
 
         SolutionSet bestSolutions = algorithm.execute();
-        ArrayList<String> csvTxt = CSVResultGenerator.csvResultGenerator(bestSolutions, dataset.getHeader());
-        FileUtils.saveFile(csvTxt, resultsPath);
-
+        if (bestSolutions.size() > 0) {
+            ArrayList<String> csvTxt = CSVResultGenerator.csvResultGenerator(bestSolutions, dataset.getHeader());
+            FileUtils.saveFile(csvTxt, resultsPath);
+        }*/
     }
 
     private static ArrayList<Boolean> loadIdentifier (Dataset dataset) throws IOException {

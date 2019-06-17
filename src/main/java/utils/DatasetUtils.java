@@ -1,28 +1,59 @@
 package utils;
 
-import dataset.Attribute;
-import dataset.Dataset;
-import dataset.DatasetColumn;
-import dataset.DatasetRow;
+import dataset.beans.Attribute;
+import dataset.beans.Dataset;
+import dataset.beans.DatasetColumn;
+import dataset.type.AttributeType;
 import dataset.type.Identifier;
 import dataset.type.QuasiIdentifier;
+import exception.IOPropertiesException;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.io.IOException;
+import java.util.*;
 
 public class DatasetUtils {
+    private static final int PROPERTY_FIELDS = 4;
 
-    public void setAttributeTypes (Dataset dataset, ArrayList<Boolean> attributeIdentifiers) {
-        for (int j = 0; j < dataset.getHeader().size(); j++) {
-            Attribute attribute = (Attribute) dataset.getHeader().get(j);
-            setAttributeType(attribute, attributeIdentifiers.get(j));
+    public static void loadProperties (Dataset dataset, String propertiesPath) throws IOPropertiesException {
+        List<String> properties = null;
+
+        try {
+            properties = FileUtils.loadFile(propertiesPath);
+            properties.remove(0);
+        } catch (IOException e) {
+            throw new IOPropertiesException("Properties file NOT FOUND");
         }
 
-        for (int i = 0; i < dataset.getData().size(); i++) {
-            DatasetRow datasetRow = dataset.getData().get(i);
-            for (int j = 0; j < datasetRow.size(); j++) {
-                Attribute attribute = (Attribute) datasetRow.get(j);
-                setAttributeType(attribute, attributeIdentifiers.get(j));
+        if (properties.isEmpty() || properties.get(0).split(":").length != PROPERTY_FIELDS) {
+            throw new IOPropertiesException("ERROR IN THE CONFIG FILE\n" +
+                    "SYNTAX EXPECTED: name : i/qi/sd : true/false");
+        }
+
+
+        for (String line : properties) {
+            System.out.println(line);
+            String [] split = line.split(":");
+
+            String attributeName = split[0];
+            String attributeType = split[1];
+            String valueType = split[2];
+            boolean primaryKey = Boolean.parseBoolean(split[3]);
+
+            int indexAttribute = 0;
+            while (indexAttribute < dataset.getHeader().size() &&
+                    !((Attribute)dataset.getHeader().get(indexAttribute)).getName().toLowerCase().equals(attributeName.toLowerCase())) {
+                indexAttribute++;
+            }
+
+            if (indexAttribute >= dataset.getHeader().size()) {
+                throw new IOPropertiesException("ATTRIBUTE NOT FOUND. CHECK PROPERTIES FILE");
+            }
+
+            //Header attribute
+            setAttribute((Attribute)dataset.getHeader().get(indexAttribute), line);
+
+            for (Object attributeObj : dataset.getColumns().get(indexAttribute)) {
+                setAttribute((Attribute) attributeObj, line);
             }
         }
     }
@@ -42,43 +73,84 @@ public class DatasetUtils {
         return hashColumn;
     }
 
-    private void setAttributeType (Attribute attribute, boolean identifier) {
-        if (identifier) {
-            attribute.setType(new Identifier());
-        } else {
-            if (attribute.getName().toLowerCase().equals("datumupdate")) {
-                attribute.setType(new QuasiIdentifier(QuasiIdentifier.TYPE_DATE));
-                if (attribute.getValue() != null && !(attribute.getValue() instanceof Date)) {
-                    attribute.setValue((Date)attribute.getValue());
-                }
-            } else if (attribute.getName().toLowerCase().equals("huisnr") ||
-                    attribute.getName().toLowerCase().equals("huisnrtoe") ||
-                    attribute.getName().toLowerCase().equals("latitude") ||
-                    attribute.getName().toLowerCase().equals("longitude") ||
-                    attribute.getName().toLowerCase().equals("xcoordinaat") ||
-                    attribute.getName().toLowerCase().equals("ycoordinaat")) {
-                attribute.setType(new QuasiIdentifier(QuasiIdentifier.TYPE_NUMERIC));
-                if (attribute.getValue() != null && attribute.getValue() instanceof String) {
-                    if (((QuasiIdentifier)attribute.getType()).type == QuasiIdentifier.TYPE_NUMERIC) {
-                        if (attribute.getValue().equals("")) {
-                            attribute.setValue(null);
-                        } else {
-                            attribute.setValue(Integer.parseInt((String)attribute.getValue()));
-                        }
-                    }
+    private static void setAttribute (Attribute attribute, String propertyLine) throws IOPropertiesException {
+        Object value = attribute.getValue();
+        Object realValue = null;
 
-                }
-            } else if (attribute.getName().toLowerCase().equals("plaats") ||
-                    attribute.getName().toLowerCase().equals("provincie")) {
-                attribute.setType(new QuasiIdentifier(QuasiIdentifier.TYPE_PLACE));
-            } else {
-                if (attribute.getName().toLowerCase().equals("postcode") && attribute.getValue() != null) {
-                    attribute.setValue(((String)attribute.getValue()).replaceAll(" ", ""));
-                }
-                attribute.setType(new QuasiIdentifier(QuasiIdentifier.TYPE_STRING));
-            }
+        String [] split = propertyLine.split(":");
+
+        if (split.length != PROPERTY_FIELDS) {
+            throw new IOPropertiesException("NUMBER OF PROPERTY FILEDS WRONG");
         }
+
+        String attributeName = split[0];
+        String attributeType = split[1];
+        String valueType = split[2];
+        boolean primaryKey = Boolean.parseBoolean(split[3]);
+
+        int type = -1;
+        switch (valueType) {
+            case "int":
+                type = AttributeType.TYPE_INT;
+
+                if (value != null) {
+                    if (value instanceof Double) {
+                        //Convert double in int
+                        realValue = ((Double) value).intValue();
+                    } else if (value instanceof Date) {
+                        realValue = null;
+                    } else {
+                        realValue = Integer.parseInt((String) value);
+                    }
+                }
+
+                break;
+            case "date":
+                type = AttributeType.TYPE_DATE;
+
+                if (value != null) {
+                    realValue = value.toString();
+                }
+
+                break;
+            case "string":
+                type = AttributeType.TYPE_STRING;
+
+                if (value != null)
+                    realValue = value;
+                break;
+            case "place":
+                type = AttributeType.TYPE_PLACE;
+                if (value != null)
+                    realValue = value;
+                break;
+            case "double":
+                type = AttributeType.TYPE_DOUBLE;
+                if (value != null) {
+                    try {
+                        realValue = Double.parseDouble((String) value);
+                    } catch (NumberFormatException ex) {
+                        realValue = null;
+                    }
+                }
+
+                break;
+            default:
+                throw new IOPropertiesException("TYPE OF DATA IN PROPERTY FILE NOT VALID");
+        }
+
+
+        //Set type
+        if (attributeType.toLowerCase().equals("i")) {
+            attribute.setType(new Identifier(type));
+        } else {
+            attribute.setType(new QuasiIdentifier(type));
+        }
+
+        //Set pk
+        attribute.setPrimaryKey(primaryKey);
+
+        //Cast value, using type just obtained
+        attribute.setValue(realValue);
     }
-
-
 }
