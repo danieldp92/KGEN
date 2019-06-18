@@ -44,7 +44,12 @@ public class CSVResultGenerator {
 
             //Objectives
             for (int j = 0; j < bestSolutions.get(i).getNumberOfObjectives(); j++) {
-                actualString += bestSolutions.get(i).getObjective(j) + ";";
+                if (j == 0) {
+                    actualString += (1 - bestSolutions.get(i).getObjective(j)) + ";";
+                } else {
+                    actualString += bestSolutions.get(i).getObjective(j) + ";";
+                }
+
             }
 
             csvTextFile.add(actualString);

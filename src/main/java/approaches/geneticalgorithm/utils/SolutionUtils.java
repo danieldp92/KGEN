@@ -20,7 +20,12 @@ public class SolutionUtils {
                     printUL(population.get(i));
 
                     for (int j = 0; j < population.get(i).getNumberOfObjectives(); j++) {
-                        System.out.println("Objective " + (j+1) + ": " + population.get(i).getObjective(j));
+                        if (j == 0) {
+                            System.out.println("Objective " + (j+1) + ": " + (1 - population.get(i).getObjective(j)));
+                        } else {
+                            System.out.println("Objective " + (j+1) + ": " + population.get(i).getObjective(j));
+                        }
+
                     }
 
                     System.out.println();

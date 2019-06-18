@@ -16,6 +16,8 @@ public class DatasetMySQL {
     private static final String UNIQUE_TAG = "_tag";
     private static final String TABLE_NAME = "dataset";
 
+    private Dataset dataset;
+
     private Connection connection;
     private PreparedStatement preparedStatement;
     private Statement statement;
@@ -24,60 +26,122 @@ public class DatasetMySQL {
     private List<String> sqlWords;
 
 
+    public DatasetMySQL (Dataset dataset) {
+        this.dataset = dataset;
 
-    public DatasetMySQL () {
         this.sqlWords = new ArrayList<>();
         this.sqlWords.add("match");
     }
 
-    public void createDatabase (Dataset dataset, String name) throws SQLException {
+    public void createDatabase (String name) throws SQLException {
         createSchema(name);
 
-        DatasetRow row = new DatasetRow();
-        for (DatasetColumn column : dataset.getColumns()) {
-            row.add(column.get(0));
-        }
-
+        DatasetRow row = dataset.getRow(0);
         addTable(row);
 
         addRows(dataset);
     }
 
-    public boolean isCreated (String schemaName) throws SQLException {
-        boolean isCreated = false;
+    public Dataset selectQuery (String query) {
+        Dataset dataset = null;
+        DatasetRow header = new DatasetRow();
 
-        //String selectDBQuery= "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = " + schemaName;
+        ArrayList<DatasetColumn> columns = new ArrayList<DatasetColumn>();
 
         try {
             connection = DBConnectionPool.getConnection();
-            resultSet = connection.getMetaData().getCatalogs();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
 
-            while (resultSet.next()) {
-                if (resultSet.getString(1).equals(schemaName)) {
-                    isCreated = true;
+            //Generate the new header, reading result set metadata
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            for (int i = 0; i < metaData.getColumnCount(); i++) {
+                String attributeName = metaData.getColumnName(i+1);
+                if (attributeName.contains(UNIQUE_TAG)) {
+                    attributeName.replaceAll(UNIQUE_TAG, "");
                 }
 
-                System.out.println(resultSet.getString(1));
+                Attribute headerAttribute = new Attribute(attributeName, null);
+
+                boolean pk = ((com.mysql.cj.jdbc.result.ResultSetMetaData)metaData).getFields()[i].isPrimaryKey();
+                headerAttribute.setPrimaryKey(pk);
+
+                AttributeType attributeType = this.dataset.getHeaderAttribute(attributeName).getType();
+                headerAttribute.setType(attributeType);
+
+                header.add(headerAttribute);
             }
 
+            //Generate attributes columns
+            for (int i = 0; i < header.size(); i++) {
+                columns.add(new DatasetColumn());
+            }
+
+
+            while (resultSet.next()) {
+                for (int i = 0; i < header.size(); i++) {
+                    Attribute attribute = (Attribute) header.get(i);
+                    Attribute newAttribute = (Attribute) attribute.clone();
+
+                    switch (attribute.getType().type) {
+                        case AttributeType.TYPE_INT:
+                            int intValue = resultSet.getInt(i+1);
+                            if (resultSet.wasNull()) {
+                                newAttribute.setValue(null);
+                            } else {
+                                newAttribute.setValue(intValue);
+                            }
+
+                            break;
+                        case AttributeType.TYPE_DOUBLE:
+                            double doubleValue = resultSet.getDouble(i+1);
+                            if (resultSet.wasNull()) {
+                                newAttribute.setValue(null);
+                            } else {
+                                newAttribute.setValue(doubleValue);
+                            }
+
+                            break;
+                        default:
+                            String stringValue = resultSet.getString(i+1);
+                            newAttribute.setValue(stringValue);
+
+                            break;
+                    }
+
+                    columns.get(i).add(newAttribute);
+                }
+            }
+
+            dataset = new Dataset(header, columns);
+
+        } catch (SQLException e) {
+            System.out.println("CONNECTION FAILED");
+            return null;
         } finally {
-            if (resultSet != null) {
-                resultSet.close();
-            }
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
 
-            if (statement != null) {
-                statement.close();
-            }
+                if (statement != null) {
+                    statement.close();
+                }
 
-            if (connection != null) {
-                DBConnectionPool.releaseConnection(connection);
+                if (connection != null) {
+                    DBConnectionPool.releaseConnection(connection);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
 
-        return isCreated;
+
+        return dataset;
     }
 
-    public int createSchema (String schemaName) throws SQLException {
+
+    private int createSchema (String schemaName) throws SQLException {
         int result = 0;
 
         String createQuery = "CREATE DATABASE IF NOT EXISTS " + schemaName;
@@ -99,7 +163,7 @@ public class DatasetMySQL {
         return result;
     }
 
-    public void addTable (DatasetRow header) throws SQLException {
+    private void addTable (DatasetRow header) throws SQLException {
         String tableQuery = generateQueryTable(header);
 
         System.out.println(tableQuery);
@@ -126,46 +190,37 @@ public class DatasetMySQL {
 
     }
 
-    public void addRows (Dataset dataset) {
+    private void addRows (Dataset dataset) {
         try {
             connection = DBConnectionPool.getConnection();
 
-            String insertQuesry = generateInsertQuery(dataset.getHeader());
-            System.out.println(insertQuesry);
-
+            System.out.print("Row 0");
             for (int i = 0; i < dataset.getDatasetSize(); i++) {
-                System.out.println("Row " + (i+1));
+                DatasetRow actualRow = dataset.getRow(i);
+                String insertQuesry = generateInsertQuery(actualRow);
+
+                System.out.print("\rRow " + (i+1));
                 preparedStatement = connection.prepareStatement(insertQuesry);
 
-                for (int j = 0; j < dataset.getColumns().size(); j++) {
+                int indexOfNotNull = 1;
+                for (int j = 0; j < actualRow.size(); j++) {
                     //Take the j attribute of the i row
-                    Attribute attribute = (Attribute) dataset.getColumns().get(j).get(i);
+                    Attribute attribute = (Attribute) actualRow.get(j);
 
-                    switch (attribute.getType().type) {
-                        case AttributeType.TYPE_INT:
-                            if (attribute.getValue() != null) {
-                                preparedStatement.setInt(j + 1, (Integer) attribute.getValue());
-                            } else {
-                                preparedStatement.setInt(j + 1, 0);
-                            }
+                    if (attribute.getValue() != null) {
+                        switch (attribute.getType().type) {
+                            case AttributeType.TYPE_INT:
+                                preparedStatement.setInt(indexOfNotNull, (Integer) attribute.getValue());
+                                break;
+                            case AttributeType.TYPE_DOUBLE:
+                                preparedStatement.setDouble(indexOfNotNull, (Double) attribute.getValue());
+                                break;
+                            default:
+                                preparedStatement.setString(indexOfNotNull, (String) attribute.getValue());
+                                break;
+                        }
 
-                            break;
-                        case AttributeType.TYPE_DOUBLE:
-                            if (attribute.getValue() != null) {
-                                preparedStatement.setDouble(j + 1, (Double) attribute.getValue());
-                            } else {
-                                preparedStatement.setDouble(j + 1, 0);
-                            }
-
-                            break;
-                        default:
-                            if (attribute.getValue() != null) {
-                                preparedStatement.setString(j + 1, (String) attribute.getValue());
-                            } else {
-                                preparedStatement.setString(j + 1, null);
-                            }
-
-                            break;
+                        indexOfNotNull++;
                     }
                 }
 
@@ -240,23 +295,25 @@ public class DatasetMySQL {
         return tableQuery;
     }
 
-    private String generateInsertQuery (DatasetRow header) {
+    private String generateInsertQuery (DatasetRow row) {
         String insert = "INSERT INTO " + TABLE_NAME + " (";
         String names = "";
         String values = "";
 
-        for (Object attributeObj : header) {
+        for (Object attributeObj : row) {
             Attribute attribute = (Attribute) attributeObj;
 
-            //Names section
-            names += ", " + attribute.getName();
+            if (attribute.getValue() != null) {
+                //Names section
+                names += ", " + attribute.getName();
 
-            if (sqlWords.contains(attribute.getName().toLowerCase())) {
-                names += UNIQUE_TAG;
+                if (sqlWords.contains(attribute.getName().toLowerCase())) {
+                    names += UNIQUE_TAG;
+                }
+
+                //Values
+                values += ", ?";
             }
-
-            //Values
-            values += ", ?";
         }
 
         insert += names.substring(2) + ") VALUES (" + values.substring(2) + ")";

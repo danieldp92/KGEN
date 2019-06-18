@@ -191,27 +191,14 @@ public class AnonymizationAlgorithm extends Algorithm {
         System.out.println();
 
         for (int i = 0; i < population.size(); i++) {
-            population.get(i).setObjective(ffLOG_OBJECTIVE, 1 - population.get(i).getObjective(ffLOG_OBJECTIVE));
+            //population.get(i).setObjective(ffLOG_OBJECTIVE, 1 - population.get(i).getObjective(ffLOG_OBJECTIVE));
             if (population.get(i).getObjective(ffKLV_OBJECTIVE) == 1) {
                 population.remove(i--);
             }
         }
 
-        SolutionUtils.printPopulation(population);
+        //SolutionUtils.printPopulation(population);
 
-        /*population = new SolutionSet(minKAnonymizedSolutions.size());
-        for (int i = 0; i < minKAnonymizedSolutions.size(); i++) {
-            population.add(minKAnonymizedSolutions.get(i));
-        }
-
-        //Reverse of ffLOG
-        for (int i = 0; i < population.size(); i++) {
-            double log = population.get(i).getObjective(ffLOG_OBJECTIVE);
-            population.get(i).setObjective(ffLOG_OBJECTIVE, 1-log);
-        }
-
-
-        SolutionUtils.printSolutions(minKAnonymizedSolutions);*/
         System.out.println("\nExecution time: " + (double)(System.currentTimeMillis() - startTime)/1000 + "s\n");
 
         return population;

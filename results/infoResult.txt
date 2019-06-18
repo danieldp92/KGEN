@@ -1,0 +1,80 @@
+ITER 1
+Execution time: 5.648 sec
+
+
+ITER 2
+Execution time: 0.998 sec
+
+
+ITER 3
+Execution time: 1.05 sec
+
+
+ITER 4
+Execution time: 0.867 sec
+
+
+ITER 5
+Execution time: 0.967 sec
+
+
+ITER 6
+Execution time: 0.9 sec
+
+
+ITER 7
+Execution time: 0.949 sec
+
+
+ITER 8
+Execution time: 0.883 sec
+
+
+ITER 9
+Execution time: 0.968 sec
+
+
+ITER 10
+Execution time: 0.862 sec
+
+
+ITER 11
+Execution time: 0.954 sec
+
+
+ITER 12
+Execution time: 0.95 sec
+
+
+ITER 13
+Execution time: 0.917 sec
+
+
+ITER 14
+Execution time: 0.9 sec
+
+
+ITER 15
+Execution time: 0.933 sec
+
+
+ITER 16
+Execution time: 0.9 sec
+
+
+ITER 17
+Execution time: 0.868 sec
+
+
+ITER 18
+Execution time: 0.916 sec
+
+
+ITER 19
+Execution time: 0.9 sec
+
+
+ITER 20
+Execution time: 0.897 sec
+
+

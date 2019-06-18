@@ -15,6 +15,7 @@ import dataset.beans.Attribute;
 import dataset.beans.Dataset;
 import dataset.beans.DatasetColumn;
 import dataset.beans.DatasetRow;
+import dataset.type.AttributeType;
 import dataset.type.Identifier;
 import dataset.type.QuasiIdentifier;
 import utils.DatasetUtils;
@@ -40,15 +41,12 @@ public class KAnonymity {
     private LinkedHashMap<Integer, Object> quasiIdentifierMedianMap;
     private LinkedHashMap<String, Integer> kAnonymizedHistoryMap;
 
-    private MultiThreadAnonymization multiThreadAnonymization;
-
     public KAnonymity(Dataset dataset) {
         this.placeGeneralization = new PlaceGeneralization();
         this.dateGeneralization = new DateGeneralization();
         this.numericGeneralization = new NumericGeneralization();
-        this.stringGeneralization = new StringGeneralization();
+        //this.stringGeneralization = new StringGeneralization();
 
-        this.multiThreadAnonymization = new MultiThreadAnonymization(100);
 
         this.dataset = dataset;
 
@@ -94,8 +92,6 @@ public class KAnonymity {
 
                 for (int j = 0; j <= upperBounds.get(indexQuasiIdentifier); j++) {
                     DatasetColumn newDatasetColumn = anonymizeColumn(i, j);
-                    ArrayList<Integer> hashColumn = DatasetUtils.getHashColumn(newDatasetColumn);
-
                     allGeneralizationColumns.add(newDatasetColumn);
                 }
 
@@ -221,7 +217,7 @@ public class KAnonymity {
         int kLevelMin = 1;
         int kLevelMax = 2;
 
-        while (kLevelMax < dataset.getDatasetSize() && kAnonymityTest(levelOfAnonymization, (kLevelMax))) {
+        while (kLevelMax < dataset.getDatasetSize() && kAnonymityTest(levelOfAnonymization, kLevelMax)) {
             kLevelMin = kLevelMax;
             kLevelMax *= 2;
         }
@@ -285,7 +281,7 @@ public class KAnonymity {
                 int log = levelOfAnonymization.get(i);
 
                 //Take a supportMap of a given LOG of qiIndex-attribute
-                SupportMap tmpLOGSupportMap = generalizationMap.get(qiIndex).get(log);
+                SupportMap tmpLOGSupportMap = (SupportMap) generalizationMap.get(qiIndex).get(log);
                 supportMaps.add(tmpLOGSupportMap);
             }
 
@@ -448,9 +444,14 @@ public class KAnonymity {
     }
 
     private DatasetColumn anonymizeColumn (int indexColumn, int levelOfAnonymization) throws LevelNotValidException {
+        DatasetColumn column = dataset.getColumns().get(indexColumn);
+        if (((Attribute)column.get(0)).getType().type == AttributeType.TYPE_STRING) {
+            this.stringGeneralization = new StringGeneralization(minLength(column), maxLength(column));
+        }
+
         DatasetColumn datasetColumn = new DatasetColumn();
 
-        Attribute firstAttribute = (Attribute)dataset.getColumns().get(indexColumn).get(0);
+        Attribute firstAttribute = (Attribute)column.get(0);
         if (firstAttribute.getType() instanceof Identifier) {
             for (int i = 0; i < dataset.getColumns().size(); i++) {
                 Attribute newAttribute = new Attribute(firstAttribute.getName(), "*****");
@@ -460,7 +461,7 @@ public class KAnonymity {
         }
 
         else {
-            for (Object attributeObj : dataset.getColumns().get(indexColumn)) {
+            for (Object attributeObj : column) {
                 Attribute attribute = (Attribute) attributeObj;
                 Object valueAnonymized = null;
 
@@ -718,13 +719,7 @@ public class KAnonymity {
         return newDataset;
     }
 
-    /**
-     * Run k-anonymity test with the level of generalizion of attributes.
-     * Check if the generated dataset is kLevel-anonymized
-     * @param levelOfAnonymization: the level of anonymization of all attributes of a given dataset
-     * @param kLevel: the level of k-anonymity
-     * @return: true, if the dataset is k-anonymized, false otherwise
-     */
+
     /*public boolean kAnonymityTest (ArrayList<Integer> levelOfAnonymization, int kLevel) {
         boolean kAnonymized = true;
 
@@ -747,4 +742,36 @@ public class KAnonymity {
 
         return kAnonymized;
     }*/
+
+    private int minLength (DatasetColumn column) {
+        int minLength = Integer.MAX_VALUE;
+
+        for (Object attributeObj : column) {
+            Attribute attribute = (Attribute) attributeObj;
+
+            if (attribute.getValue() instanceof String) {
+                if (((String) attribute.getValue()).length() < minLength) {
+                    minLength = ((String) attribute.getValue()).length();
+                }
+            }
+        }
+
+        return minLength;
+    }
+
+    private int maxLength (DatasetColumn column) {
+        int maxLength = Integer.MIN_VALUE;
+
+        for (Object attributeObj : column) {
+            Attribute attribute = (Attribute) attributeObj;
+
+            if (attribute.getValue() instanceof String) {
+                if (((String) attribute.getValue()).length() > maxLength) {
+                    maxLength = ((String) attribute.getValue()).length();
+                }
+            }
+        }
+
+        return maxLength;
+    }
 }

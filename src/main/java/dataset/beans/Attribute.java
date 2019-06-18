@@ -44,4 +44,13 @@ public class Attribute {
     public void setPrimaryKey(boolean primaryKey) {
         this.primaryKey = primaryKey;
     }
+
+    @Override
+    public Object clone() {
+        Attribute cloneAttribute = new Attribute(name, value);
+        cloneAttribute.setPrimaryKey(primaryKey);
+        cloneAttribute.setType(type);
+
+        return cloneAttribute;
+    }
 }

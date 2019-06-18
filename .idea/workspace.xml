@@ -10,6 +10,20 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
   </component>
@@ -18,27 +32,70 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/main/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="31" column="26" lean-forward="true" selection-start-line="31" selection-start-column="26" selection-end-line="31" selection-end-column="26" />
+            <state relative-caret-position="437">
+              <caret line="59" column="67" selection-start-line="59" selection-start-column="67" selection-end-line="59" selection-end-column="67" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#loadIdentifier#0;class#Main#0" />
+                <element signature="method#prova#0;class#Main#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/dataset/database/DatasetMySQL.java">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/results/CSVResultGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
-              <caret line="135" column="25" selection-start-line="135" selection-start-column="25" selection-end-line="135" selection-end-column="25" />
+            <state relative-caret-position="356">
+              <caret line="49" column="79" selection-start-line="49" selection-start-column="79" selection-end-line="49" selection-end-column="79" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#isCreated#0;class#DatasetMySQL#0" />
-                <element signature="method#createSchema#0;class#DatasetMySQL#0" />
-                <element signature="method#generateQueryTable#0;class#DatasetMySQL#0" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/anonymization/KAnonymity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="455">
+              <caret line="216" selection-start-line="216" selection-end-line="216" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#initQuasiIdentifierIndex#0;class#KAnonymity#0" />
+                <element signature="method#initAnonymizationMap#0;class#KAnonymity#0" />
+                <element signature="method#initMedianMap#0;class#KAnonymity#0" />
+                <element signature="docComment;method#initGeneralizationMap#0;class#KAnonymity#0" />
+                <element signature="method#initGeneralizationMap#0;class#KAnonymity#0" />
+                <element signature="e#6354#6362#0" expanded="true" />
+                <element signature="e#7203#7212#0" expanded="true" />
+                <element signature="docComment;method#kAnonymityTest#0;class#KAnonymity#0" />
+                <element signature="e#10554#10566#0" expanded="true" />
+                <element signature="e#11034#11043#0" expanded="true" />
+                <element signature="e#11399#11420#0" expanded="true" />
+                <element signature="docComment;method#kAnonymityTest#2;class#KAnonymity#0" />
+                <element signature="e#13751#13760#0" expanded="true" />
+                <element signature="e#14384#14399#0" expanded="true" />
+                <element signature="method#upperBounds#0;class#KAnonymity#0" />
+                <element signature="method#getMaxAttributNumber#0;class#KAnonymity#0" />
+                <element signature="method#getMaxAttributeStringLenght#0;class#KAnonymity#0" />
+                <element signature="method#findMedian#0;class#KAnonymity#0" />
+                <element signature="method#deleteNotKAnonymizedRows#0;class#KAnonymity#0" />
+                <element signature="method#anonymize#0;class#KAnonymity#0" />
+                <element signature="method#numberOfEqualsRow#0;class#KAnonymity#0" />
+                <element signature="method#datasetReduction#0;class#KAnonymity#0" />
+                <element signature="method#minLength#0;class#KAnonymity#0" />
+                <element signature="method#minLength#1;class#KAnonymity#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/anonymization/support/SupportMap.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="13" column="32" selection-start-line="13" selection-start-column="32" selection-end-line="13" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -46,39 +103,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/dataset/beans/Dataset.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="57" column="33" selection-start-line="57" selection-start-column="33" selection-end-line="57" selection-end-column="33" />
+            <state relative-caret-position="370">
+              <caret line="91" selection-start-line="91" selection-end-line="91" />
               <folding>
+                <element signature="method#getHeaderAttribute#0;class#Dataset#0" />
+                <element signature="e#1011#1012#0" expanded="true" />
+                <element signature="e#1047#1048#0" expanded="true" />
                 <element signature="method#getData#0;class#Dataset#0" />
-                <element signature="method#getDatasetSize#0;class#Dataset#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/dataset/beans/Attribute.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-              <folding>
-                <element signature="e#761#762#0" expanded="true" />
-                <element signature="e#794#795#0" expanded="true" />
-                <element signature="e#847#848#0" expanded="true" />
-                <element signature="e#891#892#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/utils/DatasetUtils.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="222">
-              <caret line="75" column="24" selection-start-line="75" selection-start-column="24" selection-end-line="75" selection-end-column="24" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="method#getHashColumn#0;class#DatasetUtils#0" />
+                <element signature="method#getRow#0;class#Dataset#0" />
+                <element signature="e#1948#1949#0" expanded="true" />
+                <element signature="e#1980#1981#0" expanded="true" />
+                <element signature="e#2032#2033#0" expanded="true" />
+                <element signature="e#2062#2063#0" expanded="true" />
+                <element signature="e#2126#2127#0" expanded="true" />
+                <element signature="e#2164#2165#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -87,11 +125,65 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/utils/FileUtils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="561">
-              <caret line="50" lean-forward="true" selection-start-line="50" selection-end-line="50" />
+            <state relative-caret-position="136">
+              <caret line="17" column="23" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
               <folding>
                 <element signature="method#getFileExtension#0;class#FileUtils#0" />
-                <element signature="method#saveFile#0;class#FileUtils#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/anonymization/generalization/type/StringGeneralization.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="381">
+              <caret line="37" column="44" selection-start-line="37" selection-start-column="44" selection-end-line="37" selection-end-column="44" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationAlgorithm.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="267">
+              <caret line="193" column="14" selection-start-line="193" selection-start-column="14" selection-end-line="193" selection-end-column="14" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="docComment;method#AnonymizationAlgorithm#0;class#AnonymizationAlgorithm#0" />
+                <element signature="e#2706#2730#0" expanded="true" />
+                <element signature="e#3505#3529#0" expanded="true" />
+                <element signature="method#insertKAnonymizedSolution#0;class#AnonymizationAlgorithm#0" />
+                <element signature="docComment;method#reduction#0;class#AnonymizationAlgorithm#0" />
+                <element signature="method#reduction#0;class#AnonymizationAlgorithm#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/utils/SolutionUtils.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="391">
+              <caret line="23" column="118" selection-start-line="23" selection-start-column="118" selection-end-line="23" selection-end-column="118" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#printLL#0;class#SolutionUtils#0" />
+                <element signature="method#printUL#0;class#SolutionUtils#0" />
+                <element signature="method#printSolution#0;class#SolutionUtils#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationProblem.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="242">
+              <caret line="19" column="11" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#evaluateND#0;class#AnonymizationProblem#0" />
               </folding>
             </state>
           </provider>
@@ -130,12 +222,10 @@
         <option value="$PROJECT_DIR$/src/main/java/geneticalgorithm/operator/Selection.java" />
         <option value="$PROJECT_DIR$/src/main/java/geneticalgorithm/jmetal/NodeSolutionType.java" />
         <option value="$PROJECT_DIR$/src/main/java/jmetal/operators/crossover/SinglePointCrossover.java" />
-        <option value="$PROJECT_DIR$/src/main/java/anonymization/generalization/type/StringGeneralization.java" />
         <option value="$PROJECT_DIR$/src/main/java/geneticalgorithm/operator/Crossover.java" />
         <option value="$PROJECT_DIR$/src/main/java/geneticalgorithm/operator/Algorithm.java" />
         <option value="$PROJECT_DIR$/src/main/java/dataset/Dataset.java" />
         <option value="$PROJECT_DIR$/src/main/java/results/XMLResultGenerator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/results/CSVResultGenerator.java" />
         <option value="$PROJECT_DIR$/src/main/java/geneticalgorithm/jmetal/AnonymizationSetting.java" />
         <option value="$PROJECT_DIR$/src/main/java/geneticalgorithm/jmetal/AnonymizationProblem.java" />
         <option value="$PROJECT_DIR$/src/main/java/geneticalgorithm/jmetal/AnonymizationAlgorithm.java" />
@@ -147,38 +237,40 @@
         <option value="$PROJECT_DIR$/src/main/java/anonymization/support/AttributeSupportMap.java" />
         <option value="$PROJECT_DIR$/src/main/java/anonymization/support/LOGMap.java" />
         <option value="$PROJECT_DIR$/src/main/java/anonymization/support/GeneralizationMap.java" />
-        <option value="$PROJECT_DIR$/src/main/java/anonymization/support/SupportMap.java" />
-        <option value="$PROJECT_DIR$/src/main/java/anonymization/KAnonymity.java" />
-        <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/utils/SolutionUtils.java" />
-        <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationSetting.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/operator/KAnonymizationMutation.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/encoding.java" />
-        <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationProblem.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/operator/LatticeCrossover.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/encoding/GeneralizationSolution.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/operator/MultiObjectiveRouletteSelection.java" />
-        <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationAlgorithm.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/utils/DBConnectionPool.java" />
-        <option value="$PROJECT_DIR$/src/main/java/dataset/beans/Attribute.java" />
         <option value="$PROJECT_DIR$/src/main/java/exception/IOPropertiesException.java" />
         <option value="$PROJECT_DIR$/src/main/java/dataset/type/Identifier.java" />
         <option value="$PROJECT_DIR$/src/main/java/dataset/type/QuasiIdentifier.java" />
         <option value="$PROJECT_DIR$/src/main/java/utils/FileUtils.java" />
-        <option value="$PROJECT_DIR$/src/main/java/main/Main.java" />
-        <option value="$PROJECT_DIR$/src/main/java/dataset/beans/Dataset.java" />
         <option value="$PROJECT_DIR$/src/main/java/utils/XlsUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/dataset/type/AttributeType.java" />
-        <option value="$PROJECT_DIR$/src/main/java/utils/DatasetUtils.java" />
+        <option value="$PROJECT_DIR$/src/main/java/dataset/beans/Attribute.java" />
+        <option value="$PROJECT_DIR$/src/main/java/dataset/beans/Dataset.java" />
         <option value="$PROJECT_DIR$/src/main/java/dataset/database/DatasetMySQL.java" />
+        <option value="$PROJECT_DIR$/src/main/java/utils/DatasetUtils.java" />
+        <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationProblem.java" />
+        <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationSetting.java" />
+        <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/utils/SolutionUtils.java" />
+        <option value="$PROJECT_DIR$/src/main/java/anonymization/generalization/type/StringGeneralization.java" />
+        <option value="$PROJECT_DIR$/src/main/java/anonymization/KAnonymity.java" />
+        <option value="$PROJECT_DIR$/src/main/java/anonymization/support/SupportMap.java" />
+        <option value="$PROJECT_DIR$/src/main/java/main/Main.java" />
+        <option value="$PROJECT_DIR$/src/main/java/results/CSVResultGenerator.java" />
+        <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationAlgorithm.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1912" />
-    <option name="y" value="-8" />
+    <option name="x" value="1919" />
+    <option name="y" value="655" />
     <option name="width" value="1936" />
-    <option name="height" value="1176" />
+    <option name="height" value="978" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -186,7 +278,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -218,7 +309,7 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="dataset" type="462c0819:PsiDirectoryNode" />
+              <item name="approaches" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Anonymization-metrics-implemetation-for-de-identification-problem" type="b2602c69:ProjectViewProjectNode" />
@@ -226,8 +317,8 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="dataset" type="462c0819:PsiDirectoryNode" />
-              <item name="beans" type="462c0819:PsiDirectoryNode" />
+              <item name="approaches" type="462c0819:PsiDirectoryNode" />
+              <item name="geneticalgorithm" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Anonymization-metrics-implemetation-for-de-identification-problem" type="b2602c69:ProjectViewProjectNode" />
@@ -235,25 +326,9 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="dataset" type="462c0819:PsiDirectoryNode" />
-              <item name="database" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Anonymization-metrics-implemetation-for-de-identification-problem" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Anonymization-metrics-implemetation-for-de-identification-problem" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="dataset" type="462c0819:PsiDirectoryNode" />
-              <item name="type" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Anonymization-metrics-implemetation-for-de-identification-problem" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Anonymization-metrics-implemetation-for-de-identification-problem" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="exception" type="462c0819:PsiDirectoryNode" />
+              <item name="approaches" type="462c0819:PsiDirectoryNode" />
+              <item name="geneticalgorithm" type="462c0819:PsiDirectoryNode" />
+              <item name="operator" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Anonymization-metrics-implemetation-for-de-identification-problem" type="b2602c69:ProjectViewProjectNode" />
@@ -271,6 +346,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -362,11 +438,12 @@
       <workItem from="1560515226547" duration="8296000" />
       <workItem from="1560759603187" duration="6845000" />
       <workItem from="1560767142245" duration="11256000" />
+      <workItem from="1560844725686" duration="20468000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="267337000" />
+    <option name="totallyTimeSpent" value="287805000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -380,7 +457,7 @@
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1176" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.3139659" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.31716418" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -389,8 +466,8 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.33557048" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.28092042" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3106424" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.4467881" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.42281878" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32981783" />
@@ -419,15 +496,9 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationAlgorithm.java</url>
-          <line>75</line>
+          <line>82</line>
           <properties />
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/dataset/database/DatasetMySQL.java</url>
-          <line>171</line>
-          <properties />
-          <option name="timeStamp" value="16" />
+          <option name="timeStamp" value="23" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -438,8 +509,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/geneticalgorithm/operator/Crossover.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/geneticalgorithm/operator/Mutation.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/geneticalgorithm/operator/Selection.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/results/re.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm2/AnonymizationProblem.java" />
@@ -481,16 +550,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="219">
           <caret line="3014" column="36" selection-start-line="3014" selection-start-column="36" selection-end-line="3014" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/anonymization/support/SupportMap.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="19" selection-start-line="13" selection-start-column="19" selection-end-line="13" selection-end-column="19" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -547,30 +606,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/results/CSVResultGenerator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="28" column="42" selection-start-line="28" selection-start-column="42" selection-end-line="28" selection-end-column="42" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/utils/SolutionUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="64" selection-start-line="10" selection-start-column="64" selection-end-line="10" selection-end-column="64" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#printPopulation#0;class#SolutionUtils#0" />
-            <element signature="method#printLL#0;class#SolutionUtils#0" />
-            <element signature="method#printUL#0;class#SolutionUtils#0" />
-            <element signature="method#printSolution#0;class#SolutionUtils#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/jmetal/experiments/settings/WASFGA_Settings.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
@@ -585,55 +620,6 @@
           <caret line="33" column="75" selection-start-line="33" selection-start-column="75" selection-end-line="33" selection-end-column="75" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationProblem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="45" column="5" selection-start-line="45" selection-start-column="5" selection-end-line="45" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#evaluateND#0;class#AnonymizationProblem#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationSetting.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="31" column="51" selection-start-line="31" selection-start-column="51" selection-end-line="31" selection-end-column="51" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/anonymization/KAnonymity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3162">
-          <caret line="272" selection-start-line="272" selection-end-line="272" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#initQuasiIdentifierIndex#0;class#KAnonymity#0" />
-            <element signature="method#initMedianMap#0;class#KAnonymity#0" />
-            <element signature="docComment;method#initGeneralizationMap#0;class#KAnonymity#0" />
-            <element signature="method#initGeneralizationMap#0;class#KAnonymity#0" />
-            <element signature="docComment;method#kAnonymityTest#0;class#KAnonymity#0" />
-            <element signature="method#kAnonymityTest#2;class#KAnonymity#0" />
-            <element signature="method#lowerBounds#0;class#KAnonymity#0" />
-            <element signature="method#upperBounds#0;class#KAnonymity#0" />
-            <element signature="method#anonymizeColumn#0;class#KAnonymity#0" />
-            <element signature="method#equalsRows#0;class#KAnonymity#0" />
-            <element signature="method#equalsAttribute#0;class#KAnonymity#0" />
-            <element signature="method#getMaxAttributNumber#0;class#KAnonymity#0" />
-            <element signature="method#getMaxAttributeStringLenght#0;class#KAnonymity#0" />
-            <element signature="method#findMedian#0;class#KAnonymity#0" />
-            <element signature="method#deleteNotKAnonymizedRows#0;class#KAnonymity#0" />
-            <element signature="method#anonymize#0;class#KAnonymity#0" />
-            <element signature="method#numberOfEqualsRow#0;class#KAnonymity#0" />
-            <element signature="method#datasetReduction#0;class#KAnonymity#0" />
           </folding>
         </state>
       </provider>
@@ -660,35 +646,6 @@
           <caret line="30" column="12" selection-start-line="30" selection-start-column="12" selection-end-line="30" selection-end-column="12" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/operator/MultiObjectiveRouletteSelection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="44" selection-start-line="44" selection-end-line="44" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1425#1433#0" expanded="true" />
-            <element signature="e#1629#1639#0" expanded="true" />
-            <element signature="method#orderByPenalty#0;class#MultiObjectiveRouletteSelection#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationAlgorithm.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2856">
-          <caret line="172" column="14" selection-start-line="172" selection-start-column="14" selection-end-line="172" selection-end-column="14" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="docComment;method#AnonymizationAlgorithm#0;class#AnonymizationAlgorithm#0" />
-            <element signature="e#2630#2654#0" expanded="true" />
-            <element signature="e#2880#2904#0" expanded="true" />
-            <element signature="method#insertKAnonymizedSolution#0;class#AnonymizationAlgorithm#0" />
-            <element signature="docComment;method#reduction#0;class#AnonymizationAlgorithm#0" />
-            <element signature="method#reduction#0;class#AnonymizationAlgorithm#0" />
           </folding>
         </state>
       </provider>
@@ -729,16 +686,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utils/DBConnectionPool.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="556">
-          <caret line="107" column="42" lean-forward="true" selection-start-line="107" selection-start-column="42" selection-end-line="107" selection-end-column="42" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/dataset/type/QuasiIdentifier.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -772,24 +719,52 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utils/FileUtils.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/utils/XlsUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="50" lean-forward="true" selection-start-line="50" selection-end-line="50" />
+        <state relative-caret-position="323">
+          <caret line="30" column="47" lean-forward="true" selection-start-line="30" selection-start-column="47" selection-end-line="30" selection-end-column="47" />
           <folding>
-            <element signature="method#getFileExtension#0;class#FileUtils#0" />
-            <element signature="method#saveFile#0;class#FileUtils#0" />
+            <element signature="e#622#637#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/utils/DatasetUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="31" column="26" lean-forward="true" selection-start-line="31" selection-start-column="26" selection-end-line="31" selection-end-column="26" />
+        <state relative-caret-position="595">
+          <caret line="89" column="67" selection-start-line="89" selection-start-column="67" selection-end-line="89" selection-end-column="67" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#loadIdentifier#0;class#Main#0" />
+            <element signature="method#loadProperties#0;class#DatasetUtils#0" />
+            <element signature="method#getHashColumn#0;class#DatasetUtils#0" />
+            <element signature="method#setAttribute#0;class#DatasetUtils#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/utils/DBConnectionPool.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="621">
+          <caret line="77" selection-start-line="77" selection-end-line="77" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/dataset/database/DatasetMySQL.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="505">
+          <caret line="116" selection-start-line="116" selection-end-line="116" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#createDatabase#0;class#DatasetMySQL#0" />
+            <element signature="e#1237#1252#0" expanded="true" />
+            <element signature="method#createSchema#0;class#DatasetMySQL#0" />
+            <element signature="method#addTable#0;class#DatasetMySQL#0" />
+            <element signature="method#addRows#0;class#DatasetMySQL#0" />
+            <element signature="method#generateQueryTable#0;class#DatasetMySQL#0" />
+            <element signature="method#generateInsertQuery#0;class#DatasetMySQL#0" />
           </folding>
         </state>
       </provider>
@@ -803,8 +778,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/dataset/beans/Attribute.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+        <state relative-caret-position="99">
+          <caret line="11" column="26" lean-forward="true" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
           <folding>
             <element signature="e#761#762#0" expanded="true" />
             <element signature="e#794#795#0" expanded="true" />
@@ -814,44 +789,172 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/dataset/beans/Dataset.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="57" column="33" selection-start-line="57" selection-start-column="33" selection-end-line="57" selection-end-column="33" />
-          <folding>
-            <element signature="method#getData#0;class#Dataset#0" />
-            <element signature="method#getDatasetSize#0;class#Dataset#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utils/XlsUtils.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationSetting.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="476">
-          <caret line="71" column="40" lean-forward="true" selection-start-line="71" selection-start-column="40" selection-end-line="71" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utils/DatasetUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="75" column="24" selection-start-line="75" selection-start-column="24" selection-end-line="75" selection-end-column="24" />
+          <caret line="28" column="31" selection-start-line="28" selection-start-column="31" selection-end-line="28" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#getHashColumn#0;class#DatasetUtils#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/dataset/database/DatasetMySQL.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/operator/MultiObjectiveRouletteSelection.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="135" column="25" selection-start-line="135" selection-start-column="25" selection-end-line="135" selection-end-column="25" />
+        <state relative-caret-position="-377">
+          <caret line="55" column="13" selection-start-line="55" selection-start-column="13" selection-end-line="55" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#isCreated#0;class#DatasetMySQL#0" />
-            <element signature="method#createSchema#0;class#DatasetMySQL#0" />
-            <element signature="method#generateQueryTable#0;class#DatasetMySQL#0" />
+            <element signature="e#1425#1433#0" expanded="true" />
+            <element signature="e#1629#1639#0" expanded="true" />
+            <element signature="method#orderByPenalty#0;class#MultiObjectiveRouletteSelection#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationProblem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="19" column="11" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#evaluateND#0;class#AnonymizationProblem#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/utils/SolutionUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="23" column="118" selection-start-line="23" selection-start-column="118" selection-end-line="23" selection-end-column="118" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#printLL#0;class#SolutionUtils#0" />
+            <element signature="method#printUL#0;class#SolutionUtils#0" />
+            <element signature="method#printSolution#0;class#SolutionUtils#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/anonymization/generalization/type/StringGeneralization.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="381">
+          <caret line="37" column="44" selection-start-line="37" selection-start-column="44" selection-end-line="37" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/dataset/beans/Dataset.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="370">
+          <caret line="91" selection-start-line="91" selection-end-line="91" />
+          <folding>
+            <element signature="method#getHeaderAttribute#0;class#Dataset#0" />
+            <element signature="e#1011#1012#0" expanded="true" />
+            <element signature="e#1047#1048#0" expanded="true" />
+            <element signature="method#getData#0;class#Dataset#0" />
+            <element signature="method#getRow#0;class#Dataset#0" />
+            <element signature="e#1948#1949#0" expanded="true" />
+            <element signature="e#1980#1981#0" expanded="true" />
+            <element signature="e#2032#2033#0" expanded="true" />
+            <element signature="e#2062#2063#0" expanded="true" />
+            <element signature="e#2126#2127#0" expanded="true" />
+            <element signature="e#2164#2165#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_201/src.zip!/java/util/Collection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="443" column="12" selection-start-line="443" selection-start-column="12" selection-end-line="443" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/anonymization/support/SupportMap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="32" selection-start-line="13" selection-start-column="32" selection-end-line="13" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/anonymization/KAnonymity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="455">
+          <caret line="216" selection-start-line="216" selection-end-line="216" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#initQuasiIdentifierIndex#0;class#KAnonymity#0" />
+            <element signature="method#initAnonymizationMap#0;class#KAnonymity#0" />
+            <element signature="method#initMedianMap#0;class#KAnonymity#0" />
+            <element signature="docComment;method#initGeneralizationMap#0;class#KAnonymity#0" />
+            <element signature="method#initGeneralizationMap#0;class#KAnonymity#0" />
+            <element signature="e#6354#6362#0" expanded="true" />
+            <element signature="e#7203#7212#0" expanded="true" />
+            <element signature="docComment;method#kAnonymityTest#0;class#KAnonymity#0" />
+            <element signature="e#10554#10566#0" expanded="true" />
+            <element signature="e#11034#11043#0" expanded="true" />
+            <element signature="e#11399#11420#0" expanded="true" />
+            <element signature="docComment;method#kAnonymityTest#2;class#KAnonymity#0" />
+            <element signature="e#13751#13760#0" expanded="true" />
+            <element signature="e#14384#14399#0" expanded="true" />
+            <element signature="method#upperBounds#0;class#KAnonymity#0" />
+            <element signature="method#getMaxAttributNumber#0;class#KAnonymity#0" />
+            <element signature="method#getMaxAttributeStringLenght#0;class#KAnonymity#0" />
+            <element signature="method#findMedian#0;class#KAnonymity#0" />
+            <element signature="method#deleteNotKAnonymizedRows#0;class#KAnonymity#0" />
+            <element signature="method#anonymize#0;class#KAnonymity#0" />
+            <element signature="method#numberOfEqualsRow#0;class#KAnonymity#0" />
+            <element signature="method#datasetReduction#0;class#KAnonymity#0" />
+            <element signature="method#minLength#0;class#KAnonymity#0" />
+            <element signature="method#minLength#1;class#KAnonymity#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/utils/FileUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="17" column="23" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
+          <folding>
+            <element signature="method#getFileExtension#0;class#FileUtils#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="59" column="67" selection-start-line="59" selection-start-column="67" selection-end-line="59" selection-end-column="67" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#loadIdentifier#0;class#Main#0" />
+            <element signature="method#prova#0;class#Main#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/results/CSVResultGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="356">
+          <caret line="49" column="79" selection-start-line="49" selection-start-column="79" selection-end-line="49" selection-end-column="79" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationAlgorithm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="267">
+          <caret line="193" column="14" selection-start-line="193" selection-start-column="14" selection-end-line="193" selection-end-column="14" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="docComment;method#AnonymizationAlgorithm#0;class#AnonymizationAlgorithm#0" />
+            <element signature="e#2706#2730#0" expanded="true" />
+            <element signature="e#3505#3529#0" expanded="true" />
+            <element signature="method#insertKAnonymizedSolution#0;class#AnonymizationAlgorithm#0" />
+            <element signature="docComment;method#reduction#0;class#AnonymizationAlgorithm#0" />
+            <element signature="method#reduction#0;class#AnonymizationAlgorithm#0" />
           </folding>
         </state>
       </provider>

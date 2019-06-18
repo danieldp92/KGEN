@@ -31,7 +31,6 @@ public class DatasetUtils {
 
 
         for (String line : properties) {
-            System.out.println(line);
             String [] split = line.split(":");
 
             String attributeName = split[0];
@@ -71,6 +70,29 @@ public class DatasetUtils {
         }
 
         return hashColumn;
+    }
+
+    public static void printDataset (Dataset dataset) {
+        System.out.println("DATASET INFO\n");
+
+        //Header
+        for (Object attributeObj : dataset.getHeader()) {
+            Attribute attribute = (Attribute) attributeObj;
+            System.out.print(attribute.getName() + "\t\t\t\t");
+        }
+        System.out.println();
+
+        //Data
+        for (int i = 0; i < dataset.getDatasetSize(); i++) {
+            for (int j = 0; j < dataset.getColumns().size(); j++) {
+                Attribute attribute = (Attribute) dataset.getColumns().get(j).get(i);
+                if (attribute.getValue() != null)
+                    System.out.print(attribute.getValue() + "\t\t\t");
+                else
+                    System.out.print("null\t\t\t");
+            }
+            System.out.println();
+        }
     }
 
     private static void setAttribute (Attribute attribute, String propertyLine) throws IOPropertiesException {

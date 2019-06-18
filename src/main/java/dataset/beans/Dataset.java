@@ -21,6 +21,21 @@ public class Dataset {
         return header;
     }
 
+    public Attribute getHeaderAttribute (String attributeName) {
+        Attribute headerAttribute = null;
+
+        int index = 0;
+        while (index < header.size() && !((Attribute)header.get(index)).getName().equals(attributeName)) {
+            index++;
+        }
+
+        if (index < header.size()) {
+            headerAttribute = (Attribute) header.get(index);
+        }
+
+        return headerAttribute;
+    }
+
     public void setHeader(DatasetRow header) {
         this.header = header;
     }
@@ -41,6 +56,23 @@ public class Dataset {
         }
 
         return data;
+    }
+
+    public DatasetRow getRow (int index) {
+        if (index >= getDatasetSize()) {
+            return null;
+        }
+
+        if (data != null) {
+            return data.get(index);
+        }
+
+        DatasetRow row = new DatasetRow();
+        for (int i = 0; i < columns.size(); i++) {
+            row.add(columns.get(i).get(index));
+        }
+
+        return row;
     }
 
     public void setData(ArrayList<DatasetRow> data) {
