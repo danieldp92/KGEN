@@ -58,7 +58,7 @@ public class DatasetMySQL {
             for (int i = 0; i < metaData.getColumnCount(); i++) {
                 String attributeName = metaData.getColumnName(i+1);
                 if (attributeName.contains(UNIQUE_TAG)) {
-                    attributeName.replaceAll(UNIQUE_TAG, "");
+                    attributeName = attributeName.split("_")[0];
                 }
 
                 Attribute headerAttribute = new Attribute(attributeName, null);

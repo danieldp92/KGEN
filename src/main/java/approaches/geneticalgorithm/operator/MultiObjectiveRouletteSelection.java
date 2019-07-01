@@ -11,6 +11,7 @@ import java.util.*;
 public class MultiObjectiveRouletteSelection extends Selection {
     private static final int ffLOG_OBJECTIVE = 0;
     private static final int ffKLV_OBJECTIVE = 1;
+    private static final int MIN_KLEV = 2;
 
     public MultiObjectiveRouletteSelection(HashMap<String, Object> parameters) {
         super(parameters);
@@ -26,7 +27,9 @@ public class MultiObjectiveRouletteSelection extends Selection {
         //Take all klv in the population, without repeat them
         Set<Double> klvList = new HashSet<Double>();
         for (int i = 0; i < population.size(); i++) {
-            klvList.add(population.get(i).getObjective(ffKLV_OBJECTIVE));
+            if (population.get(i).getObjective(ffKLV_OBJECTIVE) >= MIN_KLEV) {
+                klvList.add(population.get(i).getObjective(ffKLV_OBJECTIVE));
+            }
         }
 
 

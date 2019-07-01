@@ -14,6 +14,7 @@ import java.util.*;
 public class DatasetUtils {
     private static final int PROPERTY_FIELDS = 4;
 
+
     public static void loadProperties (Dataset dataset, String propertiesPath) throws IOPropertiesException {
         List<String> properties = null;
 
@@ -57,19 +58,99 @@ public class DatasetUtils {
         }
     }
 
-    public static ArrayList<Integer> getHashColumn (DatasetColumn datasetColumn) {
-        ArrayList<Integer> hashColumn = new ArrayList<Integer>();
+    public static int getMaxAttributNumber(DatasetColumn column) {
+        int maxNumber = 0;
 
-        for (Object attributeObj : datasetColumn) {
+        for (Object attributeObj : column) {
             Attribute attribute = (Attribute) attributeObj;
-            if (attribute.getValue() == null) {
-                hashColumn.add(null);
-            } else {
-                hashColumn.add(attribute.getValue().hashCode());
+            if (attribute.getValue() != null) {
+                Integer number = (Integer) attribute.getValue();
+
+                if (Math.abs(number) > maxNumber) {
+                    maxNumber = Math.abs(number);
+                }
             }
         }
 
-        return hashColumn;
+        return maxNumber;
+    }
+
+    public static int getMaxAttributeStringLenght(DatasetColumn columns) {
+        int maxLenght = 0;
+
+        for (Object attributeObj : columns) {
+            Attribute attribute = (Attribute) attributeObj;
+
+            if (attribute.getValue() != null) {
+                String value = (String) attribute.getValue();
+
+                if (value.length() > maxLenght) {
+                    maxLenght = value.length();
+                }
+            }
+        }
+
+
+        return maxLenght;
+    }
+
+    public static Object findMedian (DatasetColumn column) {
+        Object median = null;
+        ArrayList<Object> arrayOfNotNull = new ArrayList<Object>();
+
+        for (Object attributeObj : column) {
+            Attribute attribute = (Attribute) attributeObj;
+
+            if (attribute.getValue() != null) {
+                arrayOfNotNull.add(attribute.getValue());
+            }
+        }
+
+        if (!arrayOfNotNull.isEmpty()) {
+            median = arrayOfNotNull.get(arrayOfNotNull.size()/2);
+        } else {
+            QuasiIdentifier qiAttribute = (QuasiIdentifier) ((Attribute)column.get(0)).getType();
+
+            if (qiAttribute.type == QuasiIdentifier.TYPE_INT) {
+                median = 0;
+            } else {
+                median = "*****";
+            }
+        }
+
+        return median;
+    }
+
+    public static int minLength (DatasetColumn column) {
+        int minLength = Integer.MAX_VALUE;
+
+        for (Object attributeObj : column) {
+            Attribute attribute = (Attribute) attributeObj;
+
+            if (attribute.getValue() instanceof String) {
+                if (((String) attribute.getValue()).length() < minLength) {
+                    minLength = ((String) attribute.getValue()).length();
+                }
+            }
+        }
+
+        return minLength;
+    }
+
+    public static int maxLength (DatasetColumn column) {
+        int maxLength = Integer.MIN_VALUE;
+
+        for (Object attributeObj : column) {
+            Attribute attribute = (Attribute) attributeObj;
+
+            if (attribute.getValue() instanceof String) {
+                if (((String) attribute.getValue()).length() > maxLength) {
+                    maxLength = ((String) attribute.getValue()).length();
+                }
+            }
+        }
+
+        return maxLength;
     }
 
     public static void printDataset (Dataset dataset) {
@@ -94,6 +175,8 @@ public class DatasetUtils {
             System.out.println();
         }
     }
+
+
 
     private static void setAttribute (Attribute attribute, String propertyLine) throws IOPropertiesException {
         Object value = attribute.getValue();

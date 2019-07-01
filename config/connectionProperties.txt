@@ -1,0 +1,4 @@
+driver:com.mysql.cj.jdbc.Driver
+url:jdbc:mysql://localhost/anon
+username:root
+password:albus-4112

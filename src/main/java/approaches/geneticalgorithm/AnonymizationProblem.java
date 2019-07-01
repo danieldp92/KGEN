@@ -20,7 +20,8 @@ public class AnonymizationProblem extends Problem {
     public AnonymizationProblem (Dataset dataset) {
         //Dataset variables
         this.dataset = dataset;
-        this.kAnonymity = new KAnonymity(this.dataset);
+
+        initKAnonymity();
 
         List<Integer> tmpLowerBounds = this.kAnonymity.lowerBounds();
         List<Integer> tmpUpperBounds = this.kAnonymity.upperBounds();
@@ -45,10 +46,16 @@ public class AnonymizationProblem extends Problem {
         this.solutionType_ = new IntSolutionType(this);
     }
 
+    public void initKAnonymity () {
+        this.kAnonymity = new KAnonymity(dataset);
+    }
+
     public KAnonymity getkAnonymity () {
         return kAnonymity;
     }
 
+
+    //Evaluate methods
     public void evaluate(Solution solution) throws JMException {
         double ffLOG = evaluateLOG(solution);
         solution.setObjective(0, 1-ffLOG);

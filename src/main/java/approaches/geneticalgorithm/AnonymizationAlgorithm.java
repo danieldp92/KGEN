@@ -19,10 +19,12 @@ public class AnonymizationAlgorithm extends Algorithm {
     private Operator kAnonymizationMutation;
 
     private SolutionSet population;
-    private ArrayList<Solution> minKAnonymizedSolutions;
-    private ArrayList<Integer> penalty;
 
     private KAnonymity kAnonymity;
+    private int populationSize;
+    private int maxEvaluations;
+    private int evaluation;
+
 
     /**
      * Constructor
@@ -31,22 +33,13 @@ public class AnonymizationAlgorithm extends Algorithm {
      */
     public AnonymizationAlgorithm(Problem problem) throws JMException {
         super(problem);
-
-        this.kAnonymity = ((AnonymizationProblem)problem).getkAnonymity();
     }
 
     public SolutionSet execute() throws JMException, ClassNotFoundException {
-        this.minKAnonymizedSolutions = new ArrayList<Solution>();
+        init();
 
         long startTime = 0;
-        int evaluation = 0;
-        selection = operators_.get("selection");
-        crossover = operators_.get("crossover");
-        mutation = operators_.get("mutation");
-        kAnonymizationMutation = operators_.get("kAnonymizationMutation");
 
-        int populationSize = ((Integer)getInputParameter("populationSize")).intValue();
-        int maxEvaluations = ((Integer)getInputParameter("maxEvaluations")).intValue();
 
         this.population = new SolutionSet(populationSize);
 
@@ -57,9 +50,8 @@ public class AnonymizationAlgorithm extends Algorithm {
             GeneralizationSolution newSolution = new GeneralizationSolution(problem_);
             problem_.evaluate(newSolution);
 
-            if (newSolution.getObjective(ffKLV_OBJECTIVE) > 1) {
-                insertKAnonymizedSolution(newSolution);
-            }
+            ((AnonymizationProblem)problem_).evaluate(newSolution);
+
             population.add(newSolution);
             System.out.print("\rPopulation: " + ++evaluation);
         }
@@ -155,10 +147,6 @@ public class AnonymizationAlgorithm extends Algorithm {
                     for (Solution offspring : offsprings) {
                         problem_.evaluate(offspring);
 
-                        if (offspring.getObjective(ffKLV_OBJECTIVE) > 1) {
-                            insertKAnonymizedSolution(offspring);
-                        }
-
                         offspringPopulation.add((GeneralizationSolution) offspring);
                     }
 
@@ -168,10 +156,6 @@ public class AnonymizationAlgorithm extends Algorithm {
             }
 
             union.addAll(offspringPopulation);
-
-            //Delete all equals elements
-            //reduction(union);
-
 
             SolutionSet tmpUnion = new SolutionSet(union.size());
             for (int j = 0; j < union.size(); j++) {
@@ -185,7 +169,10 @@ public class AnonymizationAlgorithm extends Algorithm {
                 population.add(survivalSolution);
             }
 
-            increasePenalties(population);
+            //Increase penalties
+            for (int j = 0; j < population.size(); j++) {
+                ((GeneralizationSolution)population.get(j)).increasePenalty();
+            }
         }
 
         System.out.println();
@@ -203,6 +190,24 @@ public class AnonymizationAlgorithm extends Algorithm {
 
         return population;
     }
+
+    private void init () {
+        ((AnonymizationProblem)problem_).initKAnonymity();
+        this.kAnonymity = ((AnonymizationProblem) problem_).getkAnonymity();
+
+        selection = operators_.get("selection");
+        crossover = operators_.get("crossover");
+        mutation = operators_.get("mutation");
+        kAnonymizationMutation = operators_.get("kAnonymizationMutation");
+
+        populationSize = ((Integer)getInputParameter("populationSize")).intValue();
+        maxEvaluations = ((Integer)getInputParameter("maxEvaluations")).intValue();
+        evaluation = 0;
+    }
+
+
+
+
 
     private ArrayList<Integer> getSolutionValues (Solution solution) throws JMException {
         ArrayList<Integer> values = new ArrayList<Integer>();
@@ -228,29 +233,6 @@ public class AnonymizationAlgorithm extends Algorithm {
         return randomSolution;
     }
 
-    private void insertKAnonymizedSolution (Solution solution) throws JMException {
-        for (int i = 0; i < this.minKAnonymizedSolutions.size(); i++) {
-            Solution actualSolution = this.minKAnonymizedSolutions.get(i);
-            boolean lower = true;
-
-            int j = 0;
-            while (j < solution.getDecisionVariables().length &&
-                solution.getDecisionVariables()[j].getValue() <= actualSolution.getDecisionVariables()[j].getValue()) {
-                j++;
-            }
-
-            if (j < solution.getDecisionVariables().length) {
-                lower = false;
-            }
-
-            if (lower) {
-                this.minKAnonymizedSolutions.remove(i--);
-            }
-        }
-
-        this.minKAnonymizedSolutions.add(solution);
-    }
-
     /**
      * This method deletes all equals solutions
      * @param solutions
@@ -268,12 +250,6 @@ public class AnonymizationAlgorithm extends Algorithm {
                     solutions.remove(j--);
                 }
             }
-        }
-    }
-
-    private void increasePenalties (SolutionSet population) {
-        for (int i = 0; i < population.size(); i++) {
-            ((GeneralizationSolution)population.get(i)).increasePenalty();
         }
     }
 }

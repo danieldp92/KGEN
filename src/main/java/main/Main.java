@@ -28,7 +28,8 @@ public class Main {
     private static final String configPath = System.getProperty("user.dir") + File.separator + "config" + File.separator + "configIdentifier.txt";
     private static final String resultsPath = System.getProperty("user.dir") + File.separator + "results" + File.separator;
 
-    private static final String query = "SELECT Id, Straat, Huisnr, Latitude, PostCode, Plaats FROM dataset WHERE Huisnr <= 36;";
+    //private static final String query = "SELECT Id, Straat, Huisnr, Latitude, PostCode, Plaats FROM dataset WHERE Huisnr <= 36;";
+    private static final String query = "SELECT * FROM dataset;";
 
     public static void main (String [] args) throws IOException, JMException, ClassNotFoundException, SQLException {
         Dataset dataset = XlsUtils.readXlsx(datasetPath);
@@ -47,6 +48,9 @@ public class Main {
         AnonymizationAlgorithm algorithm = (AnonymizationAlgorithm) setting.configure();
 
         ArrayList<String> infoExec = new ArrayList<>();
+        infoExec.add("QUERY");
+        infoExec.add(query);
+        infoExec.add("\n");
 
         for (int i = 1; i <= NUMBER_OF_EXPERIMENTATION; i++) {
             long startTime = System.currentTimeMillis();

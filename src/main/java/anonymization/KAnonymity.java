@@ -121,7 +121,7 @@ public class KAnonymity {
             Attribute attribute = (Attribute) dataset.getHeader().get(i);
 
             if (attribute.getType() instanceof QuasiIdentifier) {
-                this.quasiIdentifierMedianMap.put(i, findMedian(dataset.getColumns().get(i)));
+                this.quasiIdentifierMedianMap.put(i, DatasetUtils.findMedian(dataset.getColumns().get(i)));
             }
         }
     }
@@ -417,7 +417,7 @@ public class KAnonymity {
                         upperBounds.add(generalizationTree.getHeight());
                         break;
                     case QuasiIdentifier.TYPE_INT:
-                        int maxValue = getMaxAttributNumber(dataset.getColumns().get(i));
+                        int maxValue = DatasetUtils.getMaxAttributNumber(dataset.getColumns().get(i));
                         int heightHierarchy = 0;
 
                         int tmpMax = maxValue;
@@ -432,7 +432,7 @@ public class KAnonymity {
                         upperBounds.add(2);
                         break;
                     case QuasiIdentifier.TYPE_STRING:
-                        upperBounds.add(getMaxAttributeStringLenght(dataset.getColumns().get(i)));
+                        upperBounds.add(DatasetUtils.getMaxAttributeStringLenght(dataset.getColumns().get(i)));
                         break;
                     default:
                         break;
@@ -443,10 +443,13 @@ public class KAnonymity {
         return upperBounds;
     }
 
+
+
+
     private DatasetColumn anonymizeColumn (int indexColumn, int levelOfAnonymization) throws LevelNotValidException {
         DatasetColumn column = dataset.getColumns().get(indexColumn);
         if (((Attribute)column.get(0)).getType().type == AttributeType.TYPE_STRING) {
-            this.stringGeneralization = new StringGeneralization(minLength(column), maxLength(column));
+            this.stringGeneralization = new StringGeneralization(DatasetUtils.minLength(column), DatasetUtils.maxLength(column));
         }
 
         DatasetColumn datasetColumn = new DatasetColumn();
@@ -532,69 +535,6 @@ public class KAnonymity {
         return equals;
     }
 
-    private static int getMaxAttributNumber(DatasetColumn column) {
-        int maxNumber = 0;
-
-        for (Object attributeObj : column) {
-            Attribute attribute = (Attribute) attributeObj;
-            if (attribute.getValue() != null) {
-                Integer number = (Integer) attribute.getValue();
-
-                if (Math.abs(number) > maxNumber) {
-                    maxNumber = Math.abs(number);
-                }
-            }
-        }
-
-        return maxNumber;
-    }
-
-    private static int getMaxAttributeStringLenght(DatasetColumn columns) {
-        int maxLenght = 0;
-
-        for (Object attributeObj : columns) {
-            Attribute attribute = (Attribute) attributeObj;
-
-            if (attribute.getValue() != null) {
-                String value = (String) attribute.getValue();
-
-                if (value.length() > maxLenght) {
-                    maxLenght = value.length();
-                }
-            }
-        }
-
-
-        return maxLenght;
-    }
-
-    private Object findMedian (DatasetColumn column) {
-        Object median = null;
-        ArrayList<Object> arrayOfNotNull = new ArrayList<Object>();
-
-        for (Object attributeObj : column) {
-            Attribute attribute = (Attribute) attributeObj;
-
-            if (attribute.getValue() != null) {
-                arrayOfNotNull.add(attribute.getValue());
-            }
-        }
-
-        if (!arrayOfNotNull.isEmpty()) {
-            median = arrayOfNotNull.get(arrayOfNotNull.size()/2);
-        } else {
-            QuasiIdentifier qiAttribute = (QuasiIdentifier) ((Attribute)column.get(0)).getType();
-
-            if (qiAttribute.type == QuasiIdentifier.TYPE_INT) {
-                median = 0;
-            } else {
-                median = "*****";
-            }
-        }
-
-        return median;
-    }
-
     private List<List<Integer>> getAllCombinations (List<Integer> maxVector) {
         List<List<Integer>> allCombinations = new ArrayList<List<Integer>>();
 
@@ -641,7 +581,6 @@ public class KAnonymity {
             dataset.getColumns().get(i).removeAll(attributesToRemove);
         }
     }
-
 
     public Dataset anonymize (ArrayList<Integer> levelOfAnonymization) {
         Dataset datasetAnonimyzed = null;
@@ -720,58 +659,4 @@ public class KAnonymity {
     }
 
 
-    /*public boolean kAnonymityTest (ArrayList<Integer> levelOfAnonymization, int kLevel) {
-        boolean kAnonymized = true;
-
-        String key = "";
-        for (int index : levelOfAnonymization) {
-            key += index + "-";
-        }
-
-        Integer value = this.kAnonymizedHistoryMap.get(key);
-
-        if (value == null) {
-            //I run kAnonymityTest only if I didn't do it before -> value == null
-            Dataset anonymizedDataset = anonymize(levelOfAnonymization);
-            anonymizedDataset = datasetReduction(anonymizedDataset);
-            kAnonymized = kAnonymityTest(anonymizedDataset, kLevel);
-        } else {
-            if (value == 1)
-                kAnonymized = false;
-        }
-
-        return kAnonymized;
-    }*/
-
-    private int minLength (DatasetColumn column) {
-        int minLength = Integer.MAX_VALUE;
-
-        for (Object attributeObj : column) {
-            Attribute attribute = (Attribute) attributeObj;
-
-            if (attribute.getValue() instanceof String) {
-                if (((String) attribute.getValue()).length() < minLength) {
-                    minLength = ((String) attribute.getValue()).length();
-                }
-            }
-        }
-
-        return minLength;
-    }
-
-    private int maxLength (DatasetColumn column) {
-        int maxLength = Integer.MIN_VALUE;
-
-        for (Object attributeObj : column) {
-            Attribute attribute = (Attribute) attributeObj;
-
-            if (attribute.getValue() instanceof String) {
-                if (((String) attribute.getValue()).length() > maxLength) {
-                    maxLength = ((String) attribute.getValue()).length();
-                }
-            }
-        }
-
-        return maxLength;
-    }
 }
