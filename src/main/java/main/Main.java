@@ -32,22 +32,23 @@ public class Main {
     private static final String query = "SELECT * FROM dataset;";
 
     public static void main (String [] args) throws IOException, JMException, ClassNotFoundException, SQLException {
-        Dataset dataset = XlsUtils.readXlsx(datasetPath);
+        /*Dataset dataset = XlsUtils.readXlsx(datasetPath);
         DatasetUtils.loadProperties(dataset, configPath);
 
         DatasetMySQL datasetMySQL = new DatasetMySQL(dataset);
 
         if (CREATE_DB) {
             datasetMySQL.createDatabase("anon");
-        }
+        }*/
 
-        Dataset newDataset = datasetMySQL.selectQuery(query);
+        Dataset dataset = XlsUtils.readXlsx(datasetPath);
+        DatasetUtils.loadProperties(dataset, configPath);
 
-        AnonymizationProblem problem = new AnonymizationProblem(newDataset);
+        AnonymizationProblem problem = new AnonymizationProblem(dataset);
         AnonymizationSetting setting = new AnonymizationSetting(problem);
         AnonymizationAlgorithm algorithm = (AnonymizationAlgorithm) setting.configure();
 
-        ArrayList<String> infoExec = new ArrayList<>();
+        ArrayList<String> infoExec = new ArrayList<String>();
         infoExec.add("QUERY");
         infoExec.add(query);
         infoExec.add("\n");
@@ -61,7 +62,7 @@ public class Main {
                 infoExec.add("Execution time: " + ((double)(System.currentTimeMillis() - startTime)/1000) + " sec");
                 infoExec.add("\n");
 
-                ArrayList<String> csvTxt = CSVResultGenerator.csvResultGenerator(bestSolutions, newDataset.getHeader());
+                ArrayList<String> csvTxt = CSVResultGenerator.csvResultGenerator(bestSolutions, dataset.getHeader());
                 FileUtils.saveFile(csvTxt, resultsPath + "result" + i + ".csv");
             }
         }
@@ -132,7 +133,7 @@ public class Main {
         KAnonymity kAnonymity = new KAnonymity(dataset);
         int lev = 0;
 
-        ArrayList<Integer> sol1 = new ArrayList<>();
+        ArrayList<Integer> sol1 = new ArrayList<Integer>();
         sol1.add(0);
         sol1.add(3);
         sol1.add(1);
@@ -140,7 +141,7 @@ public class Main {
         System.out.println(sol1);
         System.out.println("Lev: " + lev);
 
-        ArrayList<Integer> sol2 = new ArrayList<>();
+        ArrayList<Integer> sol2 = new ArrayList<Integer>();
         sol2.add(0);
         sol2.add(4);
         sol2.add(1);

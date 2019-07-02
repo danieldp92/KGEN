@@ -180,7 +180,7 @@ public class DatasetUtils {
 
     private static void setAttribute (Attribute attribute, String propertyLine) throws IOPropertiesException {
         Object value = attribute.getValue();
-        Object realValue = null;
+        Object realValue = value;
 
         String [] split = propertyLine.split(":");
 
@@ -188,12 +188,12 @@ public class DatasetUtils {
             throw new IOPropertiesException("NUMBER OF PROPERTY FILEDS WRONG");
         }
 
-        String attributeName = split[0];
         String attributeType = split[1];
         String valueType = split[2];
         boolean primaryKey = Boolean.parseBoolean(split[3]);
 
         int type = -1;
+
         switch (valueType) {
             case "int":
                 type = AttributeType.TYPE_INT;
@@ -212,22 +212,12 @@ public class DatasetUtils {
                 break;
             case "date":
                 type = AttributeType.TYPE_DATE;
-
-                if (value != null) {
-                    realValue = value.toString();
-                }
-
                 break;
             case "string":
                 type = AttributeType.TYPE_STRING;
-
-                if (value != null)
-                    realValue = value;
                 break;
             case "place":
                 type = AttributeType.TYPE_PLACE;
-                if (value != null)
-                    realValue = value;
                 break;
             case "double":
                 type = AttributeType.TYPE_DOUBLE;

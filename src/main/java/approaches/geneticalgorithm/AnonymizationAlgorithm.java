@@ -50,8 +50,6 @@ public class AnonymizationAlgorithm extends Algorithm {
             GeneralizationSolution newSolution = new GeneralizationSolution(problem_);
             problem_.evaluate(newSolution);
 
-            ((AnonymizationProblem)problem_).evaluate(newSolution);
-
             population.add(newSolution);
             System.out.print("\rPopulation: " + ++evaluation);
         }

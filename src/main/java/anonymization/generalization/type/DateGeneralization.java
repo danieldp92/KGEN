@@ -14,7 +14,6 @@ public class DateGeneralization implements IGeneralization {
             throw new LevelNotValidException();
         }
 
-
         Date date = (Date) value;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
