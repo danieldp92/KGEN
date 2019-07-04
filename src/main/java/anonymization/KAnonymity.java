@@ -272,21 +272,12 @@ public class KAnonymity {
         if (value == null) {
             int minNumberOfRows = dataset.getDatasetSize() + 1;
 
-            //SupportMaps
-            //index -> qi attribute
-            //supportMap -> supportmap of a log given by levelOfAnonymization variable
-            List<SupportMap> supportMaps = new ArrayList<SupportMap>();
-            for (int i = 0; i < levelOfAnonymization.size(); i++) {
-                int qiIndex = this.quasiIdentifierIndex.get(i);
-                int log = levelOfAnonymization.get(i);
+            ArrayList<Integer> numberOfOccurrences = getRowsOccurrences(levelOfAnonymization);
 
-                //Take a supportMap of a given LOG of qiIndex-attribute
-                SupportMap tmpLOGSupportMap = (SupportMap) generalizationMap.get(qiIndex).get(log);
-                supportMaps.add(tmpLOGSupportMap);
-            }
-
-            List<Integer> maxVector = new ArrayList<Integer>();
+            /*List<Integer> maxVector = new ArrayList<Integer>();
             for (int i = 0; i < supportMaps.size(); i++) {
+                //supportMaps.get(i).size()-1 -> number of distint values for this attribute
+                //Example: with a LOG = 1 on the attribute 3, there are 25 different values
                 maxVector.add(supportMaps.get(i).size()-1);
             }
 
@@ -309,6 +300,12 @@ public class KAnonymity {
 
             if (minNumberOfRows == dataset.getDatasetSize() + 1) {
                 minNumberOfRows = 1;
+            }*/
+
+            for (int i : numberOfOccurrences) {
+                if (i < minNumberOfRows) {
+                    minNumberOfRows = i;
+                }
             }
 
             if (minNumberOfRows < kLevel) {
@@ -367,6 +364,65 @@ public class KAnonymity {
         return true;
     }
 
+    private ArrayList<Integer> getRowsOccurrences (ArrayList<Integer> levelOfAnonymization) {
+        //long start = System.currentTimeMillis();
+        //SupportMaps
+        //index -> qi attribute
+        //supportMap -> supportmap of a log given by levelOfAnonymization variable
+        List<SupportMap> supportMaps = new ArrayList<SupportMap>();
+        for (int i = 0; i < levelOfAnonymization.size(); i++) {
+            int qiIndex = this.quasiIdentifierIndex.get(i);
+            int log = levelOfAnonymization.get(i);
+
+            //Take a supportMap of a given LOG of qiIndex-attribute
+            //Example: take the fisrt LOG of the third qi
+            SupportMap tmpLOGSupportMap = generalizationMap.get(qiIndex).get(log);
+            supportMaps.add(tmpLOGSupportMap);
+        }
+
+        //System.out.println("Get support maps time: " + (System.currentTimeMillis() - start));
+
+        ArrayList<Integer> numberOfOccurrences = new ArrayList<>();
+        for (int i = 0; i < dataset.getDatasetSize(); i++) {
+            numberOfOccurrences.add(-1);
+        }
+
+        for (int i = 0; i < dataset.getDatasetSize(); i++) {
+            if (numberOfOccurrences.get(i) < 0) {
+                //start = System.currentTimeMillis();
+                // List of all rows that shared with i-row the same attribute (Collection<Integer>), for all the attributes
+                List<HashSet<Integer>> occurrences = new ArrayList<>();
+
+                for (SupportMap qiSupportMap : supportMaps) {
+                    //Search the i-row inside this specific attribute, and see which is the value that contain this row
+                    for (Map.Entry<String, Collection<Integer>> entry : qiSupportMap.entrySet()) {
+                        if (entry.getValue().contains(i)) {
+                            occurrences.add(new HashSet<>(entry.getValue()));
+                            break;
+                        }
+                    }
+                }
+
+                //System.out.println("Time to find the occurrences: " + (System.currentTimeMillis() - start));
+                //start = System.currentTimeMillis();
+
+                HashSet<Integer> commonRows = new HashSet<>(occurrences.get(0));
+                for (int j = 1; j < occurrences.size(); j++) {
+                    commonRows.retainAll(occurrences.get(j));
+                }
+
+                //System.out.println("Retain Time: " + (System.currentTimeMillis() - start));
+
+                //Add the number of occurrences for aall rows in commonrows
+                for (int indexRow : commonRows) {
+                    numberOfOccurrences.set(indexRow, commonRows.size());
+                }
+                //numberOfOccurrences.add(commonRows.size());
+            }
+        }
+
+        return numberOfOccurrences;
+    }
 
     //ANONYMIZATION BOUNDS
     public ArrayList<Integer> lowerBounds () {
