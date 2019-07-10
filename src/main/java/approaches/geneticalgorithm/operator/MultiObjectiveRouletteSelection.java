@@ -13,6 +13,9 @@ public class MultiObjectiveRouletteSelection extends Selection {
     private static final int ffKLV_OBJECTIVE = 1;
     private static final int MIN_KLEV = 2;
 
+    private static final double MIN_NORMALIZATION = 0;
+    private static final double MAX_NORMALIZATION = 0.9;
+
     public MultiObjectiveRouletteSelection(HashMap<String, Object> parameters) {
         super(parameters);
     }
@@ -32,6 +35,10 @@ public class MultiObjectiveRouletteSelection extends Selection {
             }
         }
 
+        //If there is no other KLEV different to 1, then choose a solution with KLEV = 1
+        if (klvList.isEmpty()) {
+            klvList.add(1.0);
+        }
 
         //KLV SELECTION
         ArrayList<Double> probabilitiesKLV = generateKLVProbabilities(klvList);
@@ -55,8 +62,6 @@ public class MultiObjectiveRouletteSelection extends Selection {
                 candidateSolutions.add(population.get(i));
             }
         }
-
-        orderByPenalty(candidateSolutions);
 
         //LOG SELECTION
         ArrayList<Double> probabilitiesLOG = generateLOGProbabilities(candidateSolutions);
@@ -82,12 +87,12 @@ public class MultiObjectiveRouletteSelection extends Selection {
         //Calculate the probability to get a single klv
         double sumKLV = 0;
         for (double klv : klvList) {
-            sumKLV += Math.log(klv+1);
+            sumKLV += Math.log(klv);
             //sumKLV += klv;
         }
 
         for (double klv : klvList) {
-            probabilityKVL += (Math.log(klv+1) / sumKLV);
+            probabilityKVL += (Math.log(klv) / sumKLV);
             //probabilityKVL += (klv / sumKLV);
             probabilitiesKLV.add(probabilityKVL);
         }
@@ -98,31 +103,63 @@ public class MultiObjectiveRouletteSelection extends Selection {
     private ArrayList<Double> generateLOGProbabilities (ArrayList<Solution> candidateSolutions) {
         //Calculate the probability to get a single log
         double sumLOG = 0;
+        int minPenalty = getMinPenalty(candidateSolutions);
+        int maxPenalty = getMaxPenalty(candidateSolutions);
+
         for (Solution candidateSolution : candidateSolutions) {
-            sumLOG += candidateSolution.getObjective(ffLOG_OBJECTIVE);
+            GeneralizationSolution generalizationSolution = (GeneralizationSolution) candidateSolution;
+            double penaltyNormalized = normalize(minPenalty, maxPenalty, generalizationSolution.getPenalty());
+
+            sumLOG += (1 - penaltyNormalized) * candidateSolution.getObjective(ffLOG_OBJECTIVE);
         }
+
 
         ArrayList<Double> probabilitiesLOG = new ArrayList<Double>();
         double probabilityLOG = 0;
 
         for (Solution candidateSolution : candidateSolutions) {
-            probabilityLOG += (candidateSolution.getObjective(ffLOG_OBJECTIVE) / sumLOG);
+            GeneralizationSolution generalizationSolution = (GeneralizationSolution) candidateSolution;
+            double penaltyNormalized = normalize(minPenalty, maxPenalty, generalizationSolution.getPenalty());
+
+            probabilityLOG += (((1 - penaltyNormalized) * candidateSolution.getObjective(ffLOG_OBJECTIVE)) / sumLOG);
             probabilitiesLOG.add(probabilityLOG);
         }
 
         return probabilitiesLOG;
     }
 
-    private void orderByPenalty (ArrayList<Solution> solutions) {
-        for (int i = 0; i < solutions.size()-1; i++) {
-            for (int j = i+1; j < solutions.size(); j++) {
-                if (((GeneralizationSolution)solutions.get(i)).getPenalty() >
-                        ((GeneralizationSolution)solutions.get(j)).getPenalty()) {
-                    GeneralizationSolution tmp = (GeneralizationSolution) solutions.get(i);
-                    solutions.set(i, solutions.get(j));
-                    solutions.set(j, tmp);
-                }
+    private int getMinPenalty (ArrayList<Solution> solutions) {
+        int minPenalty = Integer.MAX_VALUE;
+
+        for (Solution solution : solutions) {
+            if (((GeneralizationSolution)solution).getPenalty() < minPenalty) {
+                minPenalty = ((GeneralizationSolution)solution).getPenalty();
             }
         }
+
+        return minPenalty;
+    }
+
+    private int getMaxPenalty (ArrayList<Solution> solutions) {
+        int maxPenalty = -1;
+
+        for (Solution solution : solutions) {
+            if (((GeneralizationSolution)solution).getPenalty() > maxPenalty) {
+                maxPenalty = ((GeneralizationSolution)solution).getPenalty();
+            }
+        }
+
+        return maxPenalty;
+    }
+
+    private double normalize (int min, int max, int value) {
+        if (max == min) {
+            return 0;
+        }
+
+        double diff = MAX_NORMALIZATION - MIN_NORMALIZATION;
+        double fract = (double)(value - min) / (max - min);
+
+        return (diff * fract) + MIN_NORMALIZATION;
     }
 }

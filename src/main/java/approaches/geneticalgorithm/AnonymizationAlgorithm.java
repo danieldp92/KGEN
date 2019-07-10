@@ -16,7 +16,7 @@ public class AnonymizationAlgorithm extends Algorithm {
     private Operator selection;
     private Operator crossover;
     private Operator mutation;
-    private Operator kAnonymizationMutation;
+    private Operator horizontalMutation;
 
     private SolutionSet population;
 
@@ -80,9 +80,21 @@ public class AnonymizationAlgorithm extends Algorithm {
 
 
                     //Crossover
-                    ArrayList<GeneralizationSolution> offsprings = new ArrayList<GeneralizationSolution>();
-                    GeneralizationSolution [] tmpOffsprings = (GeneralizationSolution[]) crossover.execute(parents);
-                    GeneralizationSolution minLatticeNode = tmpOffsprings[0];
+                    //ArrayList<GeneralizationSolution> offsprings = new ArrayList<GeneralizationSolution>();
+                    GeneralizationSolution [] offsprings = (GeneralizationSolution[]) crossover.execute(parents);
+
+
+                    //Mutation
+                    for (int k = 0; k < offsprings.length; k++) {
+                        //offsprings[k] = (GeneralizationSolution) mutation.execute(offsprings[k]);
+                        offsprings[k] = (GeneralizationSolution) horizontalMutation.execute(offsprings[k]);
+                    }
+
+
+
+
+
+                    /*GeneralizationSolution minLatticeNode = tmpOffsprings[0];
                     GeneralizationSolution maxLatticeNode = tmpOffsprings[1];
 
 
@@ -138,7 +150,7 @@ public class AnonymizationAlgorithm extends Algorithm {
                         mutation.execute(maxLatticeNode);
                         //kAnonymizationMutation.execute(maxLatticeNode);
                         offsprings.add(maxLatticeNode);
-                    }
+                    }*/
 
 
                     //Evaluation
@@ -173,8 +185,6 @@ public class AnonymizationAlgorithm extends Algorithm {
             }
         }
 
-        System.out.println();
-
         for (int i = 0; i < population.size(); i++) {
             //population.get(i).setObjective(ffLOG_OBJECTIVE, 1 - population.get(i).getObjective(ffLOG_OBJECTIVE));
             if (population.get(i).getObjective(ffKLV_OBJECTIVE) == 1) {
@@ -184,19 +194,20 @@ public class AnonymizationAlgorithm extends Algorithm {
 
         //SolutionUtils.printPopulation(population);
 
-        System.out.println("\nExecution time: " + (double)(System.currentTimeMillis() - startTime)/1000 + "s\n");
+        System.out.println("\nExecution time: " + (double)(System.currentTimeMillis() - startTime)/1000 + "s");
+        System.out.println("History size: " + kAnonymity.getkAnonymizedHistoryMap().size() + "\n");
 
         return population;
     }
 
     private void init () {
-        ((AnonymizationProblem)problem_).initKAnonymity();
+        //((AnonymizationProblem)problem_).initKAnonymity();
         this.kAnonymity = ((AnonymizationProblem) problem_).getkAnonymity();
 
         selection = operators_.get("selection");
         crossover = operators_.get("crossover");
         mutation = operators_.get("mutation");
-        kAnonymizationMutation = operators_.get("kAnonymizationMutation");
+        horizontalMutation = operators_.get("horizontalMutation");
 
         populationSize = ((Integer)getInputParameter("populationSize")).intValue();
         maxEvaluations = ((Integer)getInputParameter("maxEvaluations")).intValue();
