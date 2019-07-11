@@ -17,7 +17,7 @@ import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-public class MultipleRun {
+public class MultipleKGENRun {
     private static final String datasetPath = System.getProperty("user.dir") + File.separator + "dataset" + File.separator + "F2_Dataset.xlsx";
     private static final String anonymizedPath = System.getProperty("user.dir") + File.separator + "anonymized" + File.separator + "F2_Dataset_Anonymized.xlsx";
     private static final String configPath = System.getProperty("user.dir") + File.separator + "config" + File.separator + "configIdentifier.txt";
