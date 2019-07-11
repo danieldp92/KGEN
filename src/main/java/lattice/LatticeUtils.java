@@ -96,14 +96,8 @@ public class LatticeUtils {
      * @param node
      * @return
      */
-    public boolean isTaggedKAnonymous (Node node) {
-        Boolean klevValue = taggedMap.get(node);
-
-        if (klevValue == null || !klevValue) {
-            return false;
-        }
-
-        return true;
+    public Boolean isTaggedKAnonymous (Node node) {
+        return taggedMap.get(node);
     }
 
     /**
@@ -149,7 +143,11 @@ public class LatticeUtils {
      * @param node
      */
     public void cleanUp (List<Node> nodes, Node node) {
-
+        for (int i = 0; i < nodes.size(); i++) {
+            if (areOfTheSameStrategyPath(node, nodes.get(i))) {
+                nodes.remove(i--);
+            }
+        }
     }
 
 

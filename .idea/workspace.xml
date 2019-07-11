@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7d3d6fdf-844a-40dc-bf4f-7f3c5e11fca1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main/Experimentation/MultipleRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/Experimentation/MultipleKGENRun.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/approaches/ola/OLAAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/approaches/ola/OLAAlgorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/lattice/LatticeUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lattice/LatticeUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/lattice/generator/LatticeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lattice/generator/LatticeGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/Experimentation/OLARun.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/Experimentation/OLARun.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -49,19 +50,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/main/Experimentation/OLARun.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="374">
-              <caret line="22" column="45" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/approaches/ola/OLAAlgorithm.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
+              <caret line="22" column="60" selection-start-line="22" selection-start-column="60" selection-end-line="22" selection-end-column="60" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -70,9 +59,67 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/lattice/LatticeUtils.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="191">
+              <caret line="56" column="21" lean-forward="true" selection-start-line="56" selection-start-column="20" selection-end-line="56" selection-end-column="21" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="docComment;method#infoLoss#0;class#LatticeUtils#0" />
+                <element signature="method#infoLoss#0;class#LatticeUtils#0" />
+                <element signature="docComment;method#width#0;class#LatticeUtils#0" />
+                <element signature="docComment;method#height#0;class#LatticeUtils#0" />
+                <element signature="e#1973#1974#0" expanded="true" />
+                <element signature="e#2017#2018#0" expanded="true" />
+                <element signature="docComment;method#isKAnonymous#0;class#LatticeUtils#0" />
+                <element signature="method#isKAnonymous#0;class#LatticeUtils#0" />
+                <element signature="e#2637#2638#0" expanded="true" />
+                <element signature="e#2679#2680#0" expanded="true" />
+                <element signature="docComment;method#tagKAnonymous#0;class#LatticeUtils#0" />
+                <element signature="e#3071#3072#0" expanded="true" />
+                <element signature="e#3117#3118#0" expanded="true" />
+                <element signature="docComment;method#tagNotKAnonymous#0;class#LatticeUtils#0" />
+                <element signature="e#3400#3401#0" expanded="true" />
+                <element signature="e#3447#3448#0" expanded="true" />
+                <element signature="docComment;method#node#0;class#LatticeUtils#0" />
+                <element signature="method#node#0;class#LatticeUtils#0" />
+                <element signature="docComment;method#cleanUp#0;class#LatticeUtils#0" />
+                <element signature="method#cleanUp#0;class#LatticeUtils#0" />
+                <element signature="method#areOfTheSameStrategyPath#0;class#LatticeUtils#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/approaches/ola/OLAAlgorithm.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="378">
+              <caret line="51" column="32" selection-start-line="51" selection-start-column="32" selection-end-line="51" selection-end-column="32" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/lattice/generator/LatticeGenerator.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="418">
+              <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#generateWithMinMax#0;class#LatticeGenerator#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/main/Experimentation/MultipleKGENRun.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
+            <state relative-caret-position="136">
               <caret line="29" column="57" lean-forward="true" selection-start-line="27" selection-start-column="8" selection-end-line="29" selection-end-column="57" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -113,6 +160,7 @@
       <find>datasetReduction</find>
       <find>match</find>
       <find>allCom</find>
+      <find>tru</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -167,9 +215,9 @@
         <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationSetting.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationAlgorithm.java" />
         <option value="$PROJECT_DIR$/src/main/java/lattice/bean/Node.java" />
-        <option value="$PROJECT_DIR$/src/main/java/lattice/LatticeUtils.java" />
-        <option value="$PROJECT_DIR$/src/main/java/main/Experimentation/OLARun.java" />
         <option value="$PROJECT_DIR$/src/main/java/main/Main.java" />
+        <option value="$PROJECT_DIR$/src/main/java/main/Experimentation/OLARun.java" />
+        <option value="$PROJECT_DIR$/src/main/java/lattice/LatticeUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/lattice/generator/LatticeGenerator.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/ola/OLAAlgorithm.java" />
       </list>
@@ -396,7 +444,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="333346000" />
+    <option name="totallyTimeSpent" value="338272000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -409,7 +457,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1176" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14765458" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -420,7 +467,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3806328" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.05177373" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.40651965" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.42281878" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -454,6 +501,12 @@
           <properties />
           <option name="timeStamp" value="8" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/approaches/ola/OLAAlgorithm.java</url>
+          <line>39</line>
+          <properties />
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
@@ -463,7 +516,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_201/src.zip!/java/util/Collections.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/jmetal/core/Problem.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="219">
@@ -818,16 +870,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/Experimentation/MultipleKGENRun.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="29" column="57" lean-forward="true" selection-start-line="27" selection-start-column="8" selection-end-line="29" selection-end-column="57" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/anonymization/KAnonymity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="496">
@@ -862,18 +904,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/lattice/generator/LatticeGenerator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="54" column="64" lean-forward="true" selection-start-line="54" selection-start-column="64" selection-end-line="54" selection-end-column="64" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#getLevels#0;class#LatticeGenerator#0" />
-            <element signature="e#3542#3562#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/lattice/bean/Node.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="455">
@@ -884,38 +914,6 @@
             <element signature="e#1244#1245#0" expanded="true" />
             <element signature="e#1278#1279#0" expanded="true" />
             <element signature="method#equals#0;class#Node#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/lattice/LatticeUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="829">
-          <caret line="155" column="69" selection-start-line="155" selection-start-column="69" selection-end-line="155" selection-end-column="69" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#LatticeUtils#0;class#LatticeUtils#0" />
-            <element signature="docComment;method#infoLoss#0;class#LatticeUtils#0" />
-            <element signature="method#infoLoss#0;class#LatticeUtils#0" />
-            <element signature="docComment;method#width#0;class#LatticeUtils#0" />
-            <element signature="method#width#0;class#LatticeUtils#0" />
-            <element signature="docComment;method#height#0;class#LatticeUtils#0" />
-            <element signature="e#1826#1871#1" />
-            <element signature="e#2017#2018#0" expanded="true" />
-            <element signature="docComment;method#isKAnonymous#0;class#LatticeUtils#0" />
-            <element signature="method#isKAnonymous#0;class#LatticeUtils#0" />
-            <element signature="docComment;method#IsTaggedKAnonymous#0;class#LatticeUtils#0" />
-            <element signature="method#IsTaggedKAnonymous#0;class#LatticeUtils#0" />
-            <element signature="docComment;method#tagKAnonymous#0;class#LatticeUtils#0" />
-            <element signature="e#2924#2971#1" />
-            <element signature="e#3117#3118#0" expanded="true" />
-            <element signature="docComment;method#tagNotKAnonymous#0;class#LatticeUtils#0" />
-            <element signature="e#3253#3301#1" />
-            <element signature="e#3447#3448#0" expanded="true" />
-            <element signature="docComment;method#node#0;class#LatticeUtils#0" />
-            <element signature="method#node#0;class#LatticeUtils#0" />
-            <element signature="docComment;method#cleanUp#0;class#LatticeUtils#0" />
-            <element signature="method#areOfTheSameStrategyPath#0;class#LatticeUtils#0" />
           </folding>
         </state>
       </provider>
@@ -933,17 +931,80 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/main/Experimentation/OLARun.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
-          <caret line="22" column="45" selection-start-line="22" selection-start-column="45" selection-end-line="22" selection-end-column="45" />
+          <caret line="22" column="60" selection-start-line="22" selection-start-column="60" selection-end-line="22" selection-end-column="60" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/Experimentation/MultipleKGENRun.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="29" column="57" lean-forward="true" selection-start-line="27" selection-start-column="8" selection-end-line="29" selection-end-column="57" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_191/src.zip!/java/util/HashSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="197">
+          <caret line="219" column="19" selection-start-line="219" selection-start-column="19" selection-end-line="219" selection-end-column="19" />
+          <folding>
+            <element signature="e#8064#8065#0" expanded="true" />
+            <element signature="e#8112#8113#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/lattice/generator/LatticeGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#generateWithMinMax#0;class#LatticeGenerator#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/lattice/LatticeUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="56" column="21" lean-forward="true" selection-start-line="56" selection-start-column="20" selection-end-line="56" selection-end-column="21" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="docComment;method#infoLoss#0;class#LatticeUtils#0" />
+            <element signature="method#infoLoss#0;class#LatticeUtils#0" />
+            <element signature="docComment;method#width#0;class#LatticeUtils#0" />
+            <element signature="docComment;method#height#0;class#LatticeUtils#0" />
+            <element signature="e#1973#1974#0" expanded="true" />
+            <element signature="e#2017#2018#0" expanded="true" />
+            <element signature="docComment;method#isKAnonymous#0;class#LatticeUtils#0" />
+            <element signature="method#isKAnonymous#0;class#LatticeUtils#0" />
+            <element signature="e#2637#2638#0" expanded="true" />
+            <element signature="e#2679#2680#0" expanded="true" />
+            <element signature="docComment;method#tagKAnonymous#0;class#LatticeUtils#0" />
+            <element signature="e#3071#3072#0" expanded="true" />
+            <element signature="e#3117#3118#0" expanded="true" />
+            <element signature="docComment;method#tagNotKAnonymous#0;class#LatticeUtils#0" />
+            <element signature="e#3400#3401#0" expanded="true" />
+            <element signature="e#3447#3448#0" expanded="true" />
+            <element signature="docComment;method#node#0;class#LatticeUtils#0" />
+            <element signature="method#node#0;class#LatticeUtils#0" />
+            <element signature="docComment;method#cleanUp#0;class#LatticeUtils#0" />
+            <element signature="method#cleanUp#0;class#LatticeUtils#0" />
+            <element signature="method#areOfTheSameStrategyPath#0;class#LatticeUtils#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/approaches/ola/OLAAlgorithm.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
+        <state relative-caret-position="378">
+          <caret line="51" column="32" selection-start-line="51" selection-start-column="32" selection-end-line="51" selection-end-column="32" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

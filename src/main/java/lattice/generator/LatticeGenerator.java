@@ -32,6 +32,38 @@ public class LatticeGenerator {
         return lattice;
     }
 
+    public static Lattice generateOnlyNodes (ArrayList<Integer> minLattice, ArrayList<Integer> maxLattice) {
+        Lattice lattice = new Lattice();
+
+        ArrayList<Set<ArrayList<Integer>>> levels = getLevels(minLattice, maxLattice);
+
+        //Generate nodes from lattice's levels
+        int indexHeight = 1;
+        for (Set<ArrayList<Integer>> level : levels) {
+            int indexWidth = 1;
+            for (ArrayList<Integer> generalizationCombination : level) {
+                Node node = new Node(indexWidth++, indexHeight, generalizationCombination, minLattice, maxLattice);
+                lattice.addNode(node);
+            }
+
+            indexHeight++;
+        }
+
+        Node node1 = new Node(minLattice, minLattice, maxLattice);
+        Node node2 = new Node(maxLattice, minLattice, maxLattice);
+        for (Node node : lattice.getNodes()) {
+            if (node.equals(node1)) {
+                lattice.setNode1(node);
+            }
+
+            else if (node.equals(node2)) {
+                lattice.setNode2(node);
+            }
+        }
+
+        return lattice;
+    }
+
     public static Lattice generateWithMinMax (ArrayList<Integer> minLattice, ArrayList<Integer> maxLattice) {
         Lattice lattice = new Lattice();
 

@@ -20,7 +20,7 @@ public class OLARun {
         Dataset dataset = XlsUtils.readXlsx(datasetPath);
         DatasetUtils.loadProperties(dataset, configPath);
 
-        OLAAlgorithm olaAlgorithm = new OLAAlgorithm();
+        OLAAlgorithm olaAlgorithm = new OLAAlgorithm(dataset);
         olaAlgorithm.execute(dataset);
     }
 }
