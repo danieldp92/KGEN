@@ -1,0 +1,5 @@
+Name:IDType:DateType:PK
+Name:i:string:true
+Age:qi:int:false
+Postcode:qi:string:false
+Gender:qi:string:false

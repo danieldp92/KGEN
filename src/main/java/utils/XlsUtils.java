@@ -96,7 +96,7 @@ public class XlsUtils {
 
     public static void writeXlsx(String path, Dataset dataset) {
         Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Zoekresultaten");
+        Sheet sheet = workbook.createSheet("Dataset");
 
         if (!dataset.getColumns().isEmpty()) {
             ArrayList<Attribute> header = dataset.getHeader();
@@ -119,7 +119,12 @@ public class XlsUtils {
                     if (value == null) {
                         cell.setCellValue("");
                     } else {
-                        cell.setCellValue((String)value);
+                        if (value instanceof Integer) {
+                            cell.setCellValue(new Double((Integer) value));
+                        } else {
+                            cell.setCellValue((String) value);
+                        }
+
                     }
                 }
             }

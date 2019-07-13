@@ -335,6 +335,10 @@ public class KAnonymity {
 
     //ANONYMIZATION BOUNDS
     public ArrayList<Integer> lowerBounds () {
+        if (this.lowerBounds != null) {
+            return this.lowerBounds;
+        }
+
         ArrayList<Integer> lowerBounds = new ArrayList<Integer>();
 
         boolean isAnonymized = false;
@@ -366,6 +370,10 @@ public class KAnonymity {
     }
 
     public ArrayList<Integer> upperBounds () {
+        if (this.upperBounds != null) {
+            return this.upperBounds;
+        }
+
         ArrayList<Integer> upperBounds = new ArrayList<Integer>();
 
         GeneralizationTree generalizationTree = GeneralizationGraphGenerator.generatePlaceHierarchy();
