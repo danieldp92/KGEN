@@ -1,10 +1,10 @@
 package main;
 
+import javafx.application.Application;
+import javafx.stage.Stage;
 import jmetal.util.JMException;
-import main.Experimentation.ExhaustiveRun;
-import main.Experimentation.KGENRun;
-import main.Experimentation.MultipleKGENRun;
-import main.Experimentation.OLARun;
+import main.experimentation.KGENRun;
+import main.gui_experimentation.OLARunGui;
 
 import java.io.*;
 import java.sql.SQLException;
@@ -16,6 +16,7 @@ public class Main {
         //MultipleKGENRun.execute(NUMBER_OF_EXPERIMENTATION);
         //OLARun.execute();
         //ExhaustiveRun.execute();
-        KGENRun.execute();
+        //KGENRun.execute();
+        OLARunGui.execute(args);
     }
 }

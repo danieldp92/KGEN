@@ -1,13 +1,11 @@
-package main.Experimentation;
+package main.experimentation;
 
 import anonymization.KAnonymity;
 import approaches.geneticalgorithm.AnonymizationAlgorithm;
 import approaches.geneticalgorithm.AnonymizationProblem;
 import approaches.geneticalgorithm.AnonymizationSetting;
-import approaches.ola.OLAAlgorithm;
 import dataset.beans.Dataset;
 import dataset.generator.DatasetGenerator;
-import exception.IOPropertiesException;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 import jmetal.core.Variable;

@@ -5,9 +5,7 @@ import lattice.bean.Lattice;
 import lattice.bean.Node;
 import utils.ArrayUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 public class LatticeUtils {
     private static final int MIN_KLEV = 2;
@@ -229,5 +227,44 @@ public class LatticeUtils {
         }
 
         return false;
+    }
+
+
+    // STATIC METHODS
+    public static ArrayList<ArrayList<Node>> getLevelsNode (Lattice lattice) {
+        int latticeHeight = 0;
+
+        Node firstNode = lattice.getNodes().get(0);
+        for (int i = 0; i < firstNode.getMaxGeneralization().size(); i++) {
+            latticeHeight += (firstNode.getMaxGeneralization().get(i) - firstNode.getMinGeneralization().get(i));
+        }
+
+        ArrayList<ArrayList<Node>> levels = new ArrayList<ArrayList<Node>>();
+        for (int i = 0; i <= latticeHeight; i++) {
+            levels.add(new ArrayList<Node>());
+        }
+
+
+        for (Node node : lattice.getNodes()) {
+            int height = 0;
+            for (int i = 0; i < node.getActualGeneralization().size(); i++) {
+                height += (node.getActualGeneralization().get(i) - node.getMinGeneralization().get(i));
+            }
+
+            levels.get(height).add(node);
+        }
+
+        return levels;
+    }
+
+    public static ArrayList<Node> orderLevel (ArrayList<Node> level, ArrayList<Node> prevLevel) {
+        Set<Node> levelOrdered = new LinkedHashSet<Node>();
+
+        for (Node levelNode : prevLevel) {
+            ArrayList<Node> outgoingNodes = levelNode.getOutdegrees();
+            levelOrdered.addAll(outgoingNodes);
+        }
+
+        return new ArrayList<Node>(levelOrdered);
     }
 }

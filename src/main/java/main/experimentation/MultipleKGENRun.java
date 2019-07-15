@@ -1,4 +1,4 @@
-package main.Experimentation;
+package main.experimentation;
 
 import approaches.geneticalgorithm.AnonymizationAlgorithm;
 import approaches.geneticalgorithm.AnonymizationProblem;

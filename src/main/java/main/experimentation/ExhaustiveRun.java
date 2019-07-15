@@ -1,10 +1,8 @@
-package main.Experimentation;
+package main.experimentation;
 
 import approaches.exhaustive.ExhaustiveAlgorithm;
-import approaches.ola.OLAAlgorithm;
 import dataset.beans.Dataset;
 import dataset.generator.DatasetGenerator;
-import exception.IOPropertiesException;
 import utils.DatasetUtils;
 import utils.XlsUtils;
 

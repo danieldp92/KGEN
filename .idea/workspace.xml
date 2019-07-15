@@ -3,17 +3,19 @@
   <component name="ChangeListManager">
     <list default="true" id="7d3d6fdf-844a-40dc-bf4f-7f3c5e11fca1" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationAlgorithm.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationSetting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationSetting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/operator/LatticeCrossover.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/operator/LatticeCrossover.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/operator/MultiObjectiveRouletteSelection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/operator/MultiObjectiveRouletteSelection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/approaches/ola/OLAAlgorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/approaches/ola/OLAAlgorithm.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/lattice/LatticeUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lattice/LatticeUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lattice/bean/Node.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lattice/bean/Node.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/lattice/generator/LatticeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/lattice/generator/LatticeGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main/Experimentation/OLARun.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/Experimentation/OLARun.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/Experimentation/ExhaustiveRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/experimentation/ExhaustiveRun.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/Experimentation/KGENRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/experimentation/KGENRun.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/Experimentation/MultipleKGENRun.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/experimentation/MultipleKGENRun.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/main/Experimentation/OLARun.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/experimentation/OLARun.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/utils/ArrayUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/ArrayUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/lattice/LatticeUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/lattice/LatticeUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/Experimentation/ExhaustiveRun.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/Experimentation/ExhaustiveRun.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/Experimentation/KGENRun.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/Experimentation/KGENRun.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/Experimentation/MultipleKGENRun$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/Experimentation/MultipleKGENRun$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/Experimentation/MultipleKGENRun.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/Experimentation/MultipleKGENRun.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/Experimentation/OLARun.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/Experimentation/OLARun.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/main/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/main/Main.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -43,78 +45,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/approaches/ola/OLAAlgorithm.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="35" selection-start-line="35" selection-end-line="35" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationSetting.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="217">
-              <caret line="31" column="38" selection-start-line="31" selection-start-column="38" selection-end-line="31" selection-end-column="38" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/operator/MultiObjectiveRouletteSelection.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="491">
-              <caret line="62" column="14" selection-start-line="62" selection-start-column="14" selection-end-line="62" selection-end-column="14" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="method#getMinPenalty#0;class#MultiObjectiveRouletteSelection#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/lattice/bean/Lattice.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="92">
-              <caret line="43" selection-start-line="43" selection-end-line="43" />
-              <folding>
-                <element signature="e#1102#1103#0" expanded="true" />
-                <element signature="e#1521#1522#0" expanded="true" />
-                <element signature="e#1549#1550#0" expanded="true" />
-                <element signature="e#1653#1654#0" expanded="true" />
-                <element signature="e#1681#1682#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/lattice/LatticeUtils.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="183" column="13" selection-start-line="183" selection-start-column="13" selection-end-line="183" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1973#1974#0" expanded="true" />
-                <element signature="e#2017#2018#0" expanded="true" />
-                <element signature="method#areOfTheSameStrategyPath#0;class#LatticeUtils#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/main/Main.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="323">
-              <caret line="19" selection-start-line="19" selection-end-line="19" />
+              <caret line="19" column="22" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -123,10 +57,16 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/main/Experimentation/KGENRun.java">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/main.fxml">
+          <provider selected="true" editor-type-id="text-editor" />
+          <provider editor-type-id="JavaFX-Scene-Builder" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/main/gui_experimentation/OLARunGui.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="319">
-              <caret line="71" column="61" selection-start-line="71" selection-start-column="61" selection-end-line="71" selection-end-column="61" />
+            <state relative-caret-position="829">
+              <caret line="99" column="5" lean-forward="true" selection-start-line="99" selection-start-column="5" selection-end-line="99" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -135,35 +75,43 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/main/Experimentation/MultipleKGENRun.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/lattice/generator/LatticeGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="45" column="60" lean-forward="true" selection-start-line="45" selection-start-column="12" selection-end-line="45" selection-end-column="60" />
+            <state relative-caret-position="-209">
+              <caret line="66" column="26" selection-start-line="66" selection-start-column="26" selection-end-line="66" selection-end-column="26" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="method#generateWithNodes#0;class#LatticeGenerator#0" />
+                <element signature="method#generateReductedLattice#0;class#LatticeGenerator#0" />
+                <element signature="method#getLevels#0;class#LatticeGenerator#0" />
+                <element signature="method#sameStrategyPath#0;class#LatticeGenerator#0" />
+                <element signature="method#getMinLattice#0;class#LatticeGenerator#0" />
+                <element signature="method#getMaxLattice#0;class#LatticeGenerator#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationAlgorithm.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/gui/LatticeGui.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="223" selection-start-line="223" selection-end-line="223" />
+            <state relative-caret-position="221">
+              <caret line="13" column="25" lean-forward="true" selection-start-line="13" selection-start-column="25" selection-end-line="13" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="docComment;method#AnonymizationAlgorithm#0;class#AnonymizationAlgorithm#0" />
+                <element signature="method#drawEllipses#0;class#LatticeGui#0" />
+                <element signature="method#drawLines#0;class#LatticeGui#0" />
+                <element signature="method#getEllipseFromNode#0;class#LatticeGui#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/operator/LatticeCrossover.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/main/experimentation/OLARun.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="279">
-              <caret line="19" column="62" selection-start-line="19" selection-start-column="62" selection-end-line="19" selection-end-column="62" />
+            <state relative-caret-position="521">
+              <caret line="47" column="9" lean-forward="true" selection-start-line="24" selection-start-column="8" selection-end-line="47" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -196,10 +144,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/dataset/Dataset.java" />
-        <option value="$PROJECT_DIR$/src/main/java/results/XMLResultGenerator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/geneticalgorithm/jmetal/AnonymizationSetting.java" />
-        <option value="$PROJECT_DIR$/src/main/java/geneticalgorithm/jmetal/AnonymizationProblem.java" />
         <option value="$PROJECT_DIR$/src/main/java/geneticalgorithm/jmetal/AnonymizationAlgorithm.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/jmetal/AnonymizationAlgorithm.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm2/AnonymizationAlgorithm.java" />
@@ -236,25 +180,29 @@
         <option value="$PROJECT_DIR$/src/main/java/lattice/bean/Node.java" />
         <option value="$PROJECT_DIR$/src/main/java/lattice/generator/LatticeGenerator.java" />
         <option value="$PROJECT_DIR$/src/main/java/utils/ArrayUtils.java" />
-        <option value="$PROJECT_DIR$/src/main/java/lattice/LatticeUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/main/Experimentation/OLARun.java" />
         <option value="$PROJECT_DIR$/src/main/java/main/Experimentation/ExhaustiveRun.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/ola/OLAAlgorithm.java" />
-        <option value="$PROJECT_DIR$/src/main/java/main/Main.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/exhaustive/ExhaustiveAlgorithm.java" />
         <option value="$PROJECT_DIR$/src/main/java/main/Experimentation/KGENRun.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationAlgorithm.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/operator/LatticeCrossover.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/operator/MultiObjectiveRouletteSelection.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationSetting.java" />
+        <option value="$PROJECT_DIR$/src/main/java/gui/bean/TextEllipse.java" />
+        <option value="$PROJECT_DIR$/src/main/java/lattice/LatticeUtils.java" />
+        <option value="$PROJECT_DIR$/src/main/java/gui/LatticeGui.java" />
+        <option value="$PROJECT_DIR$/src/main/java/main/KGEN.java" />
+        <option value="$PROJECT_DIR$/src/main/java/main/Main.java" />
+        <option value="$PROJECT_DIR$/src/main/java/main/gui_experimentation/OLARunGui.java" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="2399" />
-    <option name="y" value="90" />
-    <option name="width" value="960" />
-    <option name="height" value="510" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="1912" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1176" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -295,59 +243,6 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="approaches" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="KGEN" type="b2602c69:ProjectViewProjectNode" />
-              <item name="KGEN" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="approaches" type="462c0819:PsiDirectoryNode" />
-              <item name="exhaustive" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="KGEN" type="b2602c69:ProjectViewProjectNode" />
-              <item name="KGEN" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="approaches" type="462c0819:PsiDirectoryNode" />
-              <item name="geneticalgorithm" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="KGEN" type="b2602c69:ProjectViewProjectNode" />
-              <item name="KGEN" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="approaches" type="462c0819:PsiDirectoryNode" />
-              <item name="geneticalgorithm" type="462c0819:PsiDirectoryNode" />
-              <item name="operator" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="KGEN" type="b2602c69:ProjectViewProjectNode" />
-              <item name="KGEN" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="lattice" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="KGEN" type="b2602c69:ProjectViewProjectNode" />
-              <item name="KGEN" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="lattice" type="462c0819:PsiDirectoryNode" />
-              <item name="generator" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="KGEN" type="b2602c69:ProjectViewProjectNode" />
-              <item name="KGEN" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -357,7 +252,7 @@
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="Experimentation" type="462c0819:PsiDirectoryNode" />
+              <item name="experimentation" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="KGEN" type="b2602c69:ProjectViewProjectNode" />
@@ -365,7 +260,8 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="gui_experimentation" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="KGEN" type="b2602c69:ProjectViewProjectNode" />
@@ -386,7 +282,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/IdeaProjects/Lattice" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -485,12 +381,12 @@
       <workItem from="1562833463762" duration="598000" />
       <workItem from="1562920944252" duration="12102000" />
       <workItem from="1563010713302" duration="555000" />
-      <workItem from="1563178901145" duration="14894000" />
+      <workItem from="1563178901145" duration="18930000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="365823000" />
+    <option name="totallyTimeSpent" value="369859000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -514,7 +410,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3806328" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.34419942" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.34419942" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.48897412" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -555,7 +451,7 @@
           <option name="timeStamp" value="15" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/main/Experimentation/KGENRun.java</url>
+          <url>file://$PROJECT_DIR$/src/main/java/main/experimentation/KGENRun.java</url>
           <line>72</line>
           <properties />
           <option name="timeStamp" value="19" />
@@ -569,23 +465,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/jmetal/experiments/settings/WASFGA_Settings.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="21" column="45" selection-start-line="21" selection-start-column="45" selection-end-line="21" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/encoding.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/dataset/mysql.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/dataset/beans/DatasetRow.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_201/src.zip!/java/util/Properties.java" />
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="731">
@@ -874,23 +753,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/lattice/generator/LatticeGenerator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="40" column="27" selection-start-line="40" selection-start-column="27" selection-end-line="40" selection-end-column="27" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#generateWithNodes#0;class#LatticeGenerator#0" />
-            <element signature="method#generateWithMinMax#0;class#LatticeGenerator#0" />
-            <element signature="method#generateReductedLattice#0;class#LatticeGenerator#0" />
-            <element signature="method#getLevels#0;class#LatticeGenerator#0" />
-            <element signature="method#sameStrategyPath#0;class#LatticeGenerator#0" />
-            <element signature="method#getMinLattice#0;class#LatticeGenerator#0" />
-            <element signature="method#getMaxLattice#0;class#LatticeGenerator#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/utils/ArrayUtils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -925,17 +787,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/Experimentation/OLARun.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="52" column="9" lean-forward="true" selection-start-line="29" selection-start-column="8" selection-end-line="52" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/Experimentation/ExhaustiveRun.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/experimentation/ExhaustiveRun.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
           <caret line="23" column="52" lean-forward="true" selection-start-line="14" selection-start-column="4" selection-end-line="23" selection-end-column="52" />
@@ -945,20 +797,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/Experimentation/MultipleKGENRun.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/experimentation/MultipleKGENRun.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="459">
           <caret line="45" column="60" lean-forward="true" selection-start-line="45" selection-start-column="12" selection-end-line="45" selection-end-column="60" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" selection-start-line="19" selection-end-line="19" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -985,7 +827,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/main/Experimentation/KGENRun.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/experimentation/KGENRun.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="319">
           <caret line="71" column="61" selection-start-line="71" selection-start-column="61" selection-end-line="71" selection-end-column="61" />
@@ -1016,19 +858,6 @@
             <element signature="method#equalsAttribute#0;class#KAnonymity#0" />
             <element signature="method#deleteNotKAnonymizedRows#0;class#KAnonymity#0" />
             <element signature="method#anonymize#0;class#KAnonymity#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/lattice/LatticeUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="183" column="13" selection-start-line="183" selection-start-column="13" selection-end-line="183" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1973#1974#0" expanded="true" />
-            <element signature="e#2017#2018#0" expanded="true" />
-            <element signature="method#areOfTheSameStrategyPath#0;class#LatticeUtils#0" />
           </folding>
         </state>
       </provider>
@@ -1069,6 +898,100 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="217">
           <caret line="31" column="38" selection-start-line="31" selection-start-column="38" selection-end-line="31" selection-end-column="38" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/gui/bean/TextEllipse.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="22" column="35" lean-forward="true" selection-start-line="22" selection-start-column="35" selection-end-line="22" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/lattice/LatticeUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#areOfTheSameStrategyPath#0;class#LatticeUtils#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/experimentation/OLARun.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="521">
+          <caret line="47" column="9" lean-forward="true" selection-start-line="24" selection-start-column="8" selection-end-line="47" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/KGEN.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="215">
+          <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/main.fxml">
+      <provider selected="true" editor-type-id="text-editor" />
+      <provider editor-type-id="JavaFX-Scene-Builder" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="22" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/lattice/generator/LatticeGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-209">
+          <caret line="66" column="26" selection-start-line="66" selection-start-column="26" selection-end-line="66" selection-end-column="26" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#generateWithNodes#0;class#LatticeGenerator#0" />
+            <element signature="method#generateReductedLattice#0;class#LatticeGenerator#0" />
+            <element signature="method#getLevels#0;class#LatticeGenerator#0" />
+            <element signature="method#sameStrategyPath#0;class#LatticeGenerator#0" />
+            <element signature="method#getMinLattice#0;class#LatticeGenerator#0" />
+            <element signature="method#getMaxLattice#0;class#LatticeGenerator#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/gui/LatticeGui.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="25" lean-forward="true" selection-start-line="13" selection-start-column="25" selection-end-line="13" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#drawEllipses#0;class#LatticeGui#0" />
+            <element signature="method#drawLines#0;class#LatticeGui#0" />
+            <element signature="method#getEllipseFromNode#0;class#LatticeGui#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/main/gui_experimentation/OLARunGui.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="829">
+          <caret line="99" column="5" lean-forward="true" selection-start-line="99" selection-start-column="5" selection-end-line="99" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
