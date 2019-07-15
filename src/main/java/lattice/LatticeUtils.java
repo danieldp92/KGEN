@@ -3,6 +3,7 @@ package lattice;
 import anonymization.KAnonymity;
 import lattice.bean.Lattice;
 import lattice.bean.Node;
+import utils.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -12,7 +13,7 @@ public class LatticeUtils {
     private static final int MIN_KLEV = 2;
     private KAnonymity kAnonymity;
 
-    private LinkedHashMap<Node, Boolean> taggedMap;
+    private LinkedHashMap<Integer, Boolean> taggedMap;
 
     public LatticeUtils (KAnonymity kAnonymity) {
         this.kAnonymity = kAnonymity;
@@ -70,8 +71,8 @@ public class LatticeUtils {
      * @param node
      * @return
      */
-    public int height (Node node) {
-        return node.getIndexHeight();
+    public int height (Node node, int startHeight) {
+        return node.getIndexHeight() - startHeight;
     }
 
     /**
@@ -96,8 +97,33 @@ public class LatticeUtils {
      * @param node
      * @return
      */
-    public Boolean isTaggedKAnonymous (Node node) {
-        return taggedMap.get(node);
+    public boolean isTaggedKAnonymous (Node node) {
+        int hashcodeNode = node.getActualGeneralization().toString().hashCode();
+
+        Boolean taggedValue = taggedMap.get(hashcodeNode);
+
+        if (taggedValue != null && taggedValue) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Determines whether a particular node has already been tagged as not k-anonymous.
+     * @param node
+     * @return
+     */
+    public boolean isTaggedNotKAnonymous (Node node) {
+        int hashcodeNode = node.getActualGeneralization().toString().hashCode();
+
+        Boolean taggedValue = taggedMap.get(hashcodeNode);
+
+        if (taggedValue != null && !taggedValue) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -106,7 +132,7 @@ public class LatticeUtils {
      * @param node
      */
     public void tagKAnonymous (Node node) {
-        this.taggedMap.put(node, true);
+        this.taggedMap.put(node.getActualGeneralization().toString().hashCode(), true);
     }
 
     /**
@@ -115,7 +141,7 @@ public class LatticeUtils {
      * @param node
      */
     public void tagNotKAnonymous (Node node) {
-        this.taggedMap.put(node, false);
+        this.taggedMap.put(node.getActualGeneralization().toString().hashCode(), false);
     }
 
     /**
@@ -143,8 +169,17 @@ public class LatticeUtils {
      * @param node
      */
     public void cleanUp (List<Node> nodes, Node node) {
+        //Find the minimum node of the same strategy path of "node"
+        Node min = node;
+        for (Node n : nodes) {
+            if (ArrayUtils.leq(n.getActualGeneralization(), min.getActualGeneralization())) {
+                min = n;
+            }
+        }
+
         for (int i = 0; i < nodes.size(); i++) {
-            if (areOfTheSameStrategyPath(node, nodes.get(i))) {
+            if (!nodes.get(i).equals(min) &&
+                    ArrayUtils.geq(nodes.get(i).getActualGeneralization(), min.getActualGeneralization())) {
                 nodes.remove(i--);
             }
         }
@@ -168,6 +203,23 @@ public class LatticeUtils {
 
         i = 0;
         while (i < node1LOG.size() && node1LOG.get(i) <= node2LOG.get(i)) {
+            i++;
+        }
+
+        //All LOG of node1 are greater then LOG of node2
+        if (i >= node1LOG.size()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean greaterSameStrategy (Node node1, Node node2) {
+        List<Integer> node1LOG = node1.getActualGeneralization();
+        List<Integer> node2LOG = node2.getActualGeneralization();
+
+        int i = 0;
+        while (i < node1LOG.size() && node1LOG.get(i) >= node2LOG.get(i)) {
             i++;
         }
 

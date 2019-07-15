@@ -1,20 +1,17 @@
 package main.Experimentation;
 
-import anonymization.KAnonymity;
+import approaches.exhaustive.ExhaustiveAlgorithm;
 import approaches.ola.OLAAlgorithm;
 import dataset.beans.Dataset;
 import dataset.generator.DatasetGenerator;
 import exception.IOPropertiesException;
-import lattice.bean.Lattice;
 import utils.DatasetUtils;
-import utils.FileUtils;
 import utils.XlsUtils;
 
-import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 
-public class OLARun {
+public class ExhaustiveRun {
     private static final String PROJECT_DIR = System.getProperty("user.dir") + File.separator;
     private static final String DATASET_FOLDER_DIR = PROJECT_DIR + "dataset" + File.separator;
     private static final String CONFIG_FOLDER_DIR = PROJECT_DIR + "config" + File.separator;
@@ -40,9 +37,8 @@ public class OLARun {
                 XlsUtils.writeXlsx(randomDatasetPath, dataset);
             }
 
-            OLAAlgorithm olaAlgorithm = new OLAAlgorithm(dataset);
-            olaAlgorithm.execute();
-
+            ExhaustiveAlgorithm exhaustiveAlgorithm = new ExhaustiveAlgorithm(dataset);
+            exhaustiveAlgorithm.execute();
         } else {
             //Read the dataset not anonymized
             dataset = XlsUtils.readXlsx(datasetPath);

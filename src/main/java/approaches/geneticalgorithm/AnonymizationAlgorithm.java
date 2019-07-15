@@ -5,8 +5,13 @@ import approaches.geneticalgorithm.encoding.GeneralizationSolution;
 import approaches.geneticalgorithm.utils.SolutionUtils;
 import jmetal.core.*;
 import jmetal.util.JMException;
+import lattice.bean.Lattice;
+import lattice.bean.Node;
+import lattice.generator.LatticeGenerator;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class AnonymizationAlgorithm extends Algorithm {
     private static final int MIN_K_LEVEL = 2;
@@ -86,7 +91,7 @@ public class AnonymizationAlgorithm extends Algorithm {
 
                     //Mutation
                     for (int k = 0; k < offsprings.length; k++) {
-                        //offsprings[k] = (GeneralizationSolution) mutation.execute(offsprings[k]);
+                        offsprings[k] = (GeneralizationSolution) mutation.execute(offsprings[k]);
                         offsprings[k] = (GeneralizationSolution) horizontalMutation.execute(offsprings[k]);
                     }
 
@@ -217,30 +222,6 @@ public class AnonymizationAlgorithm extends Algorithm {
 
 
 
-
-    private ArrayList<Integer> getSolutionValues (Solution solution) throws JMException {
-        ArrayList<Integer> values = new ArrayList<Integer>();
-
-        for (Variable var : solution.getDecisionVariables()) {
-            values.add((int) var.getValue());
-        }
-
-        return values;
-    }
-
-    private Solution randomBetweenSolutions (Solution solution1, Solution solution2) throws JMException {
-        GeneralizationSolution randomSolution = new GeneralizationSolution(solution1);
-
-        for (int i = 0; i < solution1.getDecisionVariables().length; i++) {
-            int val1 = (int) solution1.getDecisionVariables()[i].getValue();
-            int val2 = (int) solution2.getDecisionVariables()[i].getValue();
-
-            int random = (int) ((Math.random() * (val2 - val1 + 1)) + val1);
-            randomSolution.getDecisionVariables()[i].setValue(random);
-        }
-
-        return randomSolution;
-    }
 
     /**
      * This method deletes all equals solutions

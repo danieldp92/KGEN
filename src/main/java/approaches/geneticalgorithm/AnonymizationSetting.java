@@ -27,10 +27,10 @@ public class AnonymizationSetting extends Settings {
         this.problem_ = problem;
 
         this.populationSize = 100;
-        this.maxEvaluations = 2000;
+        this.maxEvaluations = 10000;
         this.crossoverProbability = 0.9;
-        this.mutationProbability = 0.1;
-        this.horizontalMutationProbability = 0.3;
+        this.mutationProbability = 0.2;
+        this.horizontalMutationProbability = 0.4;
 
         this.numberOfAttributeToMutate = (int) (PERCENTAGE_OF_VARIABLE_TO_MUTATE * problem.getNumberOfVariables());
         if (this.numberOfAttributeToMutate % 2 != 0) {
@@ -48,6 +48,7 @@ public class AnonymizationSetting extends Settings {
 
         Operator selection = new MultiObjectiveRouletteSelection(parameters);
         parameters.put("probability", crossoverProbability);
+        parameters.put("kAnonymity", ((AnonymizationProblem)problem_).getkAnonymity());
         Operator crossover = new LatticeCrossover(parameters);
         parameters.put("probability", mutationProbability);
         Operator mutation = MutationFactory.getMutationOperator("BitFlipMutation", parameters);

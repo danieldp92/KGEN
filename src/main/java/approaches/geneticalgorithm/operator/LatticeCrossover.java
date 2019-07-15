@@ -1,5 +1,6 @@
 package approaches.geneticalgorithm.operator;
 
+import anonymization.KAnonymity;
 import approaches.geneticalgorithm.encoding.GeneralizationSolution;
 import jmetal.core.Solution;
 import jmetal.core.Variable;
@@ -14,8 +15,12 @@ public class LatticeCrossover extends Crossover {
     private static final int ffLOG_OBJECTIVE = 0;
     private static final int ffKLV_OBJECTIVE = 1;
 
+    private KAnonymity kAnonymity;
+
     public LatticeCrossover(HashMap<String, Object> parameters) {
         super(parameters);
+
+        this.kAnonymity = (KAnonymity) parameters.get("kAnonymity");
     }
 
     public Object execute(Object object) throws JMException {
@@ -41,9 +46,42 @@ public class LatticeCrossover extends Crossover {
             }
 
 
-            dynamicOffsprings.add(min);
-            dynamicOffsprings.add(max);
+            boolean kAnonParent0 = false;
+            boolean kAnonParent1 = false;
+            if (parents[0].getObjective(ffKLV_OBJECTIVE) > 1) {
+                kAnonParent0 = true;
+            }
 
+            if (parents[1].getObjective(ffKLV_OBJECTIVE) > 1) {
+                kAnonParent1 = true;
+            }
+
+            if (kAnonParent0 && kAnonParent1) {
+                boolean kAnonMinLatticeNode = this.kAnonymity.kAnonymityTest(getSolutionValues(min), MIN_K_LEVEL);
+                if (kAnonMinLatticeNode) {
+                    //MIN will be an offspring solution
+                    dynamicOffsprings.add(min);
+                } else {
+                    //Generate a random value between min (not anonymized) and parents (anonymized).
+                    //This nodes could be anonymized
+                    dynamicOffsprings.add((GeneralizationSolution) randomBetweenSolutions(min, parents[0]));
+                    dynamicOffsprings.add((GeneralizationSolution) randomBetweenSolutions(min, parents[1]));
+                }
+            } else if (!kAnonParent0 && !kAnonParent1) {
+                dynamicOffsprings.add(max);
+
+                boolean kAnonMaxLatticeNode = this.kAnonymity.kAnonymityTest(getSolutionValues(max), MIN_K_LEVEL);
+                if (!kAnonMaxLatticeNode) {
+                    dynamicOffsprings.add((GeneralizationSolution) randomBetweenSolutions(parents[0], max));
+                    dynamicOffsprings.add((GeneralizationSolution) randomBetweenSolutions(parents[1], max));
+                }
+            } else {
+                if (kAnonParent0) {
+                    dynamicOffsprings.add((GeneralizationSolution) randomBetweenSolutions(min, parents[0]));
+                } else {
+                    dynamicOffsprings.add((GeneralizationSolution) randomBetweenSolutions(min, parents[1]));
+                }
+            }
         } else {
             dynamicOffsprings.add(parents[0]);
             dynamicOffsprings.add(parents[1]);
@@ -55,5 +93,29 @@ public class LatticeCrossover extends Crossover {
         }
 
         return offsprings;
+    }
+
+    private ArrayList<Integer> getSolutionValues (Solution solution) throws JMException {
+        ArrayList<Integer> values = new ArrayList<Integer>();
+
+        for (Variable var : solution.getDecisionVariables()) {
+            values.add((int) var.getValue());
+        }
+
+        return values;
+    }
+
+    private Solution randomBetweenSolutions (Solution solution1, Solution solution2) throws JMException {
+        GeneralizationSolution randomSolution = new GeneralizationSolution(solution1);
+
+        for (int i = 0; i < solution1.getDecisionVariables().length; i++) {
+            int val1 = (int) solution1.getDecisionVariables()[i].getValue();
+            int val2 = (int) solution2.getDecisionVariables()[i].getValue();
+
+            int random = (int) ((Math.random() * (val2 - val1 + 1)) + val1);
+            randomSolution.getDecisionVariables()[i].setValue(random);
+        }
+
+        return randomSolution;
     }
 }

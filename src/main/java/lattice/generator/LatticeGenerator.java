@@ -38,9 +38,9 @@ public class LatticeGenerator {
         ArrayList<Set<ArrayList<Integer>>> levels = getLevels(minLattice, maxLattice);
 
         //Generate nodes from lattice's levels
-        int indexHeight = 1;
+        int indexHeight = 0;
         for (Set<ArrayList<Integer>> level : levels) {
-            int indexWidth = 1;
+            int indexWidth = 0;
             for (ArrayList<Integer> generalizationCombination : level) {
                 Node node = new Node(indexWidth++, indexHeight, generalizationCombination, minLattice, maxLattice);
                 lattice.addNode(node);
@@ -123,6 +123,31 @@ public class LatticeGenerator {
         }
 
         return lattice;
+    }
+
+    public static Lattice generateReductedLattice (Lattice lattice, Node bottomNode, Node topNode) {
+        Lattice latticeReducted = new Lattice();
+        ArrayList<Node> nodes = new ArrayList<>();
+
+        ArrayList<Set<ArrayList<Integer>>> levels = getLevels(bottomNode.getActualGeneralization(), topNode.getActualGeneralization());
+
+        for (Set<ArrayList<Integer>> level : levels) {
+            for (ArrayList<Integer> gen : level) {
+                Node tmp = new Node(gen);
+
+                int i = 0;
+                while (i < lattice.getNodes().size() && !lattice.getNodes().get(i).equals(tmp))
+                    i++;
+
+                if (i < lattice.getNodes().size()) {
+                    nodes.add(lattice.getNodes().get(i));
+                }
+            }
+        }
+
+        latticeReducted.setNodes(nodes);
+
+        return latticeReducted;
     }
 
     private static ArrayList<Set<ArrayList<Integer>>> getLevels (ArrayList<Integer> minVector, ArrayList<Integer> maxVector) {

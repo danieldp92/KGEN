@@ -1,6 +1,8 @@
 package main;
 
 import jmetal.util.JMException;
+import main.Experimentation.ExhaustiveRun;
+import main.Experimentation.KGENRun;
 import main.Experimentation.MultipleKGENRun;
 import main.Experimentation.OLARun;
 
@@ -12,6 +14,8 @@ public class Main {
 
     public static void main (String [] args) throws IOException, JMException, ClassNotFoundException, SQLException {
         //MultipleKGENRun.execute(NUMBER_OF_EXPERIMENTATION);
-        OLARun.execute();
+        //OLARun.execute();
+        //ExhaustiveRun.execute();
+        KGENRun.execute();
     }
 }

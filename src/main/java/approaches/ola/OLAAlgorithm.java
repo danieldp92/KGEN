@@ -23,16 +23,24 @@ public class OLAAlgorithm {
         k = 0;
     }
 
-    public void execute (Dataset dataset) {
-        ArrayList<Integer> bottomNode = kAnonymity.lowerBounds();
-        ArrayList<Integer> topNode = kAnonymity.upperBounds();
-
+    public void execute () {
         long start = System.currentTimeMillis();
-        Lattice lattice = LatticeGenerator.generateOnlyNodes(bottomNode, topNode);
-        System.out.println("Lattice execution time: " + ((double)System.currentTimeMillis()-start)/1000);
 
-        start = System.currentTimeMillis();
+        ArrayList<Integer> topNode = kAnonymity.upperBounds();
+        ArrayList<Integer> bottomNode = new ArrayList<>();
+        for (int i = 0; i < topNode.size(); i++) {
+            bottomNode.add(0);
+        }
+
+        Lattice lattice = LatticeGenerator.generateOnlyNodes(bottomNode, topNode);
+
         KMin(lattice.getNode1(), lattice.getNode2());
+
+        System.out.println("Solution");
+        for (Node n : result) {
+            System.out.println(n.getActualGeneralization());
+        }
+
         System.out.println("Execution time: " + ((double)System.currentTimeMillis()-start)/1000);
     }
 
@@ -42,48 +50,46 @@ public class OLAAlgorithm {
         topNode = lattice.getNode2();
 
         System.out.println("Lattice size: " + lattice.getNodes().size());
-        int heightN = this.latticeUtils.height(topNode);
+        int heightN = this.latticeUtils.height(topNode, bottomNode.getIndexHeight());
         Node n = null;
 
         if (heightN > 1) {
             int height = heightN/2;
 
             System.out.println("Analyzing height " + height);
-            for (int i = 1; i <= latticeUtils.width(lattice, height); i++) {
+            for (int i = 0; i < latticeUtils.width(lattice, height); i++) {
                 System.out.println("Analyzing width " + i);
                 n = latticeUtils.node(lattice, height, i);
-                Boolean isTagged = latticeUtils.isTaggedKAnonymous(n);
 
-                if (isTagged == null) {
-                    if (latticeUtils.isKAnonymous(n)) {
-                        latticeUtils.tagKAnonymous(n);
-                        KMin(bottomNode, n);
-                    } else {
-                        latticeUtils.tagNotKAnonymous(n);
-                        KMin(n, topNode);
-                    }
+                if (latticeUtils.isTaggedKAnonymous(n)) {
+                    KMin(bottomNode, n);
+                } else if (latticeUtils.isTaggedNotKAnonymous(n)) {
+                    KMin(n, topNode);
+                } else if (latticeUtils.isKAnonymous(n)) {
+                    latticeUtils.tagKAnonymous(n);
+                    KMin(bottomNode, n);
                 } else {
-                    if (isTagged) {
-                        KMin(bottomNode, n);
-                    } else {
-                        KMin(n, topNode);
-                    }
+                    latticeUtils.tagNotKAnonymous(n);
+                    KMin(n, topNode);
                 }
             }
         } else {
             //This is a special case of a two node lattice
-            if (latticeUtils.isTaggedKAnonymous(bottomNode)) {
+            if (latticeUtils.isTaggedNotKAnonymous(bottomNode)) {
                 n = topNode;
-            } else if (latticeUtils.isKAnonymous(n)) {
+            } else if (latticeUtils.isKAnonymous(bottomNode)) {
                 latticeUtils.tagKAnonymous(bottomNode);
                 n = bottomNode;
             } else {
-                latticeUtils.tagNotKAnonymous(n);
+                latticeUtils.tagNotKAnonymous(bottomNode);
                 n = topNode;
             }
 
-            this.result.add(n);
-            latticeUtils.cleanUp(this.result, n);
+            if (!this.result.contains(n)) {
+                this.result.add(n);
+                System.out.println(n.getActualGeneralization() + " added");
+                latticeUtils.cleanUp(this.result, n);
+            }
         }
     }
 }

@@ -58,9 +58,9 @@ public class MultiObjectiveRouletteSelection extends Selection {
         //Take all solutions with the designed level of kanonymization
         ArrayList<Solution> candidateSolutions = new ArrayList<Solution>();
         for (int i = 0; i < population.size(); i++) {
-            if (population.get(i).getObjective(ffKLV_OBJECTIVE) == klvSelected) {
+            //if (population.get(i).getObjective(ffKLV_OBJECTIVE) == klvSelected) {
                 candidateSolutions.add(population.get(i));
-            }
+            //}
         }
 
         //LOG SELECTION

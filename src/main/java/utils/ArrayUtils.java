@@ -1,9 +1,44 @@
 package utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ArrayUtils {
+
+    public static boolean leq (List<Integer> list1, List<Integer> list2) {
+        if (list1.size() != list2.size()) {
+            return false;
+        }
+
+        int i = 0;
+        while (i < list1.size() && list1.get(i) <= list2.get(i)) {
+            i++;
+        }
+
+        if (i < list1.size()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static boolean geq (List<Integer> list1, List<Integer> list2) {
+        if (list1.size() != list2.size()) {
+            return false;
+        }
+
+        int i = 0;
+        while (i < list1.size() && list1.get(i) >= list2.get(i)) {
+            i++;
+        }
+
+        if (i < list1.size()) {
+            return false;
+        }
+
+        return true;
+    }
 
     private static List<List<Integer>> getAllCombinations (List<Integer> maxVector) {
         List<List<Integer>> allCombinations = new ArrayList<List<Integer>>();
@@ -33,4 +68,5 @@ public class ArrayUtils {
 
         return allCombinations;
     }
+
 }

@@ -12,6 +12,10 @@ public class Node {
     private ArrayList<Node> indegrees;
     private ArrayList<Node> outdegrees;
 
+    public Node(ArrayList<Integer> actualGeneralization) {
+        this.actualGeneralization = actualGeneralization;
+    }
+
     public Node(ArrayList<Integer> actualGeneralization, ArrayList<Integer> minGeneralization, ArrayList<Integer> maxGeneralization) {
         this.indexWidth = 0;
         this.indexHeight = 0;
