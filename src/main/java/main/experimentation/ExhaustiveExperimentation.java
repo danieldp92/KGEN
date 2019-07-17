@@ -1,6 +1,6 @@
 package main.experimentation;
 
-import approaches.ola.OLAAlgorithm;
+import approaches.exhaustive.ExhaustiveAlgorithm;
 import dataset.beans.Dataset;
 import dataset.generator.DatasetGenerator;
 import utils.DatasetUtils;
@@ -9,7 +9,7 @@ import utils.XlsUtils;
 import java.io.File;
 import java.io.IOException;
 
-public class OLARun {
+public class ExhaustiveExperimentation {
     private static final String PROJECT_DIR = System.getProperty("user.dir") + File.separator;
     private static final String DATASET_FOLDER_DIR = PROJECT_DIR + "dataset" + File.separator;
     private static final String CONFIG_FOLDER_DIR = PROJECT_DIR + "config" + File.separator;
@@ -35,16 +35,8 @@ public class OLARun {
                 XlsUtils.writeXlsx(randomDatasetPath, dataset);
             }
 
-            OLAAlgorithm olaAlgorithm = new OLAAlgorithm(dataset);
-            olaAlgorithm.execute();
-
-        } else {
-            //Read the dataset not anonymized
-            dataset = XlsUtils.readXlsx(datasetPath);
-            DatasetUtils.loadProperties(dataset, configIdentifierPath);
-
-            //OLAAlgorithm olaAlgorithm = new OLAAlgorithm(dataset);
-            //olaAlgorithm.execute(dataset);
+            ExhaustiveAlgorithm exhaustiveAlgorithm = new ExhaustiveAlgorithm(dataset);
+            exhaustiveAlgorithm.execute();
         }
     }
 }

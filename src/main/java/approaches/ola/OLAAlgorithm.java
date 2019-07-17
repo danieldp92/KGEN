@@ -1,40 +1,71 @@
 package approaches.ola;
 
 import anonymization.KAnonymity;
+import controller.LatticeController;
 import dataset.beans.Dataset;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import lattice.LatticeUtils;
 import lattice.bean.Lattice;
 import lattice.bean.Node;
 import lattice.generator.LatticeGenerator;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 public class OLAAlgorithm {
     private KAnonymity kAnonymity;
     private LatticeUtils latticeUtils;
     private ArrayList<Node> result;
-    private int k;
+    private Lattice lattice;
 
-    public OLAAlgorithm (Dataset dataset) {
+    private List<Node> prevs;
+    private Node prev;
+
+    private LatticeController latticeController;
+
+    public OLAAlgorithm (Dataset dataset, LatticeController controller) {
         this.kAnonymity = new KAnonymity(dataset);
         this.latticeUtils = new LatticeUtils(this.kAnonymity);
         this.result = new ArrayList<>();
 
-        k = 0;
+        this.latticeController = controller;
+
+        this.prevs = new ArrayList<>();
     }
 
     public void execute () {
+        System.out.println("Start");
+
         long start = System.currentTimeMillis();
 
+        // Top and Bottom nodes
         ArrayList<Integer> topNode = kAnonymity.upperBounds();
         ArrayList<Integer> bottomNode = new ArrayList<>();
         for (int i = 0; i < topNode.size(); i++) {
             bottomNode.add(0);
         }
 
-        Lattice lattice = LatticeGenerator.generateOnlyNodes(bottomNode, topNode);
+        lattice = LatticeGenerator.generateWithMinMax(bottomNode, topNode);
+        System.out.println("Lattice generation time: " + ((double)(System.currentTimeMillis()-start))/1000);
 
-        KMin(lattice.getNode1(), lattice.getNode2());
+        //Draw lattice
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                latticeController.drawLattice(lattice);
+            }
+        });
+
+        try {
+            KMin(new Node(bottomNode), new Node(topNode));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         System.out.println("Solution");
         for (Node n : result) {
@@ -44,7 +75,7 @@ public class OLAAlgorithm {
         System.out.println("Execution time: " + ((double)System.currentTimeMillis()-start)/1000);
     }
 
-    public void KMin (Node bottomNode, Node topNode) {
+    public void KMin (Node bottomNode, Node topNode) throws InterruptedException {
         Lattice lattice = LatticeGenerator.generateOnlyNodes(bottomNode.getActualGeneralization(), topNode.getActualGeneralization());
         bottomNode = lattice.getNode1();
         topNode = lattice.getNode2();
@@ -60,6 +91,14 @@ public class OLAAlgorithm {
             for (int i = 0; i < latticeUtils.width(lattice, height); i++) {
                 System.out.println("Analyzing width " + i);
                 n = latticeUtils.node(lattice, height, i);
+
+                if (prev != null) {
+                    latticeController.changeColor(prev, Color.WHITE);
+                }
+                latticeController.changeColor(n, Color.LIGHTGREY);
+
+                prev = n;
+                Thread.sleep(1000);
 
                 if (latticeUtils.isTaggedKAnonymous(n)) {
                     KMin(bottomNode, n);
@@ -86,9 +125,20 @@ public class OLAAlgorithm {
             }
 
             if (!this.result.contains(n)) {
+
                 this.result.add(n);
                 System.out.println(n.getActualGeneralization() + " added");
                 latticeUtils.cleanUp(this.result, n);
+
+                for (Node prev : this.prevs) {
+                    latticeController.changeColor(prev, Color.WHITE);
+                }
+
+                for (Node r : this.result) {
+                    latticeController.changeColor(r, Color.BROWN);
+                }
+
+                prevs = new ArrayList<>(result);
             }
         }
     }

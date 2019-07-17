@@ -36,9 +36,18 @@ public class XlsUtils {
 
             Sheet datatypeSheet = workbook.getSheetAt(0);
             Iterator<Row> iterator = datatypeSheet.iterator();
+            int numberOfRows = 0;
+            while (iterator.hasNext()) {
+                iterator.next();
+                numberOfRows++;
+            }
+
+            iterator = datatypeSheet.iterator();
 
             boolean attributeRow = true;
 
+            int j = 0;
+            System.out.print("Reading... (" + ((double)j/numberOfRows)*100 + "% complete)");
             while (iterator.hasNext()) {
                 Row currentRow = iterator.next();
 
@@ -82,6 +91,7 @@ public class XlsUtils {
                         columns.get(i).add(newAttribute);
                     }
                 }
+                System.out.print("\rReading... (" + ((double)++j/numberOfRows)*100 + "% complete)");
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -89,6 +99,7 @@ public class XlsUtils {
             e.printStackTrace();
         }
 
+        System.out.println();
         dataset = new Dataset(header, columns);
 
         return dataset;

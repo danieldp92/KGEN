@@ -24,7 +24,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class KGENRun {
+public class KGENExperimentation {
     private static final String PROJECT_DIR = System.getProperty("user.dir") + File.separator;
     private static final String DATASET_FOLDER_DIR = PROJECT_DIR + "dataset" + File.separator;
     private static final String CONFIG_FOLDER_DIR = PROJECT_DIR + "config" + File.separator;

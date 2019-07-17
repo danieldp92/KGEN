@@ -1,97 +1,80 @@
 package gui;
 
+import anonymization.KAnonymity;
+import controller.LatticeController;
+import dataset.beans.Dataset;
 import gui.bean.TextEllipse;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
+import javafx.stage.Stage;
 import lattice.LatticeUtils;
 import lattice.bean.Edge;
 import lattice.bean.Lattice;
 import lattice.bean.Node;
+import lattice.generator.LatticeGenerator;
+import main.experimentation.ExperimentationThread;
 
 import java.awt.*;
+import java.net.URL;
 import java.util.ArrayList;
 
-public class LatticeGui {
+public class LatticeGui extends Application {
     public static final Dimension LATTICEGUI_SIZE = new Dimension(1280, 720);
-    public static final double PADDING_PERCENTAGE = 0.7;
 
-    public static ArrayList<TextEllipse> drawEllipses (Lattice lattice) {
-        ArrayList<TextEllipse> ellipses = new ArrayList<TextEllipse>();
+    private static final int OLA_ALGORITHM = 1;
+    private static final int EXHAUSTIVE_ALGORITHM = 2;
+    private static final int KGEN_ALGORITHM = 3;
 
-        ArrayList<ArrayList<Node>> levels = LatticeUtils.getLevelsNode(lattice);
-        for (int i = 1; i < levels.size(); i++) {
-            levels.set(i, LatticeUtils.orderLevel(levels.get(i), levels.get(i-1)));
+    private static ExperimentationThread experimentationThread;
+    private static Lattice lattice;
+
+    public static void run (String [] args) throws InterruptedException {
+
+        experimentationThread = new ExperimentationThread(OLA_ALGORITHM);
+        experimentationThread.start();
+
+        Dataset dataset = null;
+        while ((dataset = experimentationThread.getDataset()) == null) {
+            Thread.sleep(10);
         }
 
-        int maxNumberOfNodesInALevel = 0;
-        int latticeHeight = levels.size();
+        KAnonymity kAnonymity = new KAnonymity(dataset);
 
-        for (int i = 0; i < levels.size(); i++) {
-            if (levels.get(i).size() > maxNumberOfNodesInALevel) {
-                maxNumberOfNodesInALevel = levels.get(i).size();
-            }
+        ArrayList<Integer> min = new ArrayList<>();
+        ArrayList<Integer> max = kAnonymity.upperBounds();
 
-            System.out.println("Level " + i);
-            for (Node node : levels.get(i)) {
-                System.out.println(node.getActualGeneralization());
-            }
-            System.out.println();
+        for (int i : max) {
+            min.add(0);
         }
 
-        double widthNode = (double)LATTICEGUI_SIZE.width / maxNumberOfNodesInALevel;
-        double heightNode = (double)LATTICEGUI_SIZE.height / latticeHeight;
+        lattice = LatticeGenerator.generateWithMinMax(min, max);
 
-        double ellipseWidth = widthNode - (widthNode * PADDING_PERCENTAGE);
-        double ellipseHeight = heightNode - (heightNode * PADDING_PERCENTAGE);
-
-        //Ellipse
-        for (int i = 0; i < levels.size(); i++) {
-            double yCenter = LATTICEGUI_SIZE.height - (i * heightNode) - (heightNode / 2);
-            double xCenter = 0;
-
-            for (int j = 0; j < levels.get(i).size(); j++) {
-                double actualWithNode = (double)LATTICEGUI_SIZE.width / (levels.get(i).size() + 1);
-
-                xCenter = ((j+1) * actualWithNode);
-                TextEllipse textEllipse = new TextEllipse(levels.get(i).get(j).getActualGeneralization().toString(),
-                        xCenter, yCenter, ellipseWidth, ellipseHeight);
-
-
-                ellipses.add(textEllipse);
-            }
-        }
-
-        return ellipses;
+        launch(args);
     }
 
-    public static ArrayList<Line> drawLines (Lattice lattice, ArrayList<Ellipse> ellipses) {
-        ArrayList<Line> lines = new ArrayList<Line>();
-        for (Edge edge : lattice.getEdges()) {
-            Node from = edge.getFrom();
-            Node to = edge.getTo();
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        primaryStage.setTitle("K-Anonymous Project");
 
-            Ellipse ellipseFrom = getEllipseFromNode(from, ellipses);
-            Ellipse ellipseTo = getEllipseFromNode(to, ellipses);
+        URL mainGuiLocation = getClass().getResource("/main.fxml");
+        FXMLLoader mainGuiLoader = new FXMLLoader(mainGuiLocation);
+        Pane group = mainGuiLoader.load();
 
-            Line line = new Line();
-            line.setStartX(ellipseFrom.getCenterX());
-            line.setStartY(ellipseFrom.getCenterY());
-            line.setEndX(ellipseTo.getCenterX());
-            line.setEndY(ellipseTo.getCenterY());
+        LatticeController latticeController = mainGuiLoader.getController();
+        //latticeController.drawLattice(lattice);
 
-            lines.add(line);
-        }
+        Scene latticeguiScene = new Scene(group, LatticeGui.LATTICEGUI_SIZE.width, LatticeGui.LATTICEGUI_SIZE.height);
 
-        return lines;
-    }
+        primaryStage.setScene(latticeguiScene);
+        primaryStage.show();
 
-    private static Ellipse getEllipseFromNode (Node node, ArrayList<Ellipse> ellipses) {
-        for (Ellipse ellipse : ellipses) {
-            if (ellipse.getId().equals(node.getActualGeneralization().toString())) {
-                return ellipse;
-            }
-        }
+        mainGuiLoader.setController(latticeController);
 
-        return null;
+        experimentationThread.setLatticeController(latticeController);
+        experimentationThread.unlockThread();
     }
 }

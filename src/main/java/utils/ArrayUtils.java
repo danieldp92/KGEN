@@ -40,6 +40,34 @@ public class ArrayUtils {
         return true;
     }
 
+    public static ArrayList<Integer> min (ArrayList<Integer> gen1, ArrayList<Integer> gen2) {
+        ArrayList<Integer> min = new ArrayList<>();
+
+        for (int i = 0; i < gen1.size(); i++) {
+            if (gen1.get(i) < gen2.get(i)) {
+                min.add(gen1.get(i));
+            } else {
+                min.add(gen2.get(i));
+            }
+        }
+
+        return min;
+    }
+
+    public static ArrayList<Integer> max (ArrayList<Integer> gen1, ArrayList<Integer> gen2) {
+        ArrayList<Integer> max = new ArrayList<>();
+
+        for (int i = 0; i < gen1.size(); i++) {
+            if (gen1.get(i) > gen2.get(i)) {
+                max.add(gen1.get(i));
+            } else {
+                max.add(gen2.get(i));
+            }
+        }
+
+        return max;
+    }
+
     private static List<List<Integer>> getAllCombinations (List<Integer> maxVector) {
         List<List<Integer>> allCombinations = new ArrayList<List<Integer>>();
 

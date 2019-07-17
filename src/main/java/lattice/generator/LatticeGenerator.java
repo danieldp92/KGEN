@@ -3,6 +3,7 @@ package lattice.generator;
 import lattice.bean.Edge;
 import lattice.bean.Lattice;
 import lattice.bean.Node;
+import utils.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,23 +12,16 @@ import java.util.Set;
 public class LatticeGenerator {
 
     public static Lattice generateWithNodes (ArrayList<Integer> gen1, ArrayList<Integer> gen2) {
-        ArrayList<Integer> minLattice = getMinLattice(gen1, gen2);
-        ArrayList<Integer> maxLattice = getMaxLattice(gen1, gen2);
+        ArrayList<Integer> minLattice = ArrayUtils.min(gen1, gen2);
+        ArrayList<Integer> maxLattice = ArrayUtils.max(gen1, gen2);
 
         Lattice lattice = generateWithMinMax(minLattice, maxLattice);
 
-        Node node1 = new Node(gen1, minLattice, maxLattice);
-        Node node2 = new Node(gen2, minLattice, maxLattice);
+        Node node1 = getNode(lattice.getNodes(), gen1);
+        Node node2 = getNode(lattice.getNodes(), gen2);
 
-        for (Node node : lattice.getNodes()) {
-            if (node.equals(node1)) {
-                lattice.setNode1(node);
-            }
-
-            else if (node.equals(node2)) {
-                lattice.setNode2(node);
-            }
-        }
+        lattice.setNode1(node1);
+        lattice.setNode2(node2);
 
         return lattice;
     }
@@ -37,78 +31,34 @@ public class LatticeGenerator {
 
         ArrayList<Set<ArrayList<Integer>>> levels = getLevels(minLattice, maxLattice);
 
-        //Generate nodes from lattice's levels
-        int indexHeight = 0;
-        for (Set<ArrayList<Integer>> level : levels) {
-            int indexWidth = 0;
-            for (ArrayList<Integer> generalizationCombination : level) {
-                Node node = new Node(indexWidth++, indexHeight, generalizationCombination, minLattice, maxLattice);
-                lattice.addNode(node);
-            }
+        ArrayList<Node> nodes = generateNodes(levels);
 
-            indexHeight++;
-        }
+        Node node1 = getNode(nodes, minLattice);
+        Node node2 = getNode(nodes, maxLattice);
 
-        Node node1 = new Node(minLattice, minLattice, maxLattice);
-        Node node2 = new Node(maxLattice, minLattice, maxLattice);
-        for (Node node : lattice.getNodes()) {
-            if (node.equals(node1)) {
-                lattice.setNode1(node);
-            }
-
-            else if (node.equals(node2)) {
-                lattice.setNode2(node);
-            }
-        }
+        lattice.setNodes(nodes);
+        lattice.setNode1(node1);
+        lattice.setNode2(node2);
 
         return lattice;
     }
 
     public static Lattice generateWithMinMax (ArrayList<Integer> minLattice, ArrayList<Integer> maxLattice) {
-        Lattice lattice = new Lattice();
+        Lattice lattice = generateOnlyNodes(minLattice, maxLattice);
 
         ArrayList<Set<ArrayList<Integer>>> levels = getLevels(minLattice, maxLattice);
 
-        //Generate nodes from lattice's levels
-        int indexHeight = 0;
-        for (Set<ArrayList<Integer>> level : levels) {
-            int indexWidth = 0;
-            for (ArrayList<Integer> generalizationCombination : level) {
-                Node node = new Node(indexWidth++, indexHeight, generalizationCombination, minLattice, maxLattice);
-                lattice.addNode(node);
-            }
-
-            indexHeight++;
-        }
-
-        //Generate edges
-        for (int i = 1; i < levels.size(); i++) {
-            System.out.println(i);
-            Set<ArrayList<Integer>> prevLevel = levels.get(i-1);
-            Set<ArrayList<Integer>> actualLevel = levels.get(i);
-
-            for (ArrayList<Integer> prevCombination : prevLevel) {
-                Node prevNode = lattice.getNode(prevCombination);
-
-                for (ArrayList<Integer> actualCombination : actualLevel) {
-                    Node actualNode = lattice.getNode(actualCombination);
-
-                    if (sameStrategyPath(prevNode, actualNode)) {
-                        Edge edge = new Edge(prevNode, actualNode);
-                        lattice.addEdge(edge);
-                    }
-                }
-            }
-        }
+        ArrayList<Node> nodes = generateNodes(levels);
+        ArrayList<Edge> edges = generateEdges(levels, nodes);
 
         //Incoming and outgoing
-        for (int i = 0; i < lattice.getNodes().size(); i++) {
+        for (int i = 0; i < nodes.size(); i++) {
             ArrayList<Node> in = new ArrayList<Node>();
             ArrayList<Node> out = new ArrayList<Node>();
 
-            Node node = lattice.getNodes().get(i);
+            Node node = nodes.get(i);
 
-            for (Edge edge : lattice.getEdges()) {
+            for (Edge edge : edges) {
                 if (node.equals(edge.getFrom())) {
                     out.add(edge.getTo());
                 }
@@ -118,37 +68,84 @@ public class LatticeGenerator {
                 }
             }
 
-            lattice.getNodes().get(i).setIndegrees(in);
-            lattice.getNodes().get(i).setOutdegrees(out);
+            nodes.get(i).setIndegrees(in);
+            nodes.get(i).setOutdegrees(out);
         }
+
+        Node node1 = getNode(nodes, minLattice);
+        Node node2 = getNode(nodes, maxLattice);
+
+        lattice.setNodes(nodes);
+        lattice.setEdges(edges);
+        lattice.setNode1(node1);
+        lattice.setNode2(node2);
 
         return lattice;
     }
 
-    public static Lattice generateReductedLattice (Lattice lattice, Node bottomNode, Node topNode) {
-        Lattice latticeReducted = new Lattice();
+    //Generate private methods
+    private static ArrayList<Node> generateNodes (ArrayList<Set<ArrayList<Integer>>> levels) {
         ArrayList<Node> nodes = new ArrayList<>();
 
-        ArrayList<Set<ArrayList<Integer>>> levels = getLevels(bottomNode.getActualGeneralization(), topNode.getActualGeneralization());
+        //First element of 0 level
+        ArrayList<Integer> minLattice = levels.get(0).iterator().next();
 
+        //First element of last level
+        ArrayList<Integer> maxLattice = levels.get(levels.size()-1).iterator().next();
+
+        //Generate nodes from lattice's levels
+        int indexHeight = 0;
         for (Set<ArrayList<Integer>> level : levels) {
-            for (ArrayList<Integer> gen : level) {
-                Node tmp = new Node(gen);
+            int indexWidth = 0;
+            for (ArrayList<Integer> generalizationCombination : level) {
+                Node node = new Node(indexWidth++, indexHeight, generalizationCombination, minLattice, maxLattice);
+                nodes.add(node);
+            }
 
-                int i = 0;
-                while (i < lattice.getNodes().size() && !lattice.getNodes().get(i).equals(tmp))
-                    i++;
+            indexHeight++;
+        }
 
-                if (i < lattice.getNodes().size()) {
-                    nodes.add(lattice.getNodes().get(i));
+        return nodes;
+    }
+
+    private static ArrayList<Edge> generateEdges (ArrayList<Set<ArrayList<Integer>>> levels, ArrayList<Node> nodes) {
+        ArrayList<Edge> edges = new ArrayList<>();
+
+        //Generate edges
+        for (int i = 1; i < levels.size(); i++) {
+            Set<ArrayList<Integer>> prevLevel = levels.get(i-1);
+            Set<ArrayList<Integer>> actualLevel = levels.get(i);
+
+            for (ArrayList<Integer> prevCombination : prevLevel) {
+                Node prevNode = getNode(nodes, prevCombination);
+
+                for (ArrayList<Integer> actualCombination : actualLevel) {
+                    Node actualNode = getNode(nodes, actualCombination);
+
+                    if (sameStrategyPath(prevNode, actualNode)) {
+                        Edge edge = new Edge(prevNode, actualNode);
+                        edges.add(edge);
+                    }
                 }
             }
         }
 
-        latticeReducted.setNodes(nodes);
-
-        return latticeReducted;
+        return edges;
     }
+
+    private static Node getNode (ArrayList<Node> nodes, ArrayList<Integer> gen) {
+        Node tmpNode = new Node(gen, null, null);
+
+        for (Node n : nodes) {
+            if (n.equals(tmpNode)) {
+                return n;
+            }
+        }
+
+        return null;
+    }
+
+
 
     private static ArrayList<Set<ArrayList<Integer>>> getLevels (ArrayList<Integer> minVector, ArrayList<Integer> maxVector) {
         ArrayList<Set<ArrayList<Integer>>> levels = new ArrayList<Set<ArrayList<Integer>>>();
@@ -209,33 +206,5 @@ public class LatticeGenerator {
         }
 
         return true;
-    }
-
-    private static ArrayList<Integer> getMinLattice (ArrayList<Integer> gen1, ArrayList<Integer> gen2) {
-        ArrayList<Integer> min = new ArrayList<>();
-
-        for (int i = 0; i < gen1.size(); i++) {
-            if (gen1.get(i) < gen2.get(i)) {
-                min.add(gen1.get(i));
-            } else {
-                min.add(gen2.get(i));
-            }
-        }
-
-        return min;
-    }
-
-    private static ArrayList<Integer> getMaxLattice (ArrayList<Integer> gen1, ArrayList<Integer> gen2) {
-        ArrayList<Integer> max = new ArrayList<>();
-
-        for (int i = 0; i < gen1.size(); i++) {
-            if (gen1.get(i) > gen2.get(i)) {
-                max.add(gen1.get(i));
-            } else {
-                max.add(gen2.get(i));
-            }
-        }
-
-        return max;
     }
 }
