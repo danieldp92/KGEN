@@ -7,6 +7,8 @@ import jmetal.core.Solution;
 import jmetal.core.Variable;
 import jmetal.encodings.solutionType.IntSolutionType;
 import jmetal.util.JMException;
+import lattice.bean.Lattice;
+import lattice.generator.LatticeGenerator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,20 +16,22 @@ import java.util.List;
 
 public class AnonymizationProblem extends Problem {
     private static final int MIN_K_LEVEL = 2;
+
     private Dataset dataset;
     private KAnonymity kAnonymity;
 
     public AnonymizationProblem (Dataset dataset) {
         //Dataset variables
         this.dataset = dataset;
+        this.kAnonymity = new KAnonymity(dataset);
 
-        initKAnonymity();
+        //Lower and Upper bounds
+        ArrayList<Integer> lowerBounds = this.kAnonymity.lowerBounds();
+        ArrayList<Integer> upperBounds = this.kAnonymity.upperBounds();
 
-        List<Integer> tmpLowerBounds = this.kAnonymity.lowerBounds();
-        List<Integer> tmpUpperBounds = this.kAnonymity.upperBounds();
 
         //Problem variables
-        this.numberOfVariables_ = tmpLowerBounds.size();
+        this.numberOfVariables_ = lowerBounds.size();
         this.numberOfObjectives_ = 2;
         this.numberOfConstraints_ = 0;
 
@@ -39,15 +43,15 @@ public class AnonymizationProblem extends Problem {
         this.upperLimit_ = new double[numberOfVariables_];
 
         for (int i = 0; i < numberOfVariables_; i++) {
-            this.lowerLimit_[i] = tmpLowerBounds.get(i);
-            this.upperLimit_[i] = tmpUpperBounds.get(i);
+            this.lowerLimit_[i] = lowerBounds.get(i);
+            this.upperLimit_[i] = upperBounds.get(i);
         }
 
         this.solutionType_ = new IntSolutionType(this);
     }
 
-    public void initKAnonymity () {
-        this.kAnonymity = new KAnonymity(dataset);
+    public Dataset getDataset() {
+        return dataset;
     }
 
     public KAnonymity getkAnonymity () {

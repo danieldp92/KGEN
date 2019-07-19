@@ -3,14 +3,19 @@ package approaches.geneticalgorithm;
 import anonymization.KAnonymity;
 import approaches.geneticalgorithm.encoding.GeneralizationSolution;
 import approaches.geneticalgorithm.utils.SolutionUtils;
+import controller.LatticeController;
+import javafx.scene.paint.Color;
 import jmetal.core.*;
 import jmetal.util.JMException;
+import lattice.LatticeUtils;
 import lattice.bean.Lattice;
 import lattice.bean.Node;
 import lattice.generator.LatticeGenerator;
+import utils.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 public class AnonymizationAlgorithm extends Algorithm {
@@ -23,6 +28,8 @@ public class AnonymizationAlgorithm extends Algorithm {
     private Operator mutation;
     private Operator horizontalMutation;
 
+    private LatticeController latticeController;
+
     private SolutionSet population;
 
     private KAnonymity kAnonymity;
@@ -30,6 +37,7 @@ public class AnonymizationAlgorithm extends Algorithm {
     private int maxEvaluations;
     private int evaluation;
 
+    private List<List<Integer>> results;
 
     /**
      * Constructor
@@ -42,6 +50,8 @@ public class AnonymizationAlgorithm extends Algorithm {
 
     public SolutionSet execute() throws JMException, ClassNotFoundException {
         init();
+
+        this.results = new ArrayList<>();
 
         long startTime = 0;
 
@@ -83,80 +93,15 @@ public class AnonymizationAlgorithm extends Algorithm {
                     parents[0] = (GeneralizationSolution) selection.execute(population);
                     parents[1] = (GeneralizationSolution) selection.execute(population);
 
-
                     //Crossover
                     //ArrayList<GeneralizationSolution> offsprings = new ArrayList<GeneralizationSolution>();
                     GeneralizationSolution [] offsprings = (GeneralizationSolution[]) crossover.execute(parents);
-
 
                     //Mutation
                     for (int k = 0; k < offsprings.length; k++) {
                         offsprings[k] = (GeneralizationSolution) mutation.execute(offsprings[k]);
                         offsprings[k] = (GeneralizationSolution) horizontalMutation.execute(offsprings[k]);
                     }
-
-
-
-
-
-                    /*GeneralizationSolution minLatticeNode = tmpOffsprings[0];
-                    GeneralizationSolution maxLatticeNode = tmpOffsprings[1];
-
-
-                    //Mutation
-                    boolean kAnonParent0 = false;
-                    boolean kAnonParent1 = false;
-
-                    if (parents[0].getObjective(ffKLV_OBJECTIVE) > 1) {
-                        kAnonParent0 = true;
-                    }
-
-                    if (parents[1].getObjective(ffKLV_OBJECTIVE) > 1) {
-                        kAnonParent1 = true;
-                    }
-
-                    if (kAnonParent0 && kAnonParent1) {
-                        boolean kAnonMinLatticeNode = this.kAnonymity.kAnonymityTest(getSolutionValues(minLatticeNode), MIN_K_LEVEL);
-                        if (kAnonMinLatticeNode) {
-                            //MIN will be an offspring solution
-                            offsprings.add(minLatticeNode);
-                        } else {
-                            //Generate a random value between min (not anonymized) and parents (anonymized).
-                            //This nodes could be anonymized
-                            offsprings.add((GeneralizationSolution) randomBetweenSolutions(minLatticeNode, parents[0]));
-                            offsprings.add((GeneralizationSolution) randomBetweenSolutions(minLatticeNode, parents[1]));
-                        }
-
-                        //MUTATION: MAX
-                        mutation.execute(maxLatticeNode);
-                        //kAnonymizationMutation.execute(maxLatticeNode);
-                        offsprings.add(maxLatticeNode);
-                    } else if (!kAnonParent0 && !kAnonParent1) {
-                        offsprings.add(maxLatticeNode);
-
-                        boolean kAnonMaxLatticeNode = this.kAnonymity.kAnonymityTest(getSolutionValues(maxLatticeNode), MIN_K_LEVEL);
-                        if (!kAnonMaxLatticeNode) {
-                            offsprings.add((GeneralizationSolution) randomBetweenSolutions(parents[0], maxLatticeNode));
-                            offsprings.add((GeneralizationSolution) randomBetweenSolutions(parents[1], maxLatticeNode));
-                        }
-
-                        //MUTATION: MIN
-                        mutation.execute(minLatticeNode);
-                        //kAnonymizationMutation.execute(minLatticeNode);
-                        offsprings.add(minLatticeNode);
-                    } else {
-                        if (kAnonParent0) {
-                            offsprings.add((GeneralizationSolution) randomBetweenSolutions(minLatticeNode, parents[0]));
-                        } else {
-                            offsprings.add((GeneralizationSolution) randomBetweenSolutions(minLatticeNode, parents[1]));
-                        }
-
-                        //MUTATION: MAX
-                        mutation.execute(maxLatticeNode);
-                        //kAnonymizationMutation.execute(maxLatticeNode);
-                        offsprings.add(maxLatticeNode);
-                    }*/
-
 
                     //Evaluation
                     for (Solution offspring : offsprings) {
@@ -188,6 +133,9 @@ public class AnonymizationAlgorithm extends Algorithm {
             for (int j = 0; j < population.size(); j++) {
                 ((GeneralizationSolution)population.get(j)).increasePenalty();
             }
+
+            //Insert best solutions in results
+            saveBestSolutions(population);
         }
 
         for (int i = 0; i < population.size(); i++) {
@@ -202,12 +150,32 @@ public class AnonymizationAlgorithm extends Algorithm {
         System.out.println("\nExecution time: " + (double)(System.currentTimeMillis() - startTime)/1000 + "s");
         System.out.println("History size: " + kAnonymity.getkAnonymizedHistoryMap().size() + "\n");
 
+        Set<List<Integer>> tmpResults = new LinkedHashSet<>();
+        for (List<Integer> result : results) {
+            tmpResults.add(result);
+        }
+
+        population.clear();
+
+        for (List<Integer> result : tmpResults) {
+            GeneralizationSolution newSolution = new GeneralizationSolution(problem_);
+            for (int i = 0; i < result.size(); i++) {
+                newSolution.getDecisionVariables()[i].setValue(result.get(i));
+            }
+
+            problem_.evaluate(newSolution);
+
+            population.add(newSolution);
+        }
+
         return population;
     }
 
     private void init () {
         //((AnonymizationProblem)problem_).initKAnonymity();
         this.kAnonymity = ((AnonymizationProblem) problem_).getkAnonymity();
+
+        this.latticeController = (LatticeController) getInputParameter("controller");
 
         selection = operators_.get("selection");
         crossover = operators_.get("crossover");
@@ -219,25 +187,34 @@ public class AnonymizationAlgorithm extends Algorithm {
         evaluation = 0;
     }
 
+    private ArrayList<Integer> getSolutionValues (Solution solution) throws JMException {
+        ArrayList<Integer> values = new ArrayList<Integer>();
 
+        for (Variable var : solution.getDecisionVariables()) {
+            values.add((int) var.getValue());
+        }
 
+        return values;
+    }
 
+    private void saveBestSolutions (SolutionSet population) throws JMException {
+        for (int i = 0; i < population.size(); i++) {
+            if (population.get(i).getObjective(ffKLV_OBJECTIVE) > 1) {
+                List<Integer> min = getSolutionValues(population.get(i));
+                results.add(min);
 
-    /**
-     * This method deletes all equals solutions
-     * @param solutions
-     */
-    private void reduction (ArrayList<GeneralizationSolution> solutions) {
-        for (int i = 0; i < solutions.size()-1; i++) {
-            for (int j = 0; j < solutions.size(); j++) {
-                int k = 0;
-                while (k < solutions.get(i).getDecisionVariables().length &&
-                    solutions.get(i).getDecisionVariables()[k] == solutions.get(j).getDecisionVariables()[k]) {
-                    k++;
+                //Find the minimum node between actual solution and all nodes in results
+                for (List<Integer> n : results) {
+                    if (ArrayUtils.leq(n, min)) {
+                        min = n;
+                    }
                 }
 
-                if (k >= solutions.get(i).getDecisionVariables().length) {
-                    solutions.remove(j--);
+                for (int j = 0; j < results.size(); j++) {
+                    if (!results.get(j).equals(min) &&
+                            ArrayUtils.geq(results.get(j), min)) {
+                        results.remove(j--);
+                    }
                 }
             }
         }

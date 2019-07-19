@@ -2,6 +2,7 @@ package controller;
 
 import dataset.beans.Dataset;
 import gui.bean.TextEllipse;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -47,14 +48,19 @@ public class LatticeController implements Initializable {
         this.stage = stage;
     }
 
-    public void changeColor (Node node, Color color) {
+    public void changeColor (Node node, final Color color) {
         String genText = node.getActualGeneralization().toString();
 
         for (javafx.scene.Node n : latticePane.getChildren()) {
             if (n instanceof TextEllipse) {
-                TextEllipse textEllipse = (TextEllipse) n;
+                final TextEllipse textEllipse = (TextEllipse) n;
                 if (textEllipse.getText().getText().equals(genText)) {
-                    textEllipse.getBubble().setFill(color);
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            textEllipse.getBubble().setFill(color);
+                        }
+                    });
                 }
             }
         }
@@ -91,11 +97,11 @@ public class LatticeController implements Initializable {
                 maxNumberOfNodesInALevel = levels.get(i).size();
             }
 
-            System.out.println("Level " + i);
+            /*System.out.println("Level " + i);
             for (Node node : levels.get(i)) {
                 System.out.println(node.getActualGeneralization());
             }
-            System.out.println();
+            System.out.println();*/
         }
 
         double widthNode = (double)LATTICEGUI_SIZE.width / maxNumberOfNodesInALevel;

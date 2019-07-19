@@ -3,40 +3,73 @@ package main.experimentation;
 import approaches.exhaustive.ExhaustiveAlgorithm;
 import dataset.beans.Dataset;
 import dataset.generator.DatasetGenerator;
+import exception.DatasetNotFoundException;
+import main.experimentation.exceptions.ControllerNotFoundException;
 import utils.DatasetUtils;
+import utils.FileUtils;
 import utils.XlsUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ExhaustiveExperimentation {
-    private static final String PROJECT_DIR = System.getProperty("user.dir") + File.separator;
-    private static final String DATASET_FOLDER_DIR = PROJECT_DIR + "dataset" + File.separator;
-    private static final String CONFIG_FOLDER_DIR = PROJECT_DIR + "config" + File.separator;
+public class ExhaustiveExperimentation extends Experimentation{
+    private ExhaustiveAlgorithm exhaustiveAlgorithm;
 
-    private static final String datasetPath = DATASET_FOLDER_DIR + "F2_Dataset.xlsx";
-    private static final String randomDatasetPath = DATASET_FOLDER_DIR + "RandomDataset.xlsx";
-    private static final String configIdentifierPath = CONFIG_FOLDER_DIR + "configIdentifier.txt";
-    private static final String randomDatasetConfigPath = CONFIG_FOLDER_DIR + "randomDatasetConfig.txt";
+    @Override
+    public void execute(int numberOfRun) throws DatasetNotFoundException, ControllerNotFoundException {
+        if (this.dataset == null) {
+            throw new DatasetNotFoundException();
+        }
 
-    private static final boolean RANDOM_TEST = true;
+        if (this.latticeController == null) {
+            throw new ControllerNotFoundException();
+        }
 
-    public static void execute() throws IOException {
-        Dataset dataset = null;
+        this.exhaustiveAlgorithm = new ExhaustiveAlgorithm(dataset);
 
-        if (RANDOM_TEST) {
-            File randomDatasetFile = new File(randomDatasetPath);
+        for (int indexRun = 1; indexRun <= numberOfRun; indexRun++) {
+            long start = System.currentTimeMillis();
 
-            if (randomDatasetFile.exists()) {
-                dataset = XlsUtils.readXlsx(randomDatasetPath);
-                DatasetUtils.loadProperties(dataset, randomDatasetConfigPath);
-            } else {
-                dataset = DatasetGenerator.generateRandomDataset(20000);
-                XlsUtils.writeXlsx(randomDatasetPath, dataset);
-            }
+            this.solutions = this.exhaustiveAlgorithm.run();
 
-            ExhaustiveAlgorithm exhaustiveAlgorithm = new ExhaustiveAlgorithm(dataset);
-            exhaustiveAlgorithm.execute();
+            this.executionTime = (double)(System.currentTimeMillis()-start)/1000;
+
+            saveInfoExperimentation(indexRun);
+        }
+    }
+
+    @Override
+    public void saveInfoExperimentation(int indexRun) {
+        ArrayList<String> infoExperimentation = new ArrayList<>();
+        infoExperimentation.add("EXHAUSTIVE RESULTS\n");
+
+        ArrayList<Integer> lowerBounds = this.exhaustiveAlgorithm.getkAnonymity().lowerBounds();
+        ArrayList<Integer> upperBounds = this.exhaustiveAlgorithm.getkAnonymity().upperBounds();
+
+        infoExperimentation.add("Lower Bound: " + lowerBounds);
+        infoExperimentation.add("Upper Bound: " + upperBounds);
+
+        //Lattice size
+        int latticeSize = 1;
+        for (int i = 0; i < upperBounds.size(); i++) {
+            latticeSize *= (upperBounds.get(i) - lowerBounds.get(i) + 1);
+        }
+
+        infoExperimentation.add("Lattice size: " + latticeSize);
+        infoExperimentation.add("Execution time: " + this.executionTime + "\n");
+
+        infoExperimentation.add("Solutions");
+        for (List<Integer> solution : solutions) {
+            infoExperimentation.add(solution.toString());
+        }
+
+        try {
+            FileUtils.saveFile(infoExperimentation, RESULTS_DIR + "exhaustiveExp" + indexRun + ".txt");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class LatticeGenerator {
-
     public static Lattice generateWithNodes (ArrayList<Integer> gen1, ArrayList<Integer> gen2) {
         ArrayList<Integer> minLattice = ArrayUtils.min(gen1, gen2);
         ArrayList<Integer> maxLattice = ArrayUtils.max(gen1, gen2);
@@ -44,13 +43,17 @@ public class LatticeGenerator {
     }
 
     public static Lattice generateWithMinMax (ArrayList<Integer> minLattice, ArrayList<Integer> maxLattice) {
-        Lattice lattice = generateOnlyNodes(minLattice, maxLattice);
+        Lattice lattice = new Lattice();
 
+        System.out.println("Generate Levels");
         ArrayList<Set<ArrayList<Integer>>> levels = getLevels(minLattice, maxLattice);
 
+        System.out.println("Generate Nodes");
         ArrayList<Node> nodes = generateNodes(levels);
+        System.out.println("Generate Edges");
         ArrayList<Edge> edges = generateEdges(levels, nodes);
 
+        System.out.println("Generate Incoming and Outgoing");
         //Incoming and outgoing
         for (int i = 0; i < nodes.size(); i++) {
             ArrayList<Node> in = new ArrayList<Node>();
@@ -155,6 +158,8 @@ public class LatticeGenerator {
             latticeHeight += (maxVector.get(i) - minVector.get(i));
         }
 
+        //System.out.println("Height: " + latticeHeight);
+
         //Inizialize combination
         ArrayList<Integer> combination = new ArrayList<Integer>();
         for (int i = 0; i < maxVector.size(); i++) {
@@ -167,6 +172,7 @@ public class LatticeGenerator {
         ArrayList<Integer> actualCombination = null;
 
         for (int i = 0; i <= latticeHeight; i++) {
+            //System.out.println("Level " + i);
             if (i == 0) {
                 actualCombination = new ArrayList<Integer>(combination);
                 actualLevel.add(actualCombination);
