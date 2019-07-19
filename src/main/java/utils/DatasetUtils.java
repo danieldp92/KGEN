@@ -177,7 +177,6 @@ public class DatasetUtils {
     }
 
 
-
     private static void setAttribute (Attribute attribute, String propertyLine) throws IOPropertiesException {
         Object value = attribute.getValue();
         Object realValue = value;
