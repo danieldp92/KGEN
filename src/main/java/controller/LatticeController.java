@@ -36,8 +36,6 @@ public class LatticeController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("CONTROLLER START");
-
     }
 
     public Dataset getDataset() {
@@ -96,12 +94,6 @@ public class LatticeController implements Initializable {
             if (levels.get(i).size() > maxNumberOfNodesInALevel) {
                 maxNumberOfNodesInALevel = levels.get(i).size();
             }
-
-            /*System.out.println("Level " + i);
-            for (Node node : levels.get(i)) {
-                System.out.println(node.getActualGeneralization());
-            }
-            System.out.println();*/
         }
 
         double widthNode = (double)LATTICEGUI_SIZE.width / maxNumberOfNodesInALevel;

@@ -30,7 +30,7 @@ public class FileUtils {
         BufferedReader br = null;
 
         try {
-            txt = new ArrayList<String>();
+            txt = new ArrayList<>();
             br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 
             String line = null;

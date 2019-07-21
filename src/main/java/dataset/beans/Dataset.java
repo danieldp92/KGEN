@@ -3,6 +3,7 @@ package dataset.beans;
 import java.util.ArrayList;
 
 public class Dataset {
+    private String name;
     private DatasetRow header;
     private ArrayList<DatasetRow> data;
     private ArrayList<DatasetColumn> columns;
@@ -15,6 +16,14 @@ public class Dataset {
     public Dataset (DatasetRow pHeader, ArrayList<DatasetColumn> pColumns) {
         this.header = pHeader;
         this.columns = pColumns;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public DatasetRow getHeader() {

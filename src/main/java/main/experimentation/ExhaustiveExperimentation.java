@@ -4,7 +4,9 @@ import approaches.exhaustive.ExhaustiveAlgorithm;
 import dataset.beans.Dataset;
 import dataset.generator.DatasetGenerator;
 import exception.DatasetNotFoundException;
+import main.experimentation.bean.Result;
 import main.experimentation.exceptions.ControllerNotFoundException;
+import utils.CsvUtils;
 import utils.DatasetUtils;
 import utils.FileUtils;
 import utils.XlsUtils;
@@ -20,6 +22,7 @@ public class ExhaustiveExperimentation extends Experimentation{
 
     @Override
     public void execute(int numberOfRun) throws DatasetNotFoundException, ControllerNotFoundException {
+        System.out.println("EXHAUSTIVE 1");
         if (this.dataset == null) {
             throw new DatasetNotFoundException();
         }
@@ -30,46 +33,38 @@ public class ExhaustiveExperimentation extends Experimentation{
 
         this.exhaustiveAlgorithm = new ExhaustiveAlgorithm(dataset);
 
-        for (int indexRun = 1; indexRun <= numberOfRun; indexRun++) {
-            long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
 
-            this.solutions = this.exhaustiveAlgorithm.run();
+        this.solutions = this.exhaustiveAlgorithm.run();
 
-            this.executionTime = (double)(System.currentTimeMillis()-start)/1000;
+        this.executionTime = (double)(System.currentTimeMillis()-start)/1000;
 
-            saveInfoExperimentation(indexRun);
-        }
+        saveInfoExperimentation(1);
     }
 
     @Override
     public void saveInfoExperimentation(int indexRun) {
-        ArrayList<String> infoExperimentation = new ArrayList<>();
-        infoExperimentation.add("EXHAUSTIVE RESULTS\n");
+        List<Object> results = new ArrayList<>();
 
-        ArrayList<Integer> lowerBounds = this.exhaustiveAlgorithm.getkAnonymity().lowerBounds();
-        ArrayList<Integer> upperBounds = this.exhaustiveAlgorithm.getkAnonymity().upperBounds();
+        String datasetName = dataset.getName();
+        int numberOfAttributes = dataset.getColumns().size();
+        String algorithmName = "EXHAUSTIVE";
 
-        infoExperimentation.add("Lower Bound: " + lowerBounds);
-        infoExperimentation.add("Upper Bound: " + upperBounds);
+        ArrayList<Integer> bottomNode = this.exhaustiveAlgorithm.getkAnonymity().lowerBounds();
+        ArrayList<Integer> topNode = this.exhaustiveAlgorithm.getkAnonymity().upperBounds();
 
         //Lattice size
         int latticeSize = 1;
-        for (int i = 0; i < upperBounds.size(); i++) {
-            latticeSize *= (upperBounds.get(i) - lowerBounds.get(i) + 1);
+        for (int i = 0; i < topNode.size(); i++) {
+            latticeSize *= (topNode.get(i) - bottomNode.get(i) + 1);
         }
 
-        infoExperimentation.add("Lattice size: " + latticeSize);
-        infoExperimentation.add("Execution time: " + this.executionTime + "\n");
-
-        infoExperimentation.add("Solutions");
         for (List<Integer> solution : solutions) {
-            infoExperimentation.add(solution.toString());
+            Result tmpResult = new Result(datasetName, indexRun, numberOfAttributes, algorithmName, executionTime,
+                    latticeSize, bottomNode, topNode, solution);
+            results.add(tmpResult);
         }
 
-        try {
-            FileUtils.saveFile(infoExperimentation, RESULTS_DIR + "exhaustiveExp" + indexRun + ".txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        CsvUtils.appendClassAsCsv(results, RESULTS_FILE_PATH);
     }
 }

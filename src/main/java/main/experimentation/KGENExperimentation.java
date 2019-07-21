@@ -17,11 +17,9 @@ import jmetal.util.JMException;
 import lattice.bean.Lattice;
 import lattice.bean.Node;
 import lattice.generator.LatticeGenerator;
+import main.experimentation.bean.Result;
 import main.experimentation.exceptions.ControllerNotFoundException;
-import utils.ArrayUtils;
-import utils.DatasetUtils;
-import utils.FileUtils;
-import utils.XlsUtils;
+import utils.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,6 +46,7 @@ public class KGENExperimentation extends Experimentation{
         }
 
         for (int run = 1; run <= numberOfRun; run++) {
+            System.out.println("KGEN " + run);
             long start = System.currentTimeMillis();
 
             SolutionSet bestSolutions = null;
@@ -85,34 +84,28 @@ public class KGENExperimentation extends Experimentation{
 
     @Override
     public void saveInfoExperimentation(int indexRun) {
-        ArrayList<String> infoExperimentation = new ArrayList<>();
-        infoExperimentation.add("KGEN RESULTS\n");
+        List<Object> results = new ArrayList<>();
 
-        ArrayList<Integer> lowerBounds = this.anonymizationProblem.getkAnonymity().lowerBounds();
-        ArrayList<Integer> upperBounds = this.anonymizationProblem.getkAnonymity().upperBounds();
+        String datasetName = dataset.getName();
+        int numberOfAttributes = dataset.getColumns().size();
+        String algorithmName = "KGEN";
 
-        infoExperimentation.add("Lower Bound: " + lowerBounds);
-        infoExperimentation.add("Upper Bound: " + upperBounds);
+        ArrayList<Integer> bottomNode = this.anonymizationProblem.getkAnonymity().lowerBounds();
+        ArrayList<Integer> topNode = this.anonymizationProblem.getkAnonymity().upperBounds();
 
         //Lattice size
         int latticeSize = 1;
-        for (int i = 0; i < upperBounds.size(); i++) {
-            latticeSize *= (upperBounds.get(i) - lowerBounds.get(i) + 1);
+        for (int i = 0; i < topNode.size(); i++) {
+            latticeSize *= (topNode.get(i) - bottomNode.get(i) + 1);
         }
 
-        infoExperimentation.add("Lattice size: " + latticeSize);
-        infoExperimentation.add("Execution time: " + this.executionTime + "\n");
-
-        infoExperimentation.add("Solutions");
         for (List<Integer> solution : solutions) {
-            infoExperimentation.add(solution.toString());
+            Result tmpResult = new Result(datasetName, indexRun, numberOfAttributes, algorithmName, executionTime,
+                    latticeSize, bottomNode, topNode, solution);
+            results.add(tmpResult);
         }
 
-        try {
-            FileUtils.saveFile(infoExperimentation, RESULTS_DIR + "kgenExp" + indexRun + ".txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        CsvUtils.appendClassAsCsv(results, RESULTS_FILE_PATH);
     }
 
 

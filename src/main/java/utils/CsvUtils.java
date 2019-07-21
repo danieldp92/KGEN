@@ -2,7 +2,9 @@ package utils;
 
 import main.experimentation.bean.Result;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -12,6 +14,49 @@ public class CsvUtils {
     private static final String SEPARATOR_TAG = ";";
 
     public static void saveClassAsCsv(List<Object> objects, String path) {
+        List<String> csv = generateCSV(objects);
+
+        try {
+            FileUtils.saveFile((ArrayList<String>) csv, path);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * This method add new results on a csv already created
+     * @param objects
+     * @param path
+     */
+    public static void appendClassAsCsv(List<Object> objects, String path) {
+        boolean fileNotFound = false;
+
+        List<String> csv = new ArrayList<>();
+        try {
+            csv = FileUtils.loadFile(path);
+        } catch (IOException e) {
+            fileNotFound = true;
+        }
+
+        List<String> newCsv = generateCSV(objects);
+
+        //Remove the header of this new csv, because it has already created in the csv loaded
+        if (!fileNotFound) {
+            newCsv.remove(0);
+        }
+
+        csv.addAll(newCsv);
+
+
+        try {
+            FileUtils.saveFile((ArrayList<String>) csv, path);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static List<String> generateCSV(List<Object> objects) {
         ArrayList<String> csv = new ArrayList<>();
         LinkedHashMap<String, Method> getMap = new LinkedHashMap<>();
         String line = "";
@@ -19,7 +64,6 @@ public class CsvUtils {
         if (!objects.isEmpty()) {
             //First element
             Object first = objects.get(0);
-            System.out.println(first.getClass());
 
             //Initialize the getMap
             getMap = extractGetMethodsFromFields(first);
@@ -49,16 +93,7 @@ public class CsvUtils {
             }
         }
 
-        for (String s : csv) {
-            System.out.println(s);
-        }
-
-        try {
-            FileUtils.saveFile(csv, path);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
+        return csv;
     }
 
     private static LinkedHashMap<String, Method> extractGetMethodsFromFields(Object object) {

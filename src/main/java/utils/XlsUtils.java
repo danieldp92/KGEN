@@ -46,8 +46,6 @@ public class XlsUtils {
 
             boolean attributeRow = true;
 
-            int j = 0;
-            System.out.print("Reading... (" + ((double)j/numberOfRows)*100 + "% complete)");
             while (iterator.hasNext()) {
                 Row currentRow = iterator.next();
 
@@ -91,7 +89,6 @@ public class XlsUtils {
                         columns.get(i).add(newAttribute);
                     }
                 }
-                System.out.print("\rReading... (" + ((double)++j/numberOfRows)*100 + "% complete)");
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

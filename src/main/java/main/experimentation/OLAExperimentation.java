@@ -6,7 +6,9 @@ import dataset.beans.Dataset;
 import dataset.generator.DatasetGenerator;
 import exception.DatasetNotFoundException;
 import exception.IOPropertiesException;
+import main.experimentation.bean.Result;
 import main.experimentation.exceptions.ControllerNotFoundException;
+import utils.CsvUtils;
 import utils.DatasetUtils;
 import utils.FileUtils;
 import utils.XlsUtils;
@@ -22,6 +24,7 @@ public class OLAExperimentation extends Experimentation {
 
     @Override
     public void execute(int numberOfRun) throws DatasetNotFoundException, ControllerNotFoundException {
+        System.out.println("OLA 1");
         if (this.dataset == null) {
             throw new DatasetNotFoundException();
         }
@@ -32,47 +35,39 @@ public class OLAExperimentation extends Experimentation {
 
         this.olaAlgorithm = new OLAAlgorithm(this.dataset, this.latticeController);
 
-        for (int indexRun = 1; indexRun <= numberOfRun; indexRun++) {
-            long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
 
-            this.solutions = olaAlgorithm.run();
+        this.solutions = olaAlgorithm.run();
 
-            this.executionTime = (double)(System.currentTimeMillis()-start)/1000;
+        this.executionTime = (double)(System.currentTimeMillis()-start)/1000;
 
-            saveInfoExperimentation(indexRun);
-        }
+        saveInfoExperimentation(1);
 
     }
 
     @Override
     public void saveInfoExperimentation(int indexRun) {
-        ArrayList<String> infoExperimentation = new ArrayList<>();
-        infoExperimentation.add("OLA RESULTS\n");
+        List<Object> results = new ArrayList<>();
 
-        ArrayList<Integer> lowerBounds = this.olaAlgorithm.getkAnonymity().lowerBounds();
-        ArrayList<Integer> upperBounds = this.olaAlgorithm.getkAnonymity().upperBounds();
+        String datasetName = dataset.getName();
+        int numberOfAttributes = dataset.getColumns().size();
+        String algorithmName = "OLA";
 
-        infoExperimentation.add("Lower Bound: " + lowerBounds);
-        infoExperimentation.add("Upper Bound: " + upperBounds);
+        ArrayList<Integer> bottomNode = this.olaAlgorithm.getkAnonymity().lowerBounds();
+        ArrayList<Integer> topNode = this.olaAlgorithm.getkAnonymity().upperBounds();
 
         //Lattice size
         int latticeSize = 1;
-        for (int i = 0; i < upperBounds.size(); i++) {
-            latticeSize *= (upperBounds.get(i) - lowerBounds.get(i) + 1);
+        for (int i = 0; i < topNode.size(); i++) {
+            latticeSize *= (topNode.get(i) - bottomNode.get(i) + 1);
         }
 
-        infoExperimentation.add("Lattice size: " + latticeSize);
-        infoExperimentation.add("Execution time: " + this.executionTime + "\n");
-
-        infoExperimentation.add("Solutions");
         for (List<Integer> solution : solutions) {
-            infoExperimentation.add(solution.toString());
+            Result tmpResult = new Result(datasetName, indexRun, numberOfAttributes, algorithmName, executionTime,
+                    latticeSize, bottomNode, topNode, solution);
+            results.add(tmpResult);
         }
 
-        try {
-            FileUtils.saveFile(infoExperimentation, RESULTS_DIR + "olaExp.txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        CsvUtils.appendClassAsCsv(results, RESULTS_FILE_PATH);
     }
 }

@@ -20,7 +20,7 @@ public class LatticeGui extends Application {
     private static ExperimentationThread experimentationThread;
 
     public static void run (String [] args) {
-        experimentationThread = new ExperimentationThread(AlgorithmType.OLA_ALGORITHM, DatasetType.DATASET_F2, 1);
+        experimentationThread = new ExperimentationThread(DatasetType.DATASET_F2, 5);
         experimentationThread.start();
 
         launch(args);

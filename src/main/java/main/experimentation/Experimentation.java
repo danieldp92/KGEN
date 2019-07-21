@@ -11,11 +11,13 @@ import utils.XlsUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Experimentation {
     protected static final String PROJECT_DIR = System.getProperty("user.dir") + File.separator;
     protected static final String RESULTS_DIR = PROJECT_DIR + "results" + File.separator;
+    protected static final String RESULTS_FILE_PATH = RESULTS_DIR + "result.csv";
 
     protected Dataset dataset;
     protected List<List<Integer>> solutions;
@@ -25,10 +27,13 @@ public abstract class Experimentation {
 
 
     public void initDataset (String datasetPath, String configPath) throws DatasetNotFoundException {
-        File randomDatasetFile = new File(datasetPath);
+        File datasetFile = new File(datasetPath);
 
-        if (randomDatasetFile.exists()) {
+        if (datasetFile.exists()) {
+            String datasetName = datasetFile.getName().split("\\.")[0];
+
             this.dataset = XlsUtils.readXlsx(datasetPath);
+            this.dataset.setName(datasetName);
             try {
                 DatasetUtils.loadProperties(this.dataset, configPath);
             } catch (IOPropertiesException e) {

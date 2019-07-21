@@ -223,7 +223,7 @@ public class KAnonymity {
 
         int kAnonLevel = kAnonymityTest(levelOfAnonymization);
 
-        if (kAnonLevel <= kLevel) {
+        if (kAnonLevel >= kLevel) {
             return true;
         }
 

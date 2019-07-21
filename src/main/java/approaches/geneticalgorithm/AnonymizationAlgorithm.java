@@ -76,7 +76,7 @@ public class AnonymizationAlgorithm extends Algorithm {
         evaluation = 0;
         System.out.print("Evaluation: " + evaluation);
 
-        for (int i = 0; i < maxEvaluations; i++) {
+        while (evaluation < maxEvaluations) {
             //SolutionUtils.printPopulation(population);
             ArrayList<GeneralizationSolution> union = new ArrayList<GeneralizationSolution>();
             for (int j = 0; j < populationSize; j++) {
