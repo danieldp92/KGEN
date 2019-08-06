@@ -175,6 +175,9 @@ public class AnonymizationAlgorithm extends Algorithm {
         //((AnonymizationProblem)problem_).initKAnonymity();
         this.kAnonymity = ((AnonymizationProblem) problem_).getkAnonymity();
 
+        //Reset history, in order to have indipendent results in a multirun experimentation
+        this.kAnonymity.cleanHistoryMap();
+
         this.latticeController = (LatticeController) getInputParameter("controller");
 
         selection = operators_.get("selection");

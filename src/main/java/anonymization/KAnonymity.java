@@ -193,6 +193,9 @@ public class KAnonymity {
         return kAnonymizedHistoryMap;
     }
 
+    public void cleanHistoryMap () {
+        this.kAnonymizedHistoryMap.clear();
+    }
 
     //ANONYMIZATION METHODS
     /**

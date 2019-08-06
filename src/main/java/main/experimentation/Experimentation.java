@@ -1,11 +1,15 @@
 package main.experimentation;
 
+import anonymization.KAnonymity;
+import approaches.Algorithm;
 import controller.LatticeController;
 import dataset.beans.Dataset;
 import dataset.generator.DatasetGenerator;
 import exception.DatasetNotFoundException;
 import exception.IOPropertiesException;
+import main.experimentation.bean.Result;
 import main.experimentation.exceptions.ControllerNotFoundException;
+import utils.CsvUtils;
 import utils.DatasetUtils;
 import utils.XlsUtils;
 
@@ -19,9 +23,12 @@ public abstract class Experimentation {
     protected static final String RESULTS_DIR = PROJECT_DIR + "results" + File.separator;
     protected static final String RESULTS_FILE_PATH = RESULTS_DIR + "result.csv";
 
+    public static final double MAX_EVALUATION_TIME = 600000;      //expressed in millisec (10 minutes)
+
     protected Dataset dataset;
     protected List<List<Integer>> solutions;
     protected double executionTime;
+    protected boolean outOfTime;
 
     protected LatticeController latticeController;
 
@@ -62,5 +69,33 @@ public abstract class Experimentation {
 
     abstract public void execute(int numberOfRun) throws DatasetNotFoundException, ControllerNotFoundException;
 
-    abstract public void saveInfoExperimentation(int indexRun);
+    public void saveInfoExperimentation(String algorithmName, KAnonymity kAnonymity, int indexRun) {
+        List<Object> results = new ArrayList<>();
+
+        String datasetName = dataset.getName();
+        int numberOfAttributes = dataset.getColumns().size();
+
+        ArrayList<Integer> bottomNode = kAnonymity.lowerBounds();
+        ArrayList<Integer> topNode = kAnonymity.upperBounds();
+
+        //Lattice size
+        int latticeSize = 1;
+        for (int i = 0; i < topNode.size(); i++) {
+            latticeSize *= (topNode.get(i) - bottomNode.get(i) + 1);
+        }
+
+        if (this.outOfTime) {
+            Result result = new Result(datasetName, indexRun, numberOfAttributes, algorithmName,
+                    null, latticeSize, bottomNode, topNode, null);
+            results.add(result);
+        } else {
+            for (List<Integer> solution : solutions) {
+                Result tmpResult = new Result(datasetName, indexRun, numberOfAttributes, algorithmName,
+                        executionTime, latticeSize, bottomNode, topNode, solution);
+                results.add(tmpResult);
+            }
+        }
+
+        CsvUtils.appendClassAsCsv(results, RESULTS_FILE_PATH);
+    }
 }

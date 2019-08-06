@@ -7,13 +7,13 @@ public class Result {
     private int numberOfExperimentation;
     private int numberOfAttributes;
     private String algorithmName;
-    private double executionTime;
+    private Double executionTime;
     private int latticeSize;
     private List<Integer> bottomNode;
     private List<Integer> topNode;
     private List<Integer> solution;
 
-    public Result(String datasetName, int numberOfExperimentation, int numberOfAttributes, String algorithmName, double executionTime, int latticeSize, List<Integer> bottomNode, List<Integer> topNode, List<Integer> solution) {
+    public Result(String datasetName, int numberOfExperimentation, int numberOfAttributes, String algorithmName, Double executionTime, int latticeSize, List<Integer> bottomNode, List<Integer> topNode, List<Integer> solution) {
         this.datasetName = datasetName;
         this.numberOfExperimentation = numberOfExperimentation;
         this.numberOfAttributes = numberOfAttributes;
@@ -41,7 +41,7 @@ public class Result {
         return algorithmName;
     }
 
-    public double getExecutionTime() {
+    public Double getExecutionTime() {
         return executionTime;
     }
 

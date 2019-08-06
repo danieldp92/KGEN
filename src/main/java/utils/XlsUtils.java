@@ -96,7 +96,6 @@ public class XlsUtils {
             e.printStackTrace();
         }
 
-        System.out.println();
         dataset = new Dataset(header, columns);
 
         return dataset;

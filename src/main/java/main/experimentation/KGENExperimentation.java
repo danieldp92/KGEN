@@ -1,33 +1,19 @@
 package main.experimentation;
 
-import anonymization.KAnonymity;
 import approaches.geneticalgorithm.AnonymizationAlgorithm;
 import approaches.geneticalgorithm.AnonymizationProblem;
 import approaches.geneticalgorithm.AnonymizationSetting;
-import controller.LatticeController;
-import dataset.beans.Dataset;
-import dataset.generator.DatasetGenerator;
 import exception.DatasetNotFoundException;
-import exception.IOPropertiesException;
-import javafx.application.Platform;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 import jmetal.core.Variable;
 import jmetal.util.JMException;
-import lattice.bean.Lattice;
-import lattice.bean.Node;
-import lattice.generator.LatticeGenerator;
 import main.experimentation.bean.Result;
 import main.experimentation.exceptions.ControllerNotFoundException;
 import utils.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 public class KGENExperimentation extends Experimentation{
     private AnonymizationProblem anonymizationProblem;
@@ -77,37 +63,10 @@ public class KGENExperimentation extends Experimentation{
 
             this.executionTime = (double)(System.currentTimeMillis()-start)/1000;
 
-            saveInfoExperimentation(run);
+            saveInfoExperimentation("KGEN", anonymizationProblem.getkAnonymity(), run);
         }
 
     }
-
-    @Override
-    public void saveInfoExperimentation(int indexRun) {
-        List<Object> results = new ArrayList<>();
-
-        String datasetName = dataset.getName();
-        int numberOfAttributes = dataset.getColumns().size();
-        String algorithmName = "KGEN";
-
-        ArrayList<Integer> bottomNode = this.anonymizationProblem.getkAnonymity().lowerBounds();
-        ArrayList<Integer> topNode = this.anonymizationProblem.getkAnonymity().upperBounds();
-
-        //Lattice size
-        int latticeSize = 1;
-        for (int i = 0; i < topNode.size(); i++) {
-            latticeSize *= (topNode.get(i) - bottomNode.get(i) + 1);
-        }
-
-        for (List<Integer> solution : solutions) {
-            Result tmpResult = new Result(datasetName, indexRun, numberOfAttributes, algorithmName, executionTime,
-                    latticeSize, bottomNode, topNode, solution);
-            results.add(tmpResult);
-        }
-
-        CsvUtils.appendClassAsCsv(results, RESULTS_FILE_PATH);
-    }
-
 
     private static ArrayList<Integer> getSolutionValues (Solution solution) {
         ArrayList<Integer> values = new ArrayList<Integer>();

@@ -85,7 +85,11 @@ public class CsvUtils {
                 for (Field oField : oFields) {
                     Method method = getMap.get(oField.getName());
                     try {
-                        line += method.invoke(o).toString() + SEPARATOR_TAG;
+                        if (method.invoke(o) == null) {
+                            line += "-" + SEPARATOR_TAG;
+                        } else {
+                            line += method.invoke(o).toString() + SEPARATOR_TAG;
+                        }
                     } catch (IllegalAccessException | InvocationTargetException e) {}
                 }
 

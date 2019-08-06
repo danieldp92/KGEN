@@ -61,7 +61,7 @@ public class ExperimentationThread extends Thread {
                 datasetPath = F2_DATASET_PATH;
                 configPaths.add(CONFIG_DIR + F2_CONFIG_NAME + "3.txt");
                 configPaths.add(CONFIG_DIR + F2_CONFIG_NAME + "5.txt");
-                //configPaths.add(CONFIG_DIR + F2_CONFIG_NAME + "10.txt");
+                configPaths.add(CONFIG_DIR + F2_CONFIG_NAME + "10.txt");
                 //configPaths.add(CONFIG_DIR + F2_CONFIG_NAME + "15.txt");
 
                 break;
@@ -69,7 +69,7 @@ public class ExperimentationThread extends Thread {
                 datasetPath = RANDOM_DATASET_PATH;
                 configPaths.add(CONFIG_DIR + RANDOM_CONFIG_NAME + "3.txt");
                 configPaths.add(CONFIG_DIR + RANDOM_CONFIG_NAME + "5.txt");
-                //configPaths.add(CONFIG_DIR + RANDOM_CONFIG_NAME + "10.txt");
+                configPaths.add(CONFIG_DIR + RANDOM_CONFIG_NAME + "10.txt");
                 //configPaths.add(CONFIG_DIR + RANDOM_CONFIG_NAME + "15.txt");
 
                 break;
@@ -78,7 +78,10 @@ public class ExperimentationThread extends Thread {
 
         }
 
-        for (int i = 0; i < 1; i++) {
+        int numberOfConfigurations = configPaths.size();
+
+
+        for (int i = 0; i < numberOfConfigurations; i++) {
             for (int algorithmType : algorithmTypes) {
                 switch (algorithmType) {
                     case AlgorithmType.OLA_ALGORITHM:
@@ -97,7 +100,7 @@ public class ExperimentationThread extends Thread {
                 }
 
 
-                //Initaliza the dataset
+                //Initalize the dataset
                 try {
                     experimentation.initDataset(datasetPath, configPaths.get(i));
                 } catch (DatasetNotFoundException e) {
@@ -131,6 +134,8 @@ public class ExperimentationThread extends Thread {
                 }
             }
         }
+
+        System.exit(0);
     }
 
     public void setLatticeController(LatticeController latticeController) {

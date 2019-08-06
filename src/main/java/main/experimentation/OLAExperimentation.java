@@ -8,6 +8,7 @@ import exception.DatasetNotFoundException;
 import exception.IOPropertiesException;
 import main.experimentation.bean.Result;
 import main.experimentation.exceptions.ControllerNotFoundException;
+import main.experimentation.exceptions.OutOfTimeException;
 import utils.CsvUtils;
 import utils.DatasetUtils;
 import utils.FileUtils;
@@ -29,45 +30,22 @@ public class OLAExperimentation extends Experimentation {
             throw new DatasetNotFoundException();
         }
 
-        if (this.latticeController == null) {
+        /*if (this.latticeController == null) {
             throw new ControllerNotFoundException();
-        }
+        }*/
 
         this.olaAlgorithm = new OLAAlgorithm(this.dataset, this.latticeController);
 
         long start = System.currentTimeMillis();
 
-        this.solutions = olaAlgorithm.run();
-
-        this.executionTime = (double)(System.currentTimeMillis()-start)/1000;
-
-        saveInfoExperimentation(1);
-
-    }
-
-    @Override
-    public void saveInfoExperimentation(int indexRun) {
-        List<Object> results = new ArrayList<>();
-
-        String datasetName = dataset.getName();
-        int numberOfAttributes = dataset.getColumns().size();
-        String algorithmName = "OLA";
-
-        ArrayList<Integer> bottomNode = this.olaAlgorithm.getkAnonymity().lowerBounds();
-        ArrayList<Integer> topNode = this.olaAlgorithm.getkAnonymity().upperBounds();
-
-        //Lattice size
-        int latticeSize = 1;
-        for (int i = 0; i < topNode.size(); i++) {
-            latticeSize *= (topNode.get(i) - bottomNode.get(i) + 1);
+        try {
+            this.solutions = olaAlgorithm.run();
+            this.executionTime = (double)(System.currentTimeMillis()-start)/1000;
+        } catch (OutOfTimeException e) {
+            this.outOfTime = true;
         }
 
-        for (List<Integer> solution : solutions) {
-            Result tmpResult = new Result(datasetName, indexRun, numberOfAttributes, algorithmName, executionTime,
-                    latticeSize, bottomNode, topNode, solution);
-            results.add(tmpResult);
-        }
-
-        CsvUtils.appendClassAsCsv(results, RESULTS_FILE_PATH);
+        saveInfoExperimentation(this.olaAlgorithm.getName(),
+                this.olaAlgorithm.getkAnonymity(), 1);
     }
 }

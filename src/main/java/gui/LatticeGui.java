@@ -23,7 +23,9 @@ public class LatticeGui extends Application {
         experimentationThread = new ExperimentationThread(DatasetType.DATASET_F2, 5);
         experimentationThread.start();
 
-        launch(args);
+        //launch(args);
+
+        experimentationThread.unlockThread();
     }
 
     @Override
