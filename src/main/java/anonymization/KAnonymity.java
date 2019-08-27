@@ -7,7 +7,6 @@ import anonymization.generalization.type.DateGeneralization;
 import anonymization.generalization.type.NumericGeneralization;
 import anonymization.generalization.type.PlaceGeneralization;
 import anonymization.generalization.type.StringGeneralization;
-import anonymization.multithread.MultiThreadAnonymization;
 import anonymization.support.GeneralizationMap;
 import anonymization.support.LOGMap;
 import anonymization.support.SupportMap;
@@ -384,22 +383,21 @@ public class KAnonymity {
         //Max level of anonymity of every attribute
         for (int i = 0; i < dataset.getHeader().size(); i++) {
             Attribute attribute = (Attribute) dataset.getHeader().get(i);
-
             if (attribute.getType() instanceof QuasiIdentifier) {
                 QuasiIdentifier qiAttribute = (QuasiIdentifier) attribute.getType();
 
+                int heightHierarchy = 0;
                 switch (qiAttribute.type) {
                     case QuasiIdentifier.TYPE_PLACE:
                         upperBounds.add(generalizationTree.getHeight());
                         break;
                     case QuasiIdentifier.TYPE_INT:
-                        int maxValue = DatasetUtils.getMaxAttributNumber(dataset.getColumns().get(i));
-                        int heightHierarchy = 0;
+                        int maxValue = (int) DatasetUtils.getMaxAttributINT(dataset.getColumns().get(i));
 
-                        int tmpMax = maxValue;
-                        while (tmpMax > 0) {
+                        int tmpIntMax = maxValue;
+                        while (tmpIntMax > 0) {
                             heightHierarchy++;
-                            tmpMax = tmpMax/10;
+                            tmpIntMax = tmpIntMax/10;
                         }
 
                         upperBounds.add(heightHierarchy);
@@ -410,6 +408,19 @@ public class KAnonymity {
                     case QuasiIdentifier.TYPE_STRING:
                         upperBounds.add(DatasetUtils.getMaxAttributeStringLenght(dataset.getColumns().get(i)));
                         break;
+                    case QuasiIdentifier.TYPE_DOUBLE:
+                        double maxDoubleValue = DatasetUtils.getMaxAttributDOUBLE(dataset.getColumns().get(i));
+
+                        heightHierarchy++;
+                        int maxIntValue = (int) maxDoubleValue;
+
+                        int tmpMax = maxIntValue;
+                        while (tmpMax > 0) {
+                            heightHierarchy++;
+                            tmpMax = tmpMax/10;
+                        }
+
+                        upperBounds.add(heightHierarchy);
                     default:
                         break;
                 }
@@ -424,7 +435,8 @@ public class KAnonymity {
     private DatasetColumn anonymizeColumn (int indexColumn, int levelOfAnonymization) throws LevelNotValidException {
         DatasetColumn column = dataset.getColumns().get(indexColumn);
         if (((Attribute)column.get(0)).getType().type == AttributeType.TYPE_STRING) {
-            this.stringGeneralization = new StringGeneralization(DatasetUtils.minLength(column), DatasetUtils.maxLength(column));
+            this.stringGeneralization = new StringGeneralization(DatasetUtils.minLength(column),
+                    DatasetUtils.getMaxAttributeStringLenght(column));
         }
 
         DatasetColumn datasetColumn = new DatasetColumn();
@@ -455,11 +467,23 @@ public class KAnonymity {
                     case QuasiIdentifier.TYPE_INT:
                         valueAnonymized = numericGeneralization.generalize(levelOfAnonymization, valueToGeneralize);
                         break;
+                    case QuasiIdentifier.TYPE_DOUBLE:
+                        valueAnonymized = numericGeneralization.generalize(levelOfAnonymization, valueToGeneralize);
+                        break;
                     case QuasiIdentifier.TYPE_DATE:
                         valueAnonymized = dateGeneralization.generalize(levelOfAnonymization, valueToGeneralize);
                         break;
                     case QuasiIdentifier.TYPE_STRING:
-                        valueAnonymized = stringGeneralization.generalize(levelOfAnonymization, valueToGeneralize);
+                        try {
+                            valueAnonymized = stringGeneralization.generalize(levelOfAnonymization, valueToGeneralize);
+                        } catch (StringIndexOutOfBoundsException ex) {
+                            DatasetColumn column1 = column;
+                            System.out.println("MIN: " + DatasetUtils.minLength(column));
+                            System.out.println("MAX: " + DatasetUtils.getMaxAttributeStringLenght(column));
+                            System.out.println("LEV: " + levelOfAnonymization);
+                            System.out.println("Value to generalize: " + valueToGeneralize);
+                            System.out.println();
+                        }
                         break;
                     default:
                         break;

@@ -162,7 +162,7 @@ public class StandardStudy2 extends Experiment {
     test.executeTest("EPSILON");
     test.executeTest("HV");
     test.executeTest("SPREAD");
-  } // main
+  } // runner
 } // StandardStudy2
 
 

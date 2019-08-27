@@ -132,6 +132,6 @@ public class InvertedGenerationalDistance {
             new Integer(args[2]));
     
     System.out.println(value);  
-  } // main  
+  } // runner
   
 } // InvertedGenerationalDistance

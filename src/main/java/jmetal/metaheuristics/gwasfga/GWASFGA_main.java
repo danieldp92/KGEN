@@ -170,5 +170,5 @@ public class GWASFGA_main {
       int evaluations = ((Integer)algorithm.getOutputParameter("evaluations")).intValue();
       logger_.info("Speed      : " + evaluations + " evaluations") ;      
     } // if
-  } //main
+  } //runner
 } // GWASFGA_main

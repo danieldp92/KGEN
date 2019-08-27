@@ -102,5 +102,5 @@ public class dMOPSO_main {
       logger_.info("Spread     : " + indicators.getSpread(population)) ;
       logger_.info("Epsilon    : " + indicators.getEpsilon(population)) ;
     } // if                   
-  } //main
+  } //runner
 } // dMOPSO_main

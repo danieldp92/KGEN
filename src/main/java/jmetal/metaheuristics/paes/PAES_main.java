@@ -1,4 +1,4 @@
-//  PAES.main
+//  PAES.runner
 //
 //  Author:
 //       Antonio J. Nebro <antonio@lcc.uma.es>
@@ -131,5 +131,5 @@ public class PAES_main {
       logger_.info("Spread     : " + indicators.getSpread(population)) ;
       logger_.info("Epsilon    : " + indicators.getEpsilon(population)) ;  
     } // if
-  }//main
+  }//runner
 } // PAES_main

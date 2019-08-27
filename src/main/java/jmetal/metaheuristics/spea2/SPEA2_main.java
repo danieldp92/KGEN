@@ -140,5 +140,5 @@ public class SPEA2_main {
       logger_.info("Spread     : " + indicators.getSpread(population)) ;
       logger_.info("Epsilon    : " + indicators.getEpsilon(population)) ;
     } // if 
-  }//main
+  }//runner
 } // SPEA2_main.java

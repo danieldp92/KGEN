@@ -140,5 +140,5 @@ public class MainC {
         logger_.info("Speed      : " + evaluations + " evaluations") ;
       } // if
     } // if
-  } //main
+  } //runner
 } // Main

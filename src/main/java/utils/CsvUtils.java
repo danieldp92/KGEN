@@ -1,8 +1,5 @@
 package utils;
 
-import main.experimentation.bean.Result;
-
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.*;
@@ -85,7 +82,7 @@ public class CsvUtils {
                 for (Field oField : oFields) {
                     Method method = getMap.get(oField.getName());
                     try {
-                        if (method.invoke(o) == null) {
+                        if (method.invoke(o) == null || method.invoke(o).toString().equals("-1")) {
                             line += "-" + SEPARATOR_TAG;
                         } else {
                             line += method.invoke(o).toString() + SEPARATOR_TAG;

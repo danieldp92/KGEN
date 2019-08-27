@@ -168,5 +168,5 @@ public class GeneralizedSpread {
             new Integer(args[2]));
     
     System.out.println(value);  
-  }  // main
+  }  // runner
 } // GeneralizedSpread

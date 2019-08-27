@@ -148,5 +148,5 @@ public class FastPGA_main {
       int evaluations = ((Integer)algorithm.getOutputParameter("evaluations")).intValue();
       logger_.info("Speed      : " + evaluations + " evaluations") ;      
     } // if
-  }//main
+  }//runner
 } // FastPGA_main

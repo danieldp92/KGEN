@@ -132,7 +132,7 @@ public class WASFGAStudy2D extends Experiment
         // Run the experiments                
         exp.initExperiment();
         exp.runExperiment(1);                
-    } // main
+    } // runner
 
     /**
      * Deletes the given path and, if it is a directory, deletes all its

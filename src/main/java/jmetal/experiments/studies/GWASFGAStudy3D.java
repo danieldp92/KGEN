@@ -132,7 +132,7 @@ public class GWASFGAStudy3D extends Experiment {
 		exp.runExperiment(1);
 
 		generateCombinedObjectivesFiles(exp);
-	} // main
+	} // runner
 
 	/**
 	 * Deletes the given path and, if it is a directory, deletes all its

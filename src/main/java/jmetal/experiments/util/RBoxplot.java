@@ -106,7 +106,7 @@ public class RBoxplot {
         os.write("names=algs, notch = FALSE)" + "\n");
       }
       os.write("titulo <-paste(indicator, problem, sep=\":\")" + "\n");
-      os.write("title(main=titulo)" + "\n");
+      os.write("title(runner=titulo)" + "\n");
 
       os.write("}" + "\n");
 

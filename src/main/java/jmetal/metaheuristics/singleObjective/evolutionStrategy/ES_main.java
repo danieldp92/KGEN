@@ -80,6 +80,6 @@ public class ES_main {
     population.printObjectivesToFile("FUN");
     System.out.println("Variables values have been writen to file VAR");
     population.printVariablesToFile("VAR");          
-  }//main
+  }//runner
 
 } // ES_main

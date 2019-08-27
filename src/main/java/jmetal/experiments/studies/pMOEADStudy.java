@@ -137,5 +137,5 @@ public class pMOEADStudy extends Experiment {
     // Applying Friedman test
     Friedman test = new Friedman(exp);
     test.executeTest("EPSILON");
-  } // main
+  } // runner
 } // pMOEADStudy

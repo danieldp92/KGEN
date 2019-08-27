@@ -140,7 +140,7 @@ public class NSGAIIStudy extends Experiment {
     test.executeTest("EPSILON");
     test.executeTest("HV");
     test.executeTest("SPREAD");
-  } // main
+  } // runner
 } // NSGAIIStudy
 
 

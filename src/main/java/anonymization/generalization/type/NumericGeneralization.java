@@ -9,9 +9,24 @@ public class NumericGeneralization implements IGeneralization {
             throw new LevelNotValidException();
         }
 
+        int numericValue = 0;
+
+        if (value instanceof Double) {
+            double doubleValue = (Double) value;
+
+            // Return the same double value, converted in String
+            if (level == 0) {
+                return String.valueOf(doubleValue);
+            } else {
+                numericValue = (int) doubleValue;
+                level--;
+            }
+        } else {
+            numericValue = (Integer) value;
+        }
+
 
         String numericGeneralization = "";
-        int numericValue = (Integer) value;
 
         if (level == 0) {
             numericGeneralization = String.valueOf(numericValue);

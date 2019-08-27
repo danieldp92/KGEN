@@ -99,5 +99,5 @@ public class PSO_main {
     population.printObjectivesToFile("FUN");
     logger_.info("Variables values have been writen to file VAR");
     population.printVariablesToFile("VAR");                         
-  } //main
+  } //runner
 } // PSO_main

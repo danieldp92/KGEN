@@ -99,5 +99,5 @@ public class MOCHC_main {
       System.err.println(e);
       e.printStackTrace();
     } //catch    
-  }//main
+  }//runner
 }

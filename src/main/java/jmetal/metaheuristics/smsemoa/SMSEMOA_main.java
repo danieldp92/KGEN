@@ -162,5 +162,5 @@ public class SMSEMOA_main {
       int evaluations = ((Integer) algorithm.getOutputParameter("evaluations")).intValue();
       logger_.info("Speed      : " + evaluations + " evaluations");
     } // if
-  } //main
+  } //runner
 } // SMSEMOA_main

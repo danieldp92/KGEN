@@ -132,6 +132,6 @@ public class GenerationalDistance {
             new Integer(args[2]));
     
     System.out.println(value);  
-  } // main  
+  } // runner
   
 } // GenerationalDistance

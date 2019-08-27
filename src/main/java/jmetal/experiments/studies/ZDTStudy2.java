@@ -137,7 +137,7 @@ public class ZDTStudy2 extends Experiment {
     test.executeTest("EPSILON");
     test.executeTest("HV");
     test.executeTest("SPREAD");
-  } // main
+  } // runner
 } // ZDTStudy
 
 

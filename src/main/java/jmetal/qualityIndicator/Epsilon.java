@@ -151,6 +151,6 @@ public class Epsilon {
             new Integer(args[2]));
     
     System.out.println(ind_value);
-  } // main
+  } // runner
 } // Epsilon
 

@@ -92,7 +92,7 @@ public class ssGA extends Algorithm {
       population.add(newIndividual);
     } //for       
 
-    // main loop
+    // runner loop
     while (evaluations < maxEvaluations) {
       Solution [] parents = new Solution[2];
       

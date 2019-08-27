@@ -513,5 +513,5 @@ public class R2 {
     System.out.println(qualityIndicator.R2Withouth(approximationFront,paretoFront,25)); 
     System.out.println(qualityIndicator.R2Withouth(approximationFront,paretoFront,75)); 
     
-  } // main
+  } // runner
 } // R2

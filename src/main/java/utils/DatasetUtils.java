@@ -18,6 +18,7 @@ public class DatasetUtils {
     public static void loadProperties (Dataset dataset, String propertiesPath) throws IOPropertiesException {
         List<String> properties = null;
 
+        // Load property file
         try {
             properties = FileUtils.loadFile(propertiesPath);
             properties.remove(0);
@@ -35,9 +36,6 @@ public class DatasetUtils {
             String [] split = line.split(":");
 
             String attributeName = split[0];
-            String attributeType = split[1];
-            String valueType = split[2];
-            boolean primaryKey = Boolean.parseBoolean(split[3]);
 
             int indexAttribute = 0;
             while (indexAttribute < dataset.getHeader().size() &&
@@ -58,7 +56,7 @@ public class DatasetUtils {
         }
     }
 
-    public static int getMaxAttributNumber(DatasetColumn column) {
+    public static int getMaxAttributINT(DatasetColumn column) {
         int maxNumber = 0;
 
         for (Object attributeObj : column) {
@@ -75,6 +73,22 @@ public class DatasetUtils {
         return maxNumber;
     }
 
+    public static double getMaxAttributDOUBLE(DatasetColumn column) {
+        double maxNumber = 0;
+
+        for (Object attributeObj : column) {
+            Attribute attribute = (Attribute) attributeObj;
+            if (attribute.getValue() != null) {
+                Double number = (Double) attribute.getValue();
+
+                if (Math.abs(number) > maxNumber) {
+                    maxNumber = Math.abs(number);
+                }
+            }
+        }
+
+        return maxNumber;
+    }
     public static int getMaxAttributeStringLenght(DatasetColumn columns) {
         int maxLenght = 0;
 
@@ -114,7 +128,7 @@ public class DatasetUtils {
             if (qiAttribute.type == QuasiIdentifier.TYPE_INT) {
                 median = 0;
             } else {
-                median = "*****";
+                median = "";
             }
         }
 
@@ -132,6 +146,10 @@ public class DatasetUtils {
                     minLength = ((String) attribute.getValue()).length();
                 }
             }
+        }
+
+        if (minLength == Integer.MAX_VALUE) {
+            minLength = 0;
         }
 
         return minLength;
@@ -184,11 +202,11 @@ public class DatasetUtils {
         String [] split = propertyLine.split(":");
 
         if (split.length != PROPERTY_FIELDS) {
-            throw new IOPropertiesException("NUMBER OF PROPERTY FILEDS WRONG");
+            throw new IOPropertiesException("NUMBER OF PROPERTY FILES WRONG");
         }
 
         String attributeType = split[1];
-        String valueType = split[2];
+        String valueType = split[2].toLowerCase();
         boolean primaryKey = Boolean.parseBoolean(split[3]);
 
         int type = -1;

@@ -270,5 +270,5 @@ public class Hypervolume {
     double value = qualityIndicator.hypervolume(solutionFront, trueFront, new Integer(args[2]));
     
     System.out.println(value);  
-  } // main
+  } // runner
 } // Hypervolume

@@ -152,5 +152,5 @@ public class MOEAD_main {
       logger_.info("IGD        : " + indicators.getIGD(population)) ;
       logger_.info("Spread     : " + indicators.getSpread(population)) ;
     } // if          
-  } //main
+  } //runner
 } // MOEAD_main

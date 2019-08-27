@@ -6,10 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import lattice.bean.Lattice;
-import main.experimentation.type.AlgorithmType;
-import main.experimentation.thread.ExperimentationThread;
-import main.experimentation.type.DatasetType;
+import runner.experimentation.thread.ExperimentationThread;
+import runner.experimentation.type.DatasetType;
 
 import java.awt.*;
 import java.net.URL;

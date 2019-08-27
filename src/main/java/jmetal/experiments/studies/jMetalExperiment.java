@@ -195,7 +195,7 @@ public class jMetalExperiment extends Experiment {
     exp.generateRBoxplotScripts(rows, columns, problems, prefix, notch=false, exp) ;
     exp.generateRWilcoxonScripts(problems, prefix, exp) ;
     */
-  } // main
+  } // runner
 } // CEC2013PlanBStudy
 
 

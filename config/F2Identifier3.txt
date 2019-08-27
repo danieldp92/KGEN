@@ -18,7 +18,7 @@ ycoordinaat:i:double:false
 telnr:i:string:false
 mobnr:i:string:false
 kvknr:i:string:false
-vestigingsnr:i:string:falsei
+vestigingsnr:i:string:false
 rsin:i:string:false
 btwnr:i:string:false
 ibannr:i:string:false

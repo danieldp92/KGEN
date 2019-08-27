@@ -63,6 +63,6 @@ public class CMAES_main {
     System.out.println("Variables values have been written to file VAR");
     population.printVariablesToFile("VAR");
 
-  } //main
+  } //runner
 
 } // CMAES_main

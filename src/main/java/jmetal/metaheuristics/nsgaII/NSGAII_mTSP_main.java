@@ -131,5 +131,5 @@ public class NSGAII_mTSP_main {
       int evaluations = ((Integer)algorithm.getOutputParameter("evaluations")).intValue();
       logger_.info("Speed      : " + evaluations + " evaluations") ;      
     } // if
-  } //main
+  } //runner
 } // NSGAII_main
