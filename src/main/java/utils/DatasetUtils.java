@@ -89,6 +89,7 @@ public class DatasetUtils {
 
         return maxNumber;
     }
+
     public static int getMaxAttributeStringLenght(DatasetColumn columns) {
         int maxLenght = 0;
 
@@ -155,45 +156,44 @@ public class DatasetUtils {
         return minLength;
     }
 
-    public static int maxLength (DatasetColumn column) {
-        int maxLength = Integer.MIN_VALUE;
+    public static boolean equalsRows (Dataset dataset, int indexRow1, int indexRow2) {
+        int i = 0;
+        boolean equalsAttribute = true;
 
-        for (Object attributeObj : column) {
-            Attribute attribute = (Attribute) attributeObj;
+        while (i < dataset.getHeader().size() && equalsAttribute) {
+            Attribute attribute1 = (Attribute) dataset.getColumns().get(i).get(indexRow1);
+            Attribute attribute2 = (Attribute) dataset.getColumns().get(i).get(indexRow2);;
 
-            if (attribute.getValue() instanceof String) {
-                if (((String) attribute.getValue()).length() > maxLength) {
-                    maxLength = ((String) attribute.getValue()).length();
-                }
+            equalsAttribute = DatasetUtils.equalsAttribute(attribute1, attribute2);
+            i++;
+        }
+
+        return equalsAttribute;
+    }
+
+
+
+
+    private static boolean equalsAttribute (Attribute attribute1, Attribute attribute2) {
+        boolean equals = false;
+
+        if (attribute1.getValue() == null && attribute2.getValue() == null) {
+            equals = true;
+        }
+
+        else if ((attribute1.getValue() == null && attribute2.getValue() != null) ||
+                (attribute1.getValue() != null && attribute2.getValue() == null)) {
+            equals = false;
+        }
+
+        else {
+            if (attribute1.getValue().equals(attribute2.getValue())) {
+                equals = true;
             }
         }
 
-        return maxLength;
+        return equals;
     }
-
-    public static void printDataset (Dataset dataset) {
-        System.out.println("DATASET INFO\n");
-
-        //Header
-        for (Object attributeObj : dataset.getHeader()) {
-            Attribute attribute = (Attribute) attributeObj;
-            System.out.print(attribute.getName() + "\t\t\t\t");
-        }
-        System.out.println();
-
-        //Data
-        for (int i = 0; i < dataset.getDatasetSize(); i++) {
-            for (int j = 0; j < dataset.getColumns().size(); j++) {
-                Attribute attribute = (Attribute) dataset.getColumns().get(j).get(i);
-                if (attribute.getValue() != null)
-                    System.out.print(attribute.getValue() + "\t\t\t");
-                else
-                    System.out.print("null\t\t\t");
-            }
-            System.out.println();
-        }
-    }
-
 
     private static void setAttribute (Attribute attribute, String propertyLine) throws IOPropertiesException {
         Object value = attribute.getValue();

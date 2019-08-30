@@ -36,9 +36,15 @@ public class ExhaustiveAlgorithm extends Algorithm {
         while (indexNode < lattice.getNodes().size()) {
 
             Node node = lattice.getNodes().get(indexNode);
+            boolean kAnon = this.kAnonymity.kAnonymityTest(node.getActualGeneralization(), MIN_KLEV);
+
+            System.out.println("Node " + (indexNode + 1));
+            System.out.println("LOG: " + node.getActualGeneralization());
+            System.out.println("KANON: " + kAnon);
+            System.out.println("SUPPRESSION PERCENTAGE: " + this.kAnonymity.suppressionPercentage(node.getActualGeneralization(), MIN_KLEV));
 
             // If the node is kAnonymized, add it to the results
-            if (this.kAnonymity.kAnonymityTest(node.getActualGeneralization(), MIN_KLEV)) {
+            if (kAnon) {
                 results.add(node.getActualGeneralization());
             }
 

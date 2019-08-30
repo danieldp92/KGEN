@@ -50,9 +50,9 @@ public class ExperimentationThread extends Thread {
 
         List<Integer> algorithmTypes = new ArrayList<>();
         algorithmTypes.add(AlgorithmType.EXHAUSTIVE_ALGORITHM);
-        algorithmTypes.add(AlgorithmType.OLA_ALGORITHM);
-        algorithmTypes.add(AlgorithmType.KGEN_ALGORITHM);
-        algorithmTypes.add(AlgorithmType.RANDOM_ALGORITHM);
+        //algorithmTypes.add(AlgorithmType.OLA_ALGORITHM);
+        //algorithmTypes.add(AlgorithmType.KGEN_ALGORITHM);
+        //algorithmTypes.add(AlgorithmType.RANDOM_ALGORITHM);
 
         List<String> configPaths = new ArrayList<>();
         switch (datasetType) {
@@ -128,6 +128,8 @@ public class ExperimentationThread extends Thread {
 
                 try {
                     experimentation.execute(numberOfRuns);
+                    if (i == 2) System.exit(0);
+
                 } catch (DatasetNotFoundException | ControllerNotFoundException e) {
                     if (e instanceof DatasetNotFoundException) {
                         System.out.println("Dataset not found");

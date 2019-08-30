@@ -20,7 +20,18 @@ public class SupportMap extends LinkedHashMap<String, Collection<Integer>> {
 
     @Override
     public Object clone() {
+        SupportMap supportMapClone = new SupportMap();
 
-        return super.clone();
+        for (Map.Entry<String, Collection<Integer>> entry : this.entrySet()) {
+            String key = entry.getKey();
+            Collection<Integer> value = entry.getValue();
+
+            String keyClone = new String(key);
+            Collection<Integer> valueClone = new ArrayList<>(value);
+
+            supportMapClone.put(keyClone, valueClone);
+        }
+
+        return supportMapClone;
     }
 }

@@ -39,6 +39,7 @@ public class ExhaustiveExperimentation extends Experimentation{
             this.solutions = executionThread.getSolutions();
             this.executionTime = (double)(System.currentTimeMillis()-start)/1000;
         } else {
+            System.out.println("Expired time");
             executionThread.stop();
         }
 

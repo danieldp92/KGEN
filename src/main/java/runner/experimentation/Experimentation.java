@@ -22,7 +22,7 @@ public abstract class Experimentation {
     protected static final String RESULTS_DIR = PROJECT_DIR + "results" + File.separator;
     public static final String RESULTS_FILE_PATH = RESULTS_DIR + "result.csv";
 
-    private static final double MAX_EVALUATION_TIME_MIN = 2;
+    private static final double MAX_EVALUATION_TIME_MIN = 10;
     public static final double MAX_EVALUATION_TIME = MAX_EVALUATION_TIME_MIN * 60 * 1000;      //expressed in millisec (10 minutes)
 
     protected Dataset dataset;
