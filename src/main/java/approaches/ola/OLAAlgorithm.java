@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OLAAlgorithm extends Algorithm {
-    private static final int MIN_KLEV = 2;
-
     private LatticeUtils latticeUtils;
     private ArrayList<Node> results;
 

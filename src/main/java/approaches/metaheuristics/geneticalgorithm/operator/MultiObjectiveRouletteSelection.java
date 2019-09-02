@@ -1,5 +1,7 @@
 package approaches.metaheuristics.geneticalgorithm.operator;
 
+import anonymization.KAnonymity;
+import approaches.metaheuristics.geneticalgorithm.AnonymizationProblem;
 import approaches.metaheuristics.geneticalgorithm.encoding.GeneralizationSolution;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
@@ -9,10 +11,6 @@ import jmetal.util.JMException;
 import java.util.*;
 
 public class MultiObjectiveRouletteSelection extends Selection {
-    private static final int ffLOG_OBJECTIVE = 0;
-    private static final int ffKLV_OBJECTIVE = 1;
-    private static final int MIN_KLEV = 2;
-
     private static final double MIN_NORMALIZATION = 0;
     private static final double MAX_NORMALIZATION = 0.9;
 
@@ -30,8 +28,8 @@ public class MultiObjectiveRouletteSelection extends Selection {
         //Take all klv in the population, without repeat them
         Set<Double> klvList = new HashSet<Double>();
         for (int i = 0; i < population.size(); i++) {
-            if (population.get(i).getObjective(ffKLV_OBJECTIVE) >= MIN_KLEV) {
-                klvList.add(population.get(i).getObjective(ffKLV_OBJECTIVE));
+            if (population.get(i).getObjective(AnonymizationProblem.ffKLV_OBJECTIVE) >= KAnonymity.MIN_K_LEVEL) {
+                klvList.add(population.get(i).getObjective(AnonymizationProblem.ffKLV_OBJECTIVE));
             }
         }
 
@@ -110,7 +108,7 @@ public class MultiObjectiveRouletteSelection extends Selection {
             GeneralizationSolution generalizationSolution = (GeneralizationSolution) candidateSolution;
             double penaltyNormalized = normalize(minPenalty, maxPenalty, generalizationSolution.getPenalty());
 
-            sumLOG += (1 - penaltyNormalized) * candidateSolution.getObjective(ffLOG_OBJECTIVE);
+            sumLOG += (1 - penaltyNormalized) * candidateSolution.getObjective(AnonymizationProblem.ffLOG_OBJECTIVE);
         }
 
 
@@ -121,7 +119,7 @@ public class MultiObjectiveRouletteSelection extends Selection {
             GeneralizationSolution generalizationSolution = (GeneralizationSolution) candidateSolution;
             double penaltyNormalized = normalize(minPenalty, maxPenalty, generalizationSolution.getPenalty());
 
-            probabilityLOG += (((1 - penaltyNormalized) * candidateSolution.getObjective(ffLOG_OBJECTIVE)) / sumLOG);
+            probabilityLOG += (((1 - penaltyNormalized) * candidateSolution.getObjective(AnonymizationProblem.ffLOG_OBJECTIVE)) / sumLOG);
             probabilitiesLOG.add(probabilityLOG);
         }
 

@@ -8,7 +8,6 @@ import utils.ArrayUtils;
 import java.util.*;
 
 public class LatticeUtils {
-    private static final int MIN_KLEV = 2;
     private KAnonymity kAnonymity;
 
     private LinkedHashMap<Integer, Boolean> taggedMap;
@@ -83,7 +82,7 @@ public class LatticeUtils {
 
         int kLev = this.kAnonymity.kAnonymityTest(nodeLOG);
 
-        if (kLev >= MIN_KLEV) {
+        if (kLev >= KAnonymity.MIN_K_LEVEL) {
             return true;
         }
 

@@ -22,7 +22,7 @@ import utils.DatasetUtils;
 import java.util.*;
 
 public class KAnonymity {
-    private static final int MIN_K_LEVEL = 2;
+    public static final int MIN_K_LEVEL = 2;
 
     private Dataset dataset;
     private ArrayList<Integer> lowerBounds;

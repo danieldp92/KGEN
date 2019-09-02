@@ -1,6 +1,7 @@
 package approaches.metaheuristics.geneticalgorithm.operator;
 
 import anonymization.KAnonymity;
+import approaches.metaheuristics.geneticalgorithm.AnonymizationProblem;
 import approaches.metaheuristics.geneticalgorithm.encoding.GeneralizationSolution;
 import jmetal.core.Solution;
 import jmetal.core.Variable;
@@ -11,10 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class LatticeCrossover extends Crossover {
-    private static final int MIN_K_LEVEL = 2;
-    private static final int ffLOG_OBJECTIVE = 0;
-    private static final int ffKLV_OBJECTIVE = 1;
-
     private KAnonymity kAnonymity;
 
     public LatticeCrossover(HashMap<String, Object> parameters) {
@@ -48,16 +45,16 @@ public class LatticeCrossover extends Crossover {
 
             boolean kAnonParent0 = false;
             boolean kAnonParent1 = false;
-            if (parents[0].getObjective(ffKLV_OBJECTIVE) > 1) {
+            if (parents[0].getObjective(AnonymizationProblem.ffKLV_OBJECTIVE) > 1) {
                 kAnonParent0 = true;
             }
 
-            if (parents[1].getObjective(ffKLV_OBJECTIVE) > 1) {
+            if (parents[1].getObjective(AnonymizationProblem.ffKLV_OBJECTIVE) > 1) {
                 kAnonParent1 = true;
             }
 
             if (kAnonParent0 && kAnonParent1) {
-                boolean kAnonMinLatticeNode = this.kAnonymity.kAnonymityTest(getSolutionValues(min), MIN_K_LEVEL);
+                boolean kAnonMinLatticeNode = this.kAnonymity.kAnonymityTest(getSolutionValues(min), KAnonymity.MIN_K_LEVEL);
                 if (kAnonMinLatticeNode) {
                     //MIN will be an offspring solution
                     dynamicOffsprings.add(min);
@@ -70,7 +67,7 @@ public class LatticeCrossover extends Crossover {
             } else if (!kAnonParent0 && !kAnonParent1) {
                 dynamicOffsprings.add(max);
 
-                boolean kAnonMaxLatticeNode = this.kAnonymity.kAnonymityTest(getSolutionValues(max), MIN_K_LEVEL);
+                boolean kAnonMaxLatticeNode = this.kAnonymity.kAnonymityTest(getSolutionValues(max), KAnonymity.MIN_K_LEVEL);
                 if (!kAnonMaxLatticeNode) {
                     dynamicOffsprings.add((GeneralizationSolution) randomBetweenSolutions(parents[0], max));
                     dynamicOffsprings.add((GeneralizationSolution) randomBetweenSolutions(parents[1], max));

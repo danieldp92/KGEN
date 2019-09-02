@@ -15,7 +15,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class AnonymizationProblem extends Problem {
-    private static final int MIN_K_LEVEL = 2;
+    public static final int ffLOG_OBJECTIVE = 0;
+    public static final int ffKLV_OBJECTIVE = 1;
 
     private Dataset dataset;
     private KAnonymity kAnonymity;
@@ -115,7 +116,7 @@ public class AnonymizationProblem extends Problem {
             chromosome.add((int) var.getValue());
         }
 
-        boolean kAnonymized = this.kAnonymity.kAnonymityTest(chromosome, MIN_K_LEVEL);
+        boolean kAnonymized = this.kAnonymity.kAnonymityTest(chromosome, KAnonymity.MIN_K_LEVEL);
 
         int numberOfIter = 0;
         while (!kAnonymized) {
@@ -133,7 +134,7 @@ public class AnonymizationProblem extends Problem {
             int randomIndex = indexToChoose.remove(0);
             chromosome.set(randomIndex, chromosome.get(randomIndex)+1);
 
-            kAnonymized = this.kAnonymity.kAnonymityTest(chromosome, MIN_K_LEVEL);
+            kAnonymized = this.kAnonymity.kAnonymityTest(chromosome, KAnonymity.MIN_K_LEVEL);
 
             numberOfIter++;
         }

@@ -9,8 +9,6 @@ import java.util.Collections;
 import java.util.HashMap;
 
 public class HorizontalMutation extends Mutation {
-    private static final int MIN_K_LEVEL = 2;
-
     private double mutationProbability;
     private int numberOfAttributeToMutate;
 

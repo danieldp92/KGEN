@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExhaustiveAlgorithm extends Algorithm {
-    private static final int MIN_KLEV = 2;
 
     public ExhaustiveAlgorithm (Dataset dataset) {
         this.dataset = dataset;
@@ -36,12 +35,12 @@ public class ExhaustiveAlgorithm extends Algorithm {
         while (indexNode < lattice.getNodes().size()) {
 
             Node node = lattice.getNodes().get(indexNode);
-            boolean kAnon = this.kAnonymity.kAnonymityTest(node.getActualGeneralization(), MIN_KLEV);
+            boolean kAnon = this.kAnonymity.kAnonymityTest(node.getActualGeneralization(), KAnonymity.MIN_K_LEVEL);
 
             System.out.println("Node " + (indexNode + 1));
             System.out.println("LOG: " + node.getActualGeneralization());
             System.out.println("KANON: " + kAnon);
-            System.out.println("SUPPRESSION PERCENTAGE: " + this.kAnonymity.suppressionPercentage(node.getActualGeneralization(), MIN_KLEV));
+            System.out.println("SUPPRESSION PERCENTAGE: " + this.kAnonymity.suppressionPercentage(node.getActualGeneralization(), KAnonymity.MIN_K_LEVEL));
 
             // If the node is kAnonymized, add it to the results
             if (kAnon) {

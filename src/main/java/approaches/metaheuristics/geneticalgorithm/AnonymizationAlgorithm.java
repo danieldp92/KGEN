@@ -13,10 +13,6 @@ import java.util.List;
 import java.util.Set;
 
 public class AnonymizationAlgorithm extends Algorithm {
-    private static final int MIN_K_LEVEL = 2;
-    private static final int ffLOG_OBJECTIVE = 0;
-    private static final int ffKLV_OBJECTIVE = 1;
-
     private Operator selection;
     private Operator crossover;
     private Operator mutation;
@@ -126,7 +122,7 @@ public class AnonymizationAlgorithm extends Algorithm {
         }
 
         for (int i = 0; i < population.size(); i++) {
-            if (population.get(i).getObjective(ffKLV_OBJECTIVE) == 1) {
+            if (population.get(i).getObjective(AnonymizationProblem.ffKLV_OBJECTIVE) == 1) {
                 population.remove(i--);
             }
         }
@@ -183,7 +179,7 @@ public class AnonymizationAlgorithm extends Algorithm {
 
     private void saveBestSolutions (SolutionSet population) throws JMException {
         for (int i = 0; i < population.size(); i++) {
-            if (population.get(i).getObjective(ffKLV_OBJECTIVE) > 1) {
+            if (population.get(i).getObjective(AnonymizationProblem.ffKLV_OBJECTIVE) > 1) {
                 List<Integer> min = getSolutionValues(population.get(i));
                 results.add(min);
 
