@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Class-Path: xmlbeans-3.1.0.jar commons-pool-1.5.4.jar mysql-connector-
+ java-8.0.16.jar jackson-core-2.9.8.jar commons-codec-1.12.jar commons
+ -math3-3.6.1.jar poi-4.1.0.jar commons-dbcp-1.4.jar curvesapi-1.06.ja
+ r commons-collections4-4.3.jar poi-ooxml-4.1.0.jar poi-ooxml-schemas-
+ 4.1.0.jar commons-compress-1.18.jar protobuf-java-3.6.1.jar
+Main-Class: runner.Main
+

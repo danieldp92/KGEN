@@ -2,15 +2,20 @@ package runner.experimentation;
 
 import approaches.exhaustive.ExhaustiveAlgorithm;
 import exception.DatasetNotFoundException;
+import runner.Main;
 import runner.experimentation.exceptions.ControllerNotFoundException;
 import runner.experimentation.thread.ExecutionThread;
 
 public class ExhaustiveExperimentation extends Experimentation{
     private ExhaustiveAlgorithm exhaustiveAlgorithm;
 
+    public ExhaustiveExperimentation(String resultPath) {
+        super(resultPath);
+    }
+
     @Override
-    public void execute(int numberOfRun) throws DatasetNotFoundException, ControllerNotFoundException {
-        System.out.println("\nEXHAUSTIVE");
+    public void execute(int numberOfRun, double suppressionTreshold) throws DatasetNotFoundException, ControllerNotFoundException {
+        if (Main.SHOW_LOG_MESSAGE) System.out.println("\nEXHAUSTIVE");
         if (this.dataset == null) {
             throw new DatasetNotFoundException();
         }
@@ -19,7 +24,7 @@ public class ExhaustiveExperimentation extends Experimentation{
             throw new ControllerNotFoundException();
         }*/
 
-        this.exhaustiveAlgorithm = new ExhaustiveAlgorithm(dataset);
+        this.exhaustiveAlgorithm = new ExhaustiveAlgorithm(dataset, suppressionTreshold);
 
         long start = System.currentTimeMillis();
 
@@ -39,12 +44,12 @@ public class ExhaustiveExperimentation extends Experimentation{
             this.solutions = executionThread.getSolutions();
             this.executionTime = (double)(System.currentTimeMillis()-start)/1000;
         } else {
-            System.out.println("Expired time");
+            if (Main.SHOW_LOG_MESSAGE) System.out.println("Expired time");
             executionThread.stop();
         }
 
         saveInfoExperimentation(this.exhaustiveAlgorithm.getName(),
-                this.exhaustiveAlgorithm.getkAnonymity(), 1);
+                this.exhaustiveAlgorithm.getkAnonymity(), 1, null);
     }
 
 }

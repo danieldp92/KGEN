@@ -1,11 +1,10 @@
 package controller;
 
 import dataset.beans.Dataset;
-import gui.bean.TextEllipse;
+import ui.gui.bean.TextEllipse;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;

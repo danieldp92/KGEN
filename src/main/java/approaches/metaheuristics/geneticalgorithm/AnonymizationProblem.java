@@ -1,5 +1,6 @@
 package approaches.metaheuristics.geneticalgorithm;
 
+import anonymization.AnonymizationReport;
 import anonymization.KAnonymity;
 import dataset.beans.Dataset;
 import jmetal.core.Problem;
@@ -20,11 +21,13 @@ public class AnonymizationProblem extends Problem {
 
     private Dataset dataset;
     private KAnonymity kAnonymity;
+    private double suppressionTreshold;
 
-    public AnonymizationProblem (Dataset dataset) {
+    public AnonymizationProblem (Dataset dataset, double suppressionTreshold) {
         //Dataset variables
         this.dataset = dataset;
         this.kAnonymity = new KAnonymity(dataset);
+        this.suppressionTreshold = suppressionTreshold;
 
         //Lower and Upper bounds
         ArrayList<Integer> lowerBounds = this.kAnonymity.lowerBounds();
@@ -62,87 +65,28 @@ public class AnonymizationProblem extends Problem {
 
     //Evaluate methods
     public void evaluate(Solution solution) throws JMException {
-        double ffLOG = evaluateLOG(solution);
+        ArrayList<Integer> levelOfAnonymization = new ArrayList<>();
+        for (Variable variable : solution.getDecisionVariables()) {
+            levelOfAnonymization.add((int) variable.getValue());
+        }
+
+        AnonymizationReport report = null;
+        try {
+            report = this.kAnonymity.runKAnonymity(levelOfAnonymization, this.kAnonymity.MIN_K_LEVEL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        double ffLOG = report.getLogMetric();
         solution.setObjective(0, 1-ffLOG);
 
-        double ffKLV = evaluateKLEV(solution);
+        double ffKLV = 0;
+        if (report.getPercentageOfSuppression() <= suppressionTreshold) {
+            ffKLV = report.getkValueWithSuppression();
+        } else {
+            ffKLV = report.getkValue();
+        }
+
         solution.setObjective(1, ffKLV);
     }
-
-    private double evaluateND (Solution solution) throws JMException {
-        int sum = 0;
-        int latticeDepth = 0;
-
-        for (int i = 0; i < numberOfVariables_; i++) {
-            if (upperLimit_[i] > 0) {
-                sum += solution.getDecisionVariables()[i].getValue();
-                latticeDepth = (int) upperLimit_[i];
-            }
-        }
-
-        return sum/latticeDepth;
-    }
-
-    private double evaluateLOG (Solution solution) throws JMException {
-        double sum = 0;
-        int maxVariable = 0;
-
-        for (int i = 0; i < numberOfVariables_; i++) {
-            if (upperLimit_[i] != lowerLimit_[i]) {
-                double value = solution.getDecisionVariables()[i].getValue();
-                sum += ((value - lowerLimit_[i]) / (upperLimit_[i] - lowerLimit_[i]));
-                maxVariable++;
-            }
-        }
-
-        return sum/maxVariable;
-    }
-
-    private double evaluateKLEV (Solution solution) throws JMException {
-        ArrayList<Integer> levelOfGeneralization = new ArrayList<Integer>();
-        for (Variable var : solution.getDecisionVariables()) {
-            levelOfGeneralization.add((int) var.getValue());
-        }
-
-        double kLev = kAnonymity.kAnonymityTest(levelOfGeneralization);
-
-        return kLev;
-    }
-
-
-    public void validateSolution (Solution solution) throws JMException {
-        ArrayList<Integer> chromosome = new ArrayList<Integer>();
-        for (Variable var : solution.getDecisionVariables()) {
-            chromosome.add((int) var.getValue());
-        }
-
-        boolean kAnonymized = this.kAnonymity.kAnonymityTest(chromosome, KAnonymity.MIN_K_LEVEL);
-
-        int numberOfIter = 0;
-        while (!kAnonymized) {
-            ArrayList<Integer> indexToChoose = new ArrayList<Integer>();
-            for (int i = 0; i < chromosome.size(); i++) {
-                if (upperLimit_[i] > chromosome.get(i)) {
-                    indexToChoose.add(i);
-                }
-            }
-
-            Collections.shuffle(indexToChoose);
-
-
-            //Increase its value
-            int randomIndex = indexToChoose.remove(0);
-            chromosome.set(randomIndex, chromosome.get(randomIndex)+1);
-
-            kAnonymized = this.kAnonymity.kAnonymityTest(chromosome, KAnonymity.MIN_K_LEVEL);
-
-            numberOfIter++;
-        }
-
-        for (int i = 0; i < chromosome.size(); i++) {
-            solution.getDecisionVariables()[i].setValue(chromosome.get(i));
-        }
-    }
-
-
 }

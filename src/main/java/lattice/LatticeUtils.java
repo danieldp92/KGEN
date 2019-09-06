@@ -1,5 +1,6 @@
 package lattice;
 
+import anonymization.AnonymizationReport;
 import anonymization.KAnonymity;
 import lattice.bean.Lattice;
 import lattice.bean.Node;
@@ -9,11 +10,13 @@ import java.util.*;
 
 public class LatticeUtils {
     private KAnonymity kAnonymity;
+    private double suppressionTreshold;
 
     private LinkedHashMap<Integer, Boolean> taggedMap;
 
-    public LatticeUtils (KAnonymity kAnonymity) {
+    public LatticeUtils (KAnonymity kAnonymity, double suppressionTreshold) {
         this.kAnonymity = kAnonymity;
+        this.suppressionTreshold = suppressionTreshold;
 
         this.taggedMap = new LinkedHashMap<>();
     }
@@ -80,13 +83,7 @@ public class LatticeUtils {
     public boolean isKAnonymous (Node node) {
         ArrayList<Integer> nodeLOG = node.getActualGeneralization();
 
-        int kLev = this.kAnonymity.kAnonymityTest(nodeLOG);
-
-        if (kLev >= KAnonymity.MIN_K_LEVEL) {
-            return true;
-        }
-
-        return false;
+        return this.kAnonymity.isKAnonymous(nodeLOG, KAnonymity.MIN_K_LEVEL, suppressionTreshold);
     }
 
     /**

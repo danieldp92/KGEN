@@ -9,6 +9,7 @@ public abstract class Algorithm {
     protected String name;
     protected Dataset dataset;
     protected KAnonymity kAnonymity;
+    protected double suppressionTreshold;
 
     public KAnonymity getkAnonymity() {
         return kAnonymity;

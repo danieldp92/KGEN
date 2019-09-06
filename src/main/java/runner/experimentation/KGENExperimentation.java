@@ -4,26 +4,37 @@ import approaches.metaheuristics.geneticalgorithm.AnonymizationAlgorithm;
 import approaches.metaheuristics.geneticalgorithm.AnonymizationProblem;
 import approaches.metaheuristics.geneticalgorithm.AnonymizationSetting;
 import approaches.metaheuristics.utils.SolutionUtils;
+import approaches.ola.OLAAlgorithm;
 import exception.DatasetNotFoundException;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 import jmetal.core.Variable;
 import jmetal.util.JMException;
+import runner.Main;
 import runner.experimentation.exceptions.ControllerNotFoundException;
 import utils.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class KGENExperimentation extends Experimentation{
     private AnonymizationProblem anonymizationProblem;
     private AnonymizationSetting anonymizationSetting;
     private AnonymizationAlgorithm anonymizationAlgorithm;
 
+    private double suppressionTreshold;
+
+    public KGENExperimentation(String resultPath) {
+        super(resultPath);
+    }
+
     @Override
-    public void execute(int numberOfRun) throws DatasetNotFoundException, ControllerNotFoundException {
-        System.out.println("\nKGEN");
+    public void execute(int numberOfRun, double suppressionTreshold) throws DatasetNotFoundException, ControllerNotFoundException {
+        this.suppressionTreshold = suppressionTreshold;
+
+        if (Main.SHOW_LOG_MESSAGE) System.out.println("\nKGEN");
         //Initialize the genetic algorithm
-        this.anonymizationProblem = new AnonymizationProblem(dataset);
+        this.anonymizationProblem = new AnonymizationProblem(dataset, suppressionTreshold);
         this.anonymizationSetting = new AnonymizationSetting(this.anonymizationProblem, latticeController);
         try {
             this.anonymizationAlgorithm = (AnonymizationAlgorithm) this.anonymizationSetting.configure();
@@ -32,7 +43,7 @@ public class KGENExperimentation extends Experimentation{
         }
 
         for (int run = 1; run <= numberOfRun; run++) {
-            System.out.println("KGEN " + run);
+            if (Main.SHOW_LOG_MESSAGE) System.out.println("KGEN " + run);
             long start = System.currentTimeMillis();
 
             SolutionSet bestSolutions = null;
@@ -41,6 +52,8 @@ public class KGENExperimentation extends Experimentation{
             } catch (JMException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
+
+            List<List<List<Integer>>> allExactSolutions = null;
 
             if (bestSolutions.size() > 0) {
                 this.solutions = new ArrayList<>();
@@ -52,9 +65,11 @@ public class KGENExperimentation extends Experimentation{
                 SolutionUtils.removeGreaterElements(this.solutions);
 
                 this.executionTime = (double)(System.currentTimeMillis()-start)/1000;
+
+                if (Main.EXACT_METAHEURISTIC_VERIFICATION) allExactSolutions = getExactSolutions(solutions);
             }
 
-            saveInfoExperimentation("KGEN", anonymizationProblem.getkAnonymity(), run);
+            saveInfoExperimentation("KGEN", anonymizationProblem.getkAnonymity(), run, allExactSolutions);
         }
 
     }
@@ -71,5 +86,25 @@ public class KGENExperimentation extends Experimentation{
         }
 
         return values;
+    }
+
+    private List<List<List<Integer>>> getExactSolutions (List<List<Integer>> solutions) {
+        // Find the best solution, for each solution found with KGEN, to evaluate every distance from the best solution
+        if (Main.SHOW_LOG_MESSAGE) System.out.println("Analyze all exact solutions for each pseudo optimal solution");
+        OLAAlgorithm olaAlgorithm = new OLAAlgorithm(dataset, suppressionTreshold);
+
+        List<List<List<Integer>>> allExactSolutions = new ArrayList<>();
+
+        int i = 1;
+        if (Main.SHOW_LOG_MESSAGE) System.out.print("Analizing solution 0 of " + solutions.size());
+        for (List<Integer> solution : solutions) {
+            if (Main.SHOW_LOG_MESSAGE) System.out.print("\rAnalizing solution " + i++ + " of " + solutions.size());
+            List<List<Integer>> exactSolutions = olaAlgorithm.run(anonymizationProblem.getkAnonymity().lowerBounds(), new ArrayList<>(solution));
+            allExactSolutions.add(exactSolutions);
+        }
+
+        if (Main.SHOW_LOG_MESSAGE) System.out.println("\nAll solutions successfully analyzed");
+
+        return allExactSolutions;
     }
 }

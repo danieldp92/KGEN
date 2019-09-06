@@ -6,12 +6,14 @@ import anonymization.generalization.graph.GeneralizationTree;
 import anonymization.generalization.graph.Node;
 
 import java.io.File;
+import java.io.InputStream;
+import java.util.List;
 
 public class PlaceGeneralization implements IGeneralization{
     private GeneralizationTree placeHierarchy;
 
-    public PlaceGeneralization() {
-        this.placeHierarchy = GeneralizationGraphGenerator.generatePlaceHierarchy();
+    public PlaceGeneralization(List<String> csv) {
+        this.placeHierarchy = GeneralizationGraphGenerator.generatePlaceHierarchy(csv);
     }
 
     public String generalize(int level, Object value) throws LevelNotValidException {

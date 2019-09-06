@@ -1,10 +1,9 @@
-package gui;
+package ui.gui;
 
 import controller.LatticeController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import runner.experimentation.thread.ExperimentationThread;

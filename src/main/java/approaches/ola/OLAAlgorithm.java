@@ -16,9 +16,10 @@ public class OLAAlgorithm extends Algorithm {
     private LatticeUtils latticeUtils;
     private ArrayList<Node> results;
 
-    public OLAAlgorithm (Dataset dataset) {
+    public OLAAlgorithm (Dataset dataset, double suppressionTreshold) {
         this.results = new ArrayList<>();
         this.dataset = dataset;
+        this.suppressionTreshold = suppressionTreshold;
 
         this.name = "OLA";
     }
@@ -26,11 +27,25 @@ public class OLAAlgorithm extends Algorithm {
     @Override
     public List<List<Integer>> run() {
         this.kAnonymity = new KAnonymity(dataset);
-        this.latticeUtils = new LatticeUtils(this.kAnonymity);
+        this.latticeUtils = new LatticeUtils(this.kAnonymity, suppressionTreshold);
 
         // Top and Bottom nodes
         ArrayList<Integer> topNode = kAnonymity.upperBounds();
         ArrayList<Integer> bottomNode = kAnonymity.lowerBounds();
+
+        KMin(new Node(bottomNode), new Node(topNode));
+
+        List<List<Integer>> solutions = new ArrayList<>();
+        for (Node result : results) {
+            solutions.add(result.getActualGeneralization());
+        }
+
+        return solutions;
+    }
+
+    public List<List<Integer>> run(ArrayList<Integer> bottomNode, ArrayList<Integer> topNode) {
+        this.kAnonymity = new KAnonymity(dataset);
+        this.latticeUtils = new LatticeUtils(this.kAnonymity, suppressionTreshold);
 
         KMin(new Node(bottomNode), new Node(topNode));
 

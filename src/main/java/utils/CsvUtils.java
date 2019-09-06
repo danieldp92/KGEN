@@ -1,14 +1,15 @@
 package utils;
 
+import anonymization.generalization.type.StringGeneralization;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 public class CsvUtils {
     private static final String SEPARATOR_TAG = ";";
+    private static final String LIST_SEPARATOR_TAG = ",";
 
     public static void saveClassAsCsv(List<Object> objects, String path) {
         List<String> csv = generateCSV(objects);
@@ -82,10 +83,28 @@ public class CsvUtils {
                 for (Field oField : oFields) {
                     Method method = getMap.get(oField.getName());
                     try {
-                        if (method.invoke(o) == null || method.invoke(o).toString().equals("-1")) {
-                            line += "-" + SEPARATOR_TAG;
+                        Object methodReturnValue = method.invoke(o);
+                        if (methodReturnValue == null || methodReturnValue.toString().equals("-1") || methodReturnValue.toString().equals("-1.0")) {
+                            line += "" + SEPARATOR_TAG;
                         } else {
-                            line += method.invoke(o).toString() + SEPARATOR_TAG;
+                            int type = TypeUtils.objectInstanceOf(methodReturnValue);
+
+                            switch (type) {
+                                case TypeUtils.PRIMITIVE_TYPE:
+                                    line += methodReturnValue.toString() + SEPARATOR_TAG;
+                                    break;
+                                case TypeUtils.ARRAY_TYPE:
+                                    line += getArrayString(methodReturnValue) + SEPARATOR_TAG;
+                                    break;
+                                case TypeUtils.SET_TYPE:
+                                    line += getArrayString(methodReturnValue) + SEPARATOR_TAG;
+                                    break;
+                                case TypeUtils.MAP_TYPE:
+                                    line += getMapString(methodReturnValue) + SEPARATOR_TAG;
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     } catch (IllegalAccessException | InvocationTargetException e) {}
                 }
@@ -131,4 +150,117 @@ public class CsvUtils {
 
         return attributeNameNormalized.substring(0, attributeNameNormalized.length()-1);
     }
+
+    private static String getArrayString (Object o) {
+        List list = (List) o;
+
+        String toString = "";
+
+        if (!list.isEmpty()) {
+            // Get first element of array
+            Object firstElement = list.get(0);
+
+            int type = TypeUtils.objectInstanceOf(firstElement);
+
+            switch (type) {
+                case TypeUtils.PRIMITIVE_TYPE:
+                    toString = list.toString();
+                    break;
+                case TypeUtils.ARRAY_TYPE:
+                    toString = "[";
+                    for (Object element : list) {
+                        toString += getArrayString(element) + LIST_SEPARATOR_TAG;
+                    }
+                    toString = toString.substring(0, toString.length()-1) + "]";
+                    break;
+                case TypeUtils.SET_TYPE:
+                    toString = "[";
+                    for (Object element : list) {
+                        toString += getArrayString(element) + LIST_SEPARATOR_TAG;
+                    }
+                    toString = toString.substring(0, toString.length()-1) + "]";
+                    break;
+                case TypeUtils.MAP_TYPE:
+                    toString = "{";
+                    for (Object element : list) {
+                        Map mapElement = (Map) element;
+                        toString += getMapString(element) + LIST_SEPARATOR_TAG;
+                    }
+                    toString = toString.substring(0, toString.length()-1) + "}";
+                    break;
+            }
+        }
+
+        return toString;
+    }
+
+    private static String getMapString (Object o) {
+        String toString = "";
+        Map map = (Map) o;
+
+        if (!map.isEmpty()) {
+            Set keySet = map.keySet();
+
+            for (Object keyObject : keySet) {
+                // Key
+                toString += "key=";
+                int keyType = TypeUtils.objectInstanceOf(keyObject);
+                switch (keyType) {
+                    case TypeUtils.PRIMITIVE_TYPE:
+                        toString += keyObject.toString();
+                        break;
+                    case TypeUtils.ARRAY_TYPE:
+                        toString = "[";
+                        for (Object element : (List)keyObject) {
+                            toString += getArrayString(element) + LIST_SEPARATOR_TAG;
+                        }
+                        toString = toString.substring(0, toString.length()-1) + "]";
+                        break;
+                    case TypeUtils.SET_TYPE:
+                        toString = "[";
+                        for (Object element : (List)keyObject) {
+                            toString += getArrayString(element) + LIST_SEPARATOR_TAG;
+                        }
+                        toString = toString.substring(0, toString.length()-1) + "]";
+                        break;
+                    case TypeUtils.MAP_TYPE:
+                        toString += getMapString(keyObject);
+                        break;
+                }
+
+                toString += LIST_SEPARATOR_TAG + "value=";
+
+                // Value
+                Object valueObject = map.get(keyObject);
+                int valueType = TypeUtils.objectInstanceOf(valueObject);
+                switch (valueType) {
+                    case TypeUtils.PRIMITIVE_TYPE:
+                        toString += keyObject.toString();
+                        break;
+                    case TypeUtils.ARRAY_TYPE:
+                        toString = "[";
+                        for (Object element : (List)keyObject) {
+                            toString += getArrayString(element) + LIST_SEPARATOR_TAG;
+                        }
+                        toString = toString.substring(0, toString.length()-1) + "]";
+                        break;
+                    case TypeUtils.SET_TYPE:
+                        toString = "[";
+                        for (Object element : (List)keyObject) {
+                            toString += getArrayString(element) + LIST_SEPARATOR_TAG;
+                        }
+                        toString = toString.substring(0, toString.length()-1) + "]";
+                        break;
+                    case TypeUtils.MAP_TYPE:
+                        toString += getMapString(keyObject);
+                        break;
+                }
+
+                toString += LIST_SEPARATOR_TAG;
+            }
+        }
+
+        return toString;
+    }
+
 }

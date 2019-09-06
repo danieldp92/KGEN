@@ -1,5 +1,6 @@
 package approaches.exhaustive;
 
+import anonymization.AnonymizationReport;
 import anonymization.KAnonymity;
 import approaches.Algorithm;
 import dataset.beans.Dataset;
@@ -13,9 +14,10 @@ import java.util.List;
 
 public class ExhaustiveAlgorithm extends Algorithm {
 
-    public ExhaustiveAlgorithm (Dataset dataset) {
+    public ExhaustiveAlgorithm (Dataset dataset, double suppressionTreshold) {
         this.dataset = dataset;
         this.name = "EXHAUSTIVE";
+        this.suppressionTreshold = suppressionTreshold;
     }
 
     @Override
@@ -27,6 +29,7 @@ public class ExhaustiveAlgorithm extends Algorithm {
 
         Lattice lattice = LatticeGenerator.generateOnlyNodes(bottomNode, topNode);
 
+
         List<List<Integer>> results = new ArrayList<>();
 
         int indexNode = 0;
@@ -35,14 +38,8 @@ public class ExhaustiveAlgorithm extends Algorithm {
         while (indexNode < lattice.getNodes().size()) {
 
             Node node = lattice.getNodes().get(indexNode);
-            boolean kAnon = this.kAnonymity.kAnonymityTest(node.getActualGeneralization(), KAnonymity.MIN_K_LEVEL);
+            boolean kAnon = this.kAnonymity.isKAnonymous(node.getActualGeneralization(), KAnonymity.MIN_K_LEVEL, this.suppressionTreshold);
 
-            System.out.println("Node " + (indexNode + 1));
-            System.out.println("LOG: " + node.getActualGeneralization());
-            System.out.println("KANON: " + kAnon);
-            System.out.println("SUPPRESSION PERCENTAGE: " + this.kAnonymity.suppressionPercentage(node.getActualGeneralization(), KAnonymity.MIN_K_LEVEL));
-
-            // If the node is kAnonymized, add it to the results
             if (kAnon) {
                 results.add(node.getActualGeneralization());
             }

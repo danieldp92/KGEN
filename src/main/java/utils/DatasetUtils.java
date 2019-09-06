@@ -3,16 +3,53 @@ package utils;
 import dataset.beans.Attribute;
 import dataset.beans.Dataset;
 import dataset.beans.DatasetColumn;
+import dataset.beans.DatasetRow;
 import dataset.type.AttributeType;
 import dataset.type.Identifier;
 import dataset.type.QuasiIdentifier;
 import exception.IOPropertiesException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class DatasetUtils {
     private static final int PROPERTY_FIELDS = 4;
+
+
+    public static Dataset readFromCSV (List<String> csvText) throws IOException {
+        Dataset dataset = null;
+        DatasetRow header = new DatasetRow();
+        ArrayList<DatasetColumn> columns = new ArrayList<DatasetColumn>();
+
+        // Header
+        String [] headerAttributes = csvText.remove(0).split(";");
+        for (String headerAttribute : headerAttributes) {
+            Attribute attribute = new Attribute(headerAttribute, null);
+            header.add(attribute);
+            columns.add(new DatasetColumn());
+        }
+
+        // Columns
+        for (String line : csvText) {
+            String [] values = line.split(";");
+            for (int i = 0; i < values.length; i++) {
+                Attribute attribute = new Attribute(((Attribute)header.get(i)).getName(), values[i]);
+                columns.get(i).add(attribute);
+            }
+        }
+
+        dataset = new Dataset(header, columns);
+
+        return dataset;
+    }
+
+
+
+
+
+
 
 
     public static void loadProperties (Dataset dataset, String propertiesPath) throws IOPropertiesException {

@@ -54,7 +54,12 @@ public class LatticeCrossover extends Crossover {
             }
 
             if (kAnonParent0 && kAnonParent1) {
-                boolean kAnonMinLatticeNode = this.kAnonymity.kAnonymityTest(getSolutionValues(min), KAnonymity.MIN_K_LEVEL);
+                boolean kAnonMinLatticeNode = false;
+                try {
+                    kAnonMinLatticeNode = this.kAnonymity.isKAnonymous(getSolutionValues(min), KAnonymity.MIN_K_LEVEL, 0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 if (kAnonMinLatticeNode) {
                     //MIN will be an offspring solution
                     dynamicOffsprings.add(min);
@@ -67,7 +72,7 @@ public class LatticeCrossover extends Crossover {
             } else if (!kAnonParent0 && !kAnonParent1) {
                 dynamicOffsprings.add(max);
 
-                boolean kAnonMaxLatticeNode = this.kAnonymity.kAnonymityTest(getSolutionValues(max), KAnonymity.MIN_K_LEVEL);
+                boolean kAnonMaxLatticeNode = this.kAnonymity.isKAnonymous(getSolutionValues(max), KAnonymity.MIN_K_LEVEL, 0);
                 if (!kAnonMaxLatticeNode) {
                     dynamicOffsprings.add((GeneralizationSolution) randomBetweenSolutions(parents[0], max));
                     dynamicOffsprings.add((GeneralizationSolution) randomBetweenSolutions(parents[1], max));

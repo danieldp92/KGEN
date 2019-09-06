@@ -10,6 +10,7 @@ public class ExecutionThread extends Thread{
 
     private Algorithm algorithm;
     private List<List<Integer>> solutions;
+    private double suppressionTreshold;
 
     public ExecutionThread (Algorithm algorithm) {
         this.algorithm = algorithm;
