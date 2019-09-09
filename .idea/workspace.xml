@@ -7,11 +7,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7d3d6fdf-844a-40dc-bf4f-7f3c5e11fca1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/anonymization/KAnonymity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/anonymization/KAnonymity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/anonymization/generalization/type/PlaceGeneralization.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/anonymization/generalization/type/PlaceGeneralization.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/runner/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/runner/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/runner/experimentation/thread/ExperimentationThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/runner/experimentation/thread/ExperimentationThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ui/cui/AnonymizationCLI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/cui/AnonymizationCLI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ui/cui/IOUtils.java" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -41,33 +39,30 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/thread/ExperimentationThread.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/ui/cui/AnonymizationCLI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="406">
-              <caret line="113" column="35" selection-start-line="113" selection-start-column="35" selection-end-line="113" selection-end-column="35" />
+            <state relative-caret-position="635">
+              <caret line="84" column="39" selection-start-line="84" selection-start-column="39" selection-end-line="84" selection-end-column="39" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#setLatticeController#0;class#ExperimentationThread#0" />
-                <element signature="method#unlockThread#0;class#ExperimentationThread#0" />
-                <element signature="method#getStub#0;class#ExperimentationThread#0" />
+                <element signature="docComment;method#argumentValidation#0;class#AnonymizationCLI#0" />
+                <element signature="method#argumentValidation#0;class#AnonymizationCLI#0" />
+                <element signature="method#extractOutputFromArguments#0;class#AnonymizationCLI#0" />
+                <element signature="method#removeOArgs#0;class#AnonymizationCLI#0" />
+                <element signature="method#isConfigFileValid#0;class#AnonymizationCLI#0" />
+                <element signature="method#showHelpMenu#0;class#AnonymizationCLI#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/ui/cui/AnonymizationCLI.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/ui/cui/ConfigGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="355">
-              <caret line="183" column="30" lean-forward="true" selection-start-line="183" selection-start-column="30" selection-end-line="183" selection-end-column="30" />
+            <state relative-caret-position="391">
+              <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#showHelpMenu#0;class#AnonymizationCLI#0" />
-                <element signature="docComment;method#argumentValidation#0;class#AnonymizationCLI#0" />
-                <element signature="method#extractOutputFromArguments#0;class#AnonymizationCLI#0" />
-                <element signature="method#removeOArgs#0;class#AnonymizationCLI#0" />
-                <element signature="method#isConfigFileValid#0;class#AnonymizationCLI#0" />
-                <element signature="method#argsStub#0;class#AnonymizationCLI#0" />
               </folding>
             </state>
           </provider>
@@ -76,80 +71,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/Experimentation.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="70" column="25" selection-start-line="70" selection-start-column="25" selection-end-line="70" selection-end-column="25" />
+            <state relative-caret-position="481">
+              <caret line="42" column="58" lean-forward="true" selection-start-line="42" selection-start-column="27" selection-end-line="42" selection-end-column="58" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#initRandomDataset#0;class#Experimentation#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/anonymization/KAnonymity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="525">
-              <caret line="262" column="25" lean-forward="true" selection-start-line="262" selection-start-column="25" selection-end-line="262" selection-end-column="25" />
-              <folding>
-                <element signature="method#initMedianMap#0;class#KAnonymity#0" />
-                <element signature="method#initQuasiIdentifierIndex#0;class#KAnonymity#0" />
-                <element signature="docComment;method#initAnonymizationMap#0;class#KAnonymity#0" />
-                <element signature="docComment;method#initGeneralizationMap#0;class#KAnonymity#0" />
-                <element signature="method#initGeneralizationMap#0;class#KAnonymity#0" />
-                <element signature="method#anonymizeColumn#0;class#KAnonymity#0" />
-                <element signature="method#getLOG#0;class#KAnonymity#0" />
-                <element signature="docComment;method#runKAnonymityOnDataset#0;class#KAnonymity#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/ExhaustiveExperimentation.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="26" column="48" selection-start-line="26" selection-start-column="48" selection-end-line="26" selection-end-column="48" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#445#446#0" expanded="true" />
-                <element signature="e#478#479#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/approaches/exhaustive/ExhaustiveAlgorithm.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="566">
-              <caret line="40" column="48" selection-start-line="40" selection-start-column="48" selection-end-line="40" selection-end-column="48" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/lattice/generator/LatticeGenerator.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2669">
-              <caret line="164" column="52" lean-forward="true" selection-start-line="164" selection-start-column="52" selection-end-line="164" selection-end-column="52" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/KGENExperimentation.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="699">
-              <caret line="62" lean-forward="true" selection-start-line="62" selection-end-line="62" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#984#985#0" expanded="true" />
-                <element signature="e#1017#1018#0" expanded="true" />
-                <element signature="method#getSolutionValues#0;class#KGENExperimentation#0" />
               </folding>
             </state>
           </provider>
@@ -191,7 +117,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/approaches/randomsearch/RandomSearchProblem.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/geneticalgorithm/AnonymizationSetting.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/randomsearch/RandomSearchSettings.java" />
         <option value="$PROJECT_DIR$/src/main/java/runner/experimentation/type/AlgorithmType.java" />
@@ -218,7 +143,6 @@
         <option value="$PROJECT_DIR$/src/main/java/approaches/exhaustive/ExhaustiveAlgorithm.java" />
         <option value="$PROJECT_DIR$/src/main/java/lattice/LatticeUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/ola/OLAAlgorithm.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ui/cui/IOUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/runner/experimentation/ArgumentException.java" />
         <option value="$PROJECT_DIR$/src/main/java/ui/cui/AnonymizationCui.java" />
         <option value="$PROJECT_DIR$/src/main/java/ui/UI.java" />
@@ -241,11 +165,13 @@
         <option value="$PROJECT_DIR$/src/main/java/anonymization/generalization/type/PlaceGeneralization.java" />
         <option value="$PROJECT_DIR$/src/main/java/anonymization/KAnonymity.java" />
         <option value="$PROJECT_DIR$/src/main/java/lattice/generator/LatticeGenerator.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ui/cui/IOUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/ui/cui/AnonymizationCLI.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ui/cui/ConfigGenerator.java" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="1915" />
     <option name="y" value="140" />
     <option name="width" value="1296" />
@@ -535,12 +461,12 @@
       <workItem from="1567597272671" duration="10998000" />
       <workItem from="1567669379226" duration="18210000" />
       <workItem from="1567758757351" duration="19300000" />
-      <workItem from="1568018040527" duration="14972000" />
+      <workItem from="1568018040527" duration="18438000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="606376000" />
+    <option name="totallyTimeSpent" value="609842000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -562,7 +488,7 @@
       <window_info id="Structure" order="5" sideWeight="0.51069516" side_tool="true" weight="0.2874494" />
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.22339405" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.22339405" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.2147651" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.34707573" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -607,13 +533,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/anonymization/generalization/type/DateGeneralization.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/approaches/metaheuristics/geneticalgorithm/operator/LatticeCrossover.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="276">
@@ -738,13 +657,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_191/src.zip!/java/lang/Integer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
-          <caret line="613" column="22" selection-start-line="613" selection-start-column="22" selection-end-line="613" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/dataset/type/Identifier.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
@@ -763,13 +675,6 @@
           <folding>
             <element signature="e#159#160#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ui/cui/IOUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" selection-start-line="3" selection-end-line="3" />
         </state>
       </provider>
     </entry>
@@ -1033,19 +938,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/KGENExperimentation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="699">
-          <caret line="62" lean-forward="true" selection-start-line="62" selection-end-line="62" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#984#985#0" expanded="true" />
-            <element signature="e#1017#1018#0" expanded="true" />
-            <element signature="method#getSolutionValues#0;class#KGENExperimentation#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/thread/ExperimentationThread.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="406">
@@ -1101,17 +993,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/Experimentation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="70" column="25" selection-start-line="70" selection-start-column="25" selection-end-line="70" selection-end-column="25" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#initRandomDataset#0;class#Experimentation#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/approaches/exhaustive/ExhaustiveAlgorithm.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="566">
@@ -1129,18 +1010,66 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ui/cui/AnonymizationCLI.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/KGENExperimentation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="355">
-          <caret line="183" column="30" lean-forward="true" selection-start-line="183" selection-start-column="30" selection-end-line="183" selection-end-column="30" />
+        <state relative-caret-position="699">
+          <caret line="62" lean-forward="true" selection-start-line="62" selection-end-line="62" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#showHelpMenu#0;class#AnonymizationCLI#0" />
+            <element signature="e#984#985#0" expanded="true" />
+            <element signature="e#1017#1018#0" expanded="true" />
+            <element signature="method#getSolutionValues#0;class#KGENExperimentation#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ui/cui/IOUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="4" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/Experimentation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="481">
+          <caret line="42" column="58" lean-forward="true" selection-start-line="42" selection-start-column="27" selection-end-line="42" selection-end-column="58" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#initRandomDataset#0;class#Experimentation#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_191/src.zip!/java/lang/Integer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="338">
+          <caret line="613" column="69" selection-start-line="613" selection-start-column="48" selection-end-line="613" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ui/cui/AnonymizationCLI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="635">
+          <caret line="84" column="39" selection-start-line="84" selection-start-column="39" selection-end-line="84" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
             <element signature="docComment;method#argumentValidation#0;class#AnonymizationCLI#0" />
+            <element signature="method#argumentValidation#0;class#AnonymizationCLI#0" />
             <element signature="method#extractOutputFromArguments#0;class#AnonymizationCLI#0" />
             <element signature="method#removeOArgs#0;class#AnonymizationCLI#0" />
             <element signature="method#isConfigFileValid#0;class#AnonymizationCLI#0" />
-            <element signature="method#argsStub#0;class#AnonymizationCLI#0" />
+            <element signature="method#showHelpMenu#0;class#AnonymizationCLI#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/ui/cui/ConfigGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>

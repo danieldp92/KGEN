@@ -41,19 +41,11 @@ public class AnonymizationCLI implements UI {
     private static final String [] CONFIG_DATE_TYPE = {"int", "double", "string", "date", "place"};
     private static final String [] CONFIG_PK = {"true", "false"};
 
-
-    public static final int EXPERIMENTATION = 0;
-    public static final int ALGORITHM = 1;
-    public static final int CONFIG = 2;
-    public static final int HELP = 3;
-
     private static final String SEPARATOR_TAG = ":";
 
 
     @Override
     public void run(String [] args) throws ArgumentException {
-        //args = argsStub();
-
         Arguments arguments = argumentValidation(args);
 
         if (arguments instanceof ExperimentationArguments) {
@@ -89,33 +81,13 @@ public class AnonymizationCLI implements UI {
         }
 
         else if (arguments instanceof ConfigArguments) {
-            // TO ADD
+            ConfigArguments configArguments = (ConfigArguments) arguments;
+            ConfigGenerator.generateConfigFileFromCLI(configArguments.getDatasetPath(), configArguments.getOutputPath());
         }
 
         else {
             showHelpMenu();
         }
-    }
-
-    private static void showHelpMenu () {
-        System.out.println("\tOptions\t\t\t\tDescription");
-
-        System.out.println("\t-a --algorithm" +
-                "\t\t\tChoose an algorithm for the anonymization of a dataset.\n" +
-                "\t\t\t\t\tIt's possible to choose 4 algorithms: EXHAUSTIVE, OLA, KGEN, RANDOM\n" +
-                "\t\t\t\t\tCommand line format: -a <algorithmName> <treshold> <datasetPath> <configPath>\n");
-
-        System.out.println("\t-c --config" +
-                "\t\t\tGenerate a config file, that it's necessary to run the algorithm.\n" +
-                "\t\t\t\t\tCommand line format: -c <datasetPath>\n");
-        System.out.println("\t-e --experimentation" +
-                "\t\tRun the entire experimentation, comparing all the algorithms available in the tool\n" +
-                "\t\t\t\t\tCommand line format: -e <numberOfRuns> <treshold> <datasetPath> <configPath>\n");
-        System.out.println("\t-o" +
-                "\t\t\t\tAllow you to choose the destination folder for the output\n" +
-                "\t\t\t\t\tExample of usage: -o <outputPath>\n");
-        System.out.println("\t-h --help" +
-                "\t\t\tShow help menu");
     }
 
     /**
@@ -278,6 +250,7 @@ public class AnonymizationCLI implements UI {
         return arguments;
     }
 
+
     private String extractOutputFromArguments (String [] args) {
         String outputFile = null;
 
@@ -350,14 +323,26 @@ public class AnonymizationCLI implements UI {
         return true;
     }
 
-    private String [] argsStub () {
-        String [] args = new String[5];
-        args[0] = "-e";
-        args[1] = "5";
-        args[2] = "0.5";
-        args[3] = "C:\\Users\\20190482\\Documents\\GitHub\\KGEN\\dataset\\F2_Dataset.xlsx";
-        args[4] = "C:\\Users\\20190482\\Documents\\GitHub\\KGEN\\config\\F2Identifier3.txt";
 
-        return args;
+
+    private static void showHelpMenu () {
+        System.out.println("\tOptions\t\t\t\tDescription");
+
+        System.out.println("\t-a --algorithm" +
+                "\t\t\tChoose an algorithm for the anonymization of a dataset.\n" +
+                "\t\t\t\t\tIt's possible to choose 4 algorithms: EXHAUSTIVE, OLA, KGEN, RANDOM\n" +
+                "\t\t\t\t\tCommand line format: -a <algorithmName> <treshold> <datasetPath> <configPath>\n");
+
+        System.out.println("\t-c --config" +
+                "\t\t\tGenerate a config file, that it's necessary to run the algorithm.\n" +
+                "\t\t\t\t\tCommand line format: -c <datasetPath>\n");
+        System.out.println("\t-e --experimentation" +
+                "\t\tRun the entire experimentation, comparing all the algorithms available in the tool\n" +
+                "\t\t\t\t\tCommand line format: -e <numberOfRuns> <treshold> <datasetPath> <configPath>\n");
+        System.out.println("\t-o" +
+                "\t\t\t\tAllow you to choose the destination folder for the output\n" +
+                "\t\t\t\t\tExample of usage: -o <outputPath>\n");
+        System.out.println("\t-h --help" +
+                "\t\t\tShow help menu");
     }
 }
