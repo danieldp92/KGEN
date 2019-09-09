@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Main {
-    public static final boolean SHOW_LOG_MESSAGE = true;
+    public static final boolean SHOW_LOG_MESSAGE = false;
     public static final boolean EXACT_METAHEURISTIC_VERIFICATION = false;
 
     public static void main (String [] args) throws IOException, ArgumentException {

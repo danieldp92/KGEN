@@ -6,11 +6,14 @@ import dataset.beans.DatasetRow;
 import dataset.type.AttributeType;
 import dataset.type.Identifier;
 import dataset.type.QuasiIdentifier;
+import exception.DatasetNotFoundException;
 import jmetal.core.Algorithm;
-import runner.experimentation.ArgumentException;
+import runner.experimentation.*;
+import runner.experimentation.exceptions.ControllerNotFoundException;
 import runner.experimentation.thread.ExperimentationThread;
 import runner.experimentation.type.AlgorithmType;
 import ui.UI;
+import ui.cui.arguments.*;
 import utils.CsvUtils;
 import utils.DatasetUtils;
 import utils.FileUtils;
@@ -29,6 +32,7 @@ public class AnonymizationCLI implements UI {
     public static final String [] EXPERIMENTATION_ARGUMENTS = {"-e", "--experimentation"};
     public static final String [] ALGORITHM_ARGUMENTS = {"-a", "--algorithm"};
     public static final String [] CONFIG_ARGUMENTS = {"-c", "--config"};
+    public static final String [] SAVE_ARGUMENTS = {"-o"};
     public static final String [] HELP_ARGUMENTS = {"-h", "--help"};
 
     private static final String [] VALID_DATASET_EXTENSIONS = {"csv", "xlsx", "xls"};
@@ -48,34 +52,48 @@ public class AnonymizationCLI implements UI {
 
     @Override
     public void run(String [] args) throws ArgumentException {
-        /*args = new String[5];
-        args[0] = "-e";
-        args[1] = "5";
-        args[2] = "0.5";
-        args[3] = "C:\\Users\\20190482\\Documents\\GitHub\\KGEN\\dataset\\F2_Dataset.xlsx";
-        args[4] = "C:\\Users\\20190482\\Documents\\GitHub\\KGEN\\config\\F2Identifier3.txt";*/
+        //args = argsStub();
 
-        int option = argumentValidation(args);
+        Arguments arguments = argumentValidation(args);
 
-        switch (option) {
-            case EXPERIMENTATION:
-                int numberOfRuns = Integer.parseInt(args[1]);
-                double suppressionTreshold = Double.parseDouble(args[2]);
-                String datasetPath = args[3];
-                String configPath = args[4];
+        if (arguments instanceof ExperimentationArguments) {
+            ExperimentationThread experimentationThread = new ExperimentationThread((ExperimentationArguments) arguments);
+            experimentationThread.start();
+        }
 
-                ExperimentationThread experimentationThread = new ExperimentationThread(datasetPath, configPath, numberOfRuns, suppressionTreshold);
-                experimentationThread.start();
-                break;
-            case ALGORITHM:
-                System.out.println("############# ALGORITHM ######################");
-                break;
-            case CONFIG:
-                System.out.println("############# CONFIG ######################");
-                break;
-            case HELP:
-                showHelpMenu();
-                break;
+        else if (arguments instanceof AlgorithmArguments) {
+            Experimentation experimentation = null;
+            AlgorithmArguments algorithmArguments = (AlgorithmArguments) arguments;
+
+            switch (algorithmArguments.getAlgorithmType()) {
+                case AlgorithmType.EXHAUSTIVE_ALGORITHM:
+                    experimentation = new ExhaustiveExperimentation(algorithmArguments.getOutputPath());
+                    break;
+                case AlgorithmType.OLA_ALGORITHM:
+                    experimentation = new OLAExperimentation(algorithmArguments.getOutputPath());
+                    break;
+                case AlgorithmType.KGEN_ALGORITHM:
+                    experimentation = new KGENExperimentation(algorithmArguments.getOutputPath());
+                    break;
+                case AlgorithmType.RANDOM_ALGORITHM:
+                    experimentation = new RandomSearchExperimentation(algorithmArguments.getOutputPath());
+                    break;
+            }
+
+            try {
+                experimentation.initDataset(algorithmArguments.getDatasetPath(), algorithmArguments.getConfigPath());
+                experimentation.execute(1, algorithmArguments.getTreshold());
+            } catch (DatasetNotFoundException | ControllerNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        else if (arguments instanceof ConfigArguments) {
+            // TO ADD
+        }
+
+        else {
+            showHelpMenu();
         }
     }
 
@@ -93,6 +111,9 @@ public class AnonymizationCLI implements UI {
         System.out.println("\t-e --experimentation" +
                 "\t\tRun the entire experimentation, comparing all the algorithms available in the tool\n" +
                 "\t\t\t\t\tCommand line format: -e <numberOfRuns> <treshold> <datasetPath> <configPath>\n");
+        System.out.println("\t-o" +
+                "\t\t\t\tAllow you to choose the destination folder for the output\n" +
+                "\t\t\t\t\tExample of usage: -o <outputPath>\n");
         System.out.println("\t-h --help" +
                 "\t\t\tShow help menu");
     }
@@ -100,14 +121,20 @@ public class AnonymizationCLI implements UI {
     /**
      * This method check if the command inserted is valid
      * @param args, the arguments passed as arguments
-     * @return the type of the option used
+     * @return the argument choosen
      * @throws ArgumentException
      */
-    public static int argumentValidation(String [] args) throws ArgumentException {
-        int argument = -1;
+    public Arguments argumentValidation(String [] args) throws ArgumentException {
+        Arguments arguments = null;
 
         if (args.length <= 0) {
             throw new ArgumentException("ERROR! Please insert an option. To see all valid options, please use the command -h or --help");
+        }
+
+        //Extract the output from arguments
+        String outputPath = extractOutputFromArguments(args);
+        if (outputPath != null) {
+            args = removeOArgs(args);
         }
 
         // Check the option
@@ -115,6 +142,12 @@ public class AnonymizationCLI implements UI {
         // Experimentation command -> -e numberOfRuns <datasetPath> <configFilePath>
         // Algorithm command -> -a algorithmName <datasetPath> <configFilePath>
         if (Arrays.asList(EXPERIMENTATION_ARGUMENTS).contains(args[0]) || Arrays.asList(ALGORITHM_ARGUMENTS).contains(args[0])) {
+            int numberOfExperimentation = 0;
+            int algorithmType = -1;
+            double treshold = 0;
+            String datasetPath = null;
+            String configFilePath = null;
+
             if (args.length != 5) {
                 if (Arrays.asList(EXPERIMENTATION_ARGUMENTS).contains(args[0])) {
                     throw new ArgumentException("ERROR! When you want to run an experimentation, please use this format:\n" +
@@ -127,7 +160,6 @@ public class AnonymizationCLI implements UI {
 
             // -e -> args[1] -> Number
             if (Arrays.asList(EXPERIMENTATION_ARGUMENTS).contains(args[0])) {
-                int numberOfExperimentation = 0;
                 try {
                     numberOfExperimentation = Integer.parseInt(args[1]);
                 } catch (NumberFormatException ex) {
@@ -142,18 +174,35 @@ public class AnonymizationCLI implements UI {
                     throw new ArgumentException("ERROR! Please, insert only one of the follow valid algorithm:\n" +
                             "\t- EXHAUSTIVE\n\t- OLA\n\t- KGEN\n\t- RANDOM");
                 }
+
+                switch (algorithmName) {
+                    case "EXHAUSTIVE":
+                        algorithmType = AlgorithmType.EXHAUSTIVE_ALGORITHM;
+                        break;
+                    case "OLA":
+                        algorithmType = AlgorithmType.OLA_ALGORITHM;
+                        break;
+                    case "KGEN":
+                        algorithmType = AlgorithmType.KGEN_ALGORITHM;
+                        break;
+                    case "RANDOM":
+                        algorithmType = AlgorithmType.RANDOM_ALGORITHM;
+                        break;
+                }
             }
 
             // args[2] -> Treshold
-            double treshold = 0;
             try {
                 treshold = Double.parseDouble(args[2]);
+                if (treshold < 0 || treshold > 1) {
+                    throw new ArgumentException("ERROR: Invalid treshold. The treshold must be expressed as a number between 0 and 1!!!");
+                }
             } catch (NumberFormatException ex) {
-                throw new ArgumentException("ERROR: Invalid argument. The treshold must be expressed as a number between 0 and 100!!!");
+                throw new ArgumentException("ERROR: Invalid argument. The treshold must be expressed as a number between 0 and 1!!!");
             }
 
             // args[3] -> Dataset Path
-            String datasetPath = args[3];
+            datasetPath = args[3];
             File datasetFile = new File(datasetPath);
             if (!datasetFile.exists()) {
                 throw new ArgumentException("ERROR! No dataset found in the path " + datasetPath);
@@ -163,7 +212,7 @@ public class AnonymizationCLI implements UI {
             }
 
             // args[4] -> Config Path
-            String configFilePath = args[4];
+            configFilePath = args[4];
             File configFile = new File(configFilePath);
             if (!configFile.exists()) {
                 throw new ArgumentException("ERROR! No config file found in the path " + configFilePath);
@@ -181,9 +230,9 @@ public class AnonymizationCLI implements UI {
 
 
             if (Arrays.asList(EXPERIMENTATION_ARGUMENTS).contains(args[0])) {
-                argument = EXPERIMENTATION;
+                arguments = new ExperimentationArguments(numberOfExperimentation, treshold, datasetPath, configFilePath, outputPath);
             } else {
-                argument = ALGORITHM;
+                arguments = new AlgorithmArguments(algorithmType, treshold, datasetPath, configFilePath, outputPath);
             }
         }
 
@@ -204,7 +253,7 @@ public class AnonymizationCLI implements UI {
                         "\t- csv\n\t- xlsx\n\t- xls");
             }
 
-            argument = CONFIG;
+            arguments = new ConfigArguments(datasetPath, outputPath);
         }
 
         // Help command -> -h
@@ -214,14 +263,50 @@ public class AnonymizationCLI implements UI {
                         "\t-h");
             }
 
-            argument = HELP;
+            if (outputPath != null) {
+                throw new ArgumentException("ERROR! Help argument cannot have an output! Please use this format:\n" +
+                        "\t-h");
+            }
+
+            arguments = new HelpArguments();
         }
 
         else {
             throw new ArgumentException("Invalid option. To see all valid options, please use the command -h or --help");
         }
 
-        return argument;
+        return arguments;
+    }
+
+    private String extractOutputFromArguments (String [] args) {
+        String outputFile = null;
+
+        for (int i = 0; i < args.length; i++) {
+            if (Arrays.asList(SAVE_ARGUMENTS).contains(args[i]) && (i+1) < args.length) {
+                outputFile = args[i+1];
+                break;
+            }
+        }
+
+        return outputFile;
+    }
+
+    private String [] removeOArgs (String [] args) {
+        List<String> tmpArgs = new ArrayList<>();
+        for (int i = 0; i < args.length; i++) {
+            if (Arrays.asList(SAVE_ARGUMENTS).contains(args[i]) && (i+1) < args.length) {
+                i++;
+            } else {
+                tmpArgs.add(args[i]);
+            }
+        }
+
+        String [] newArgs = new String[tmpArgs.size()];
+        for (int i = 0; i < tmpArgs.size(); i++) {
+            newArgs[i] = tmpArgs.get(i);
+        }
+
+        return newArgs;
     }
 
     private static boolean isConfigFileValid (String configFilePath) throws IOException {
@@ -263,5 +348,16 @@ public class AnonymizationCLI implements UI {
         }
 
         return true;
+    }
+
+    private String [] argsStub () {
+        String [] args = new String[5];
+        args[0] = "-e";
+        args[1] = "5";
+        args[2] = "0.5";
+        args[3] = "C:\\Users\\20190482\\Documents\\GitHub\\KGEN\\dataset\\F2_Dataset.xlsx";
+        args[4] = "C:\\Users\\20190482\\Documents\\GitHub\\KGEN\\config\\F2Identifier3.txt";
+
+        return args;
     }
 }

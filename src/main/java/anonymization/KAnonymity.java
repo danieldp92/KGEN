@@ -7,6 +7,7 @@ import anonymization.generalization.type.DateGeneralization;
 import anonymization.generalization.type.NumericGeneralization;
 import anonymization.generalization.type.PlaceGeneralization;
 import anonymization.generalization.type.StringGeneralization;
+import anonymization.generalization.utils.TreeUtils;
 import anonymization.support.GeneralizationMap;
 import anonymization.support.LOGMap;
 import anonymization.support.SupportMap;
@@ -355,7 +356,12 @@ public class KAnonymity {
 
         ArrayList<Integer> upperBounds = new ArrayList<Integer>();
 
-        GeneralizationTree generalizationTree = GeneralizationGraphGenerator.generatePlaceHierarchy(this.placeCsv);
+        GeneralizationTree generalizationTree = null;
+        if (placeGeneralization != null) {
+            generalizationTree = placeGeneralization.getPlaceHierarchy();
+        } else {
+            generalizationTree = GeneralizationGraphGenerator.generatePlaceHierarchy(this.placeCsv);
+        }
 
         //Max level of anonymity of every attribute
         for (int i = 0; i < dataset.getHeader().size(); i++) {

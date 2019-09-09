@@ -10,6 +10,7 @@ import runner.experimentation.bean.Result;
 import runner.experimentation.exceptions.ControllerNotFoundException;
 import runner.experimentation.type.AlgorithmType;
 import runner.experimentation.type.DatasetType;
+import ui.cui.arguments.ExperimentationArguments;
 import utils.CsvUtils;
 
 import java.io.File;
@@ -43,7 +44,7 @@ public class ExperimentationThread extends Thread {
         this.unlock = false;
     }
 
-    public ExperimentationThread (String datasetPath, String configPath, int numberOfRuns, double suppressionTreshold) {
+    public ExperimentationThread (ExperimentationArguments experimentationArguments) {
         String jarPath = null;
         try {
             jarPath = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath().replaceAll("/", "\\\\");
@@ -51,12 +52,17 @@ public class ExperimentationThread extends Thread {
             e.printStackTrace();
         }
 
-        this.datasetPath = datasetPath;
-        this.configPath = configPath;
-        this.numberOfRuns = numberOfRuns;
-        this.suppressionTreshold = suppressionTreshold;
+        this.datasetPath = experimentationArguments.getDatasetPath();
+        this.configPath = experimentationArguments.getConfigPath();
+        this.numberOfRuns = experimentationArguments.getNumberOfRuns();
+        this.suppressionTreshold = experimentationArguments.getTreshold();
 
-        this.resultPath = new File(jarPath).getParent() + File.separator + RESULT_NAME;
+        if (experimentationArguments.getOutputPath() == null) {
+            this.resultPath = new File(jarPath).getParent() + File.separator + RESULT_NAME;
+        } else {
+            this.resultPath = experimentationArguments.getOutputPath();
+        }
+
         //this.resultPath = "C:\\Users\\20190482\\Documents\\GitHub\\KGEN\\out\\artifacts\\KGEN_jar" + File.separator + RESULT_NAME;
 
         this.lock = new ReentrantLock();
