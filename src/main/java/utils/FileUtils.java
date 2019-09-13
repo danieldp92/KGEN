@@ -1,8 +1,10 @@
 package utils;
 
 import jmetal.core.SolutionSet;
+import runner.Main;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,14 +17,17 @@ public class FileUtils {
         return split[split.length-1];
     }
 
-    public static boolean pathValidation (String path) {
-        File file = new File(path);
-
-        if (file.isDirectory() || file.getParentFile().isDirectory()) {
-            return true;
+    public static String getDirOfJAR () {
+        String jarPath = null;
+        try {
+            jarPath = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath().replaceAll("/", "\\\\");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
 
-        return false;
+        String outputDir = new File(jarPath).getParent() + File.separator;
+
+        return outputDir;
     }
 
     public static void saveFile (ArrayList<String> txt, String path) throws FileNotFoundException {

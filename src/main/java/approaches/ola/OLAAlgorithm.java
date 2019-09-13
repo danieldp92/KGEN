@@ -2,7 +2,6 @@ package approaches.ola;
 
 import anonymization.KAnonymity;
 import approaches.Algorithm;
-import controller.LatticeController;
 import dataset.beans.Dataset;
 import lattice.LatticeUtils;
 import lattice.bean.Lattice;

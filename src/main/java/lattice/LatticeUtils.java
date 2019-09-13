@@ -263,4 +263,14 @@ public class LatticeUtils {
 
         return new ArrayList<Node>(levelOrdered);
     }
+
+    public static boolean sameStrategyPath (List<Integer> lowerNode, List<Integer> nextNode) {
+        for (int i = 0; i < lowerNode.size(); i++) {
+            if ((nextNode.get(i) - lowerNode.get(i)) < 0) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

@@ -27,7 +27,7 @@ package jmetal.qualityIndicator;
  * "java jmetal.qualityIndicator.GenerationalDistance <solutionFrontFile>  
  * <trueFrontFile> <getNumberOfObjectives>"
  * Reference: Van Veldhuizen, D.A., Lamont, G.B.: Multiobjective Evolutionary 
- *            Algorithm Research: A History and Analysis. 
+ *            Algorithm Research: A History and Stat.
  *            Technical Report TR-98-03, Dept. Elec. Comput. Eng., Air Force 
  *            Inst. Technol. (1998)
  */

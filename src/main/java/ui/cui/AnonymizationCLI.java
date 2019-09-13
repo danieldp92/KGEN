@@ -1,29 +1,21 @@
 package ui.cui;
 
-import dataset.beans.Attribute;
-import dataset.beans.Dataset;
-import dataset.beans.DatasetRow;
-import dataset.type.AttributeType;
-import dataset.type.Identifier;
-import dataset.type.QuasiIdentifier;
+import com.sun.org.apache.regexp.internal.RE;
 import exception.DatasetNotFoundException;
-import jmetal.core.Algorithm;
 import runner.experimentation.*;
-import runner.experimentation.exceptions.ControllerNotFoundException;
+import runner.experimentation.bean.Result;
+import runner.experimentation.bean.Stat;
+import runner.experimentation.exceptions.ArgumentException;
 import runner.experimentation.thread.ExperimentationThread;
 import runner.experimentation.type.AlgorithmType;
+import runner.experimentation.util.ResultUtils;
+import runner.experimentation.util.StatisticalUtils;
 import ui.UI;
 import ui.cui.arguments.*;
-import utils.CsvUtils;
-import utils.DatasetUtils;
 import utils.FileUtils;
-import utils.XlsUtils;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +35,8 @@ public class AnonymizationCLI implements UI {
 
     private static final String SEPARATOR_TAG = ":";
 
+    public static final String RESULT_NAME = "result.csv";
+    public static final String STAT_NAME = "stat.csv";
 
     @Override
     public void run(String [] args) throws ArgumentException {
@@ -54,29 +48,71 @@ public class AnonymizationCLI implements UI {
         }
 
         else if (arguments instanceof AlgorithmArguments) {
+            List<Result> results = new ArrayList<>();
             Experimentation experimentation = null;
             AlgorithmArguments algorithmArguments = (AlgorithmArguments) arguments;
 
+            // If the path is null, use the directory of the jar file
+            if (algorithmArguments.getOutputPath() == null) {
+                String outputDir = FileUtils.getDirOfJAR();
+                algorithmArguments.setOutputPath(outputDir);
+            }
+
             switch (algorithmArguments.getAlgorithmType()) {
                 case AlgorithmType.EXHAUSTIVE_ALGORITHM:
-                    experimentation = new ExhaustiveExperimentation(algorithmArguments.getOutputPath());
+                    experimentation = new ExhaustiveExperimentation(algorithmArguments.getOutputPath() + RESULT_NAME);
                     break;
                 case AlgorithmType.OLA_ALGORITHM:
-                    experimentation = new OLAExperimentation(algorithmArguments.getOutputPath());
+                    experimentation = new OLAExperimentation(algorithmArguments.getOutputPath() + RESULT_NAME);
                     break;
                 case AlgorithmType.KGEN_ALGORITHM:
-                    experimentation = new KGENExperimentation(algorithmArguments.getOutputPath());
+                    experimentation = new KGENExperimentation(algorithmArguments.getOutputPath() + RESULT_NAME);
                     break;
                 case AlgorithmType.RANDOM_ALGORITHM:
-                    experimentation = new RandomSearchExperimentation(algorithmArguments.getOutputPath());
+                    experimentation = new RandomSearchExperimentation(algorithmArguments.getOutputPath() + RESULT_NAME);
                     break;
             }
 
             try {
                 experimentation.initDataset(algorithmArguments.getDatasetPath(), algorithmArguments.getConfigPath());
                 experimentation.execute(1, algorithmArguments.getTreshold());
-            } catch (DatasetNotFoundException | ControllerNotFoundException e) {
+                results.addAll(experimentation.getResults());
+            } catch (DatasetNotFoundException  e) {
                 e.printStackTrace();
+            }
+
+            if (!results.isEmpty()) {
+                int numberOfQI = results.get(0).getNumberOfAttributesAnalyzed();
+
+                List<Stat> stats = null;
+                try {
+                    stats = StatisticalUtils.getStatsOfResults(results);
+                    StatisticalUtils.saveStatsIntoCsv(stats, algorithmArguments.getOutputPath() + STAT_NAME);
+                } catch (Exception e) {
+                    // Find the optimal solution, for the accuracy, in the oldest results
+                    List<Result> oldResults = ResultUtils.loadResultsFromCsv(algorithmArguments.getOutputPath() + RESULT_NAME);
+                    List<Result> optimalResults = new ArrayList<>();
+                    for (Result res : oldResults) {
+                        if (res.getNumberOfAttributesAnalyzed() == numberOfQI && res.getAlgorithmName().equals("OLA")) {
+                            optimalResults.add(res);
+                        }
+                    }
+
+                    if (optimalResults.isEmpty()) {
+                        for (Result res : oldResults) {
+                            if (res.getNumberOfAttributesAnalyzed() == numberOfQI && res.getAlgorithmName().equals("EXHAUSTIVE")) {
+                                optimalResults.add(res);
+                            }
+                        }
+                    }
+
+                    if (optimalResults.isEmpty()) {
+                        e.printStackTrace();
+                    }
+
+                    stats = StatisticalUtils.getStatsOfResults(results, optimalResults);
+                    StatisticalUtils.saveStatsIntoCsv(stats, algorithmArguments.getOutputPath() + STAT_NAME);
+                }
             }
         }
 
@@ -107,6 +143,14 @@ public class AnonymizationCLI implements UI {
         String outputPath = extractOutputFromArguments(args);
         if (outputPath != null) {
             args = removeOArgs(args);
+
+            // Check if the path is a directory
+            File outputDir = new File(outputPath);
+            if (!outputDir.exists()) {
+                throw new ArgumentException("ERROR! The outputPath doesn't exist. Please, insert a valid path");
+            } else if (outputDir.isFile()) {
+                throw new ArgumentException("ERROR! The outputPath must be a directory");
+            }
         }
 
         // Check the option

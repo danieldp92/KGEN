@@ -36,4 +36,8 @@ public class AlgorithmArguments extends Arguments {
     public String getOutputPath() {
         return outputPath;
     }
+
+    public void setOutputPath(String outputPath) {
+        this.outputPath = outputPath;
+    }
 }

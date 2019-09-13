@@ -204,7 +204,7 @@ public class KAnonymity {
 
 
 
-    //ANONYMIZATION METHODS ####################################################################
+    // ANONYMIZATION METHODS ####################################################################
     /**
      * Run k-anonymity test with the level of generalizion of attributes.
      * @param levelOfAnonymization, the level of anonymization of all attributes of a given dataset

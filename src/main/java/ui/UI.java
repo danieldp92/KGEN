@@ -1,8 +1,6 @@
 package ui;
 
-import runner.experimentation.ArgumentException;
-
-import java.io.IOException;
+import runner.experimentation.exceptions.ArgumentException;
 
 public interface UI {
     public void run(String [] args) throws ArgumentException;

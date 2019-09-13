@@ -1,7 +1,5 @@
 package utils;
 
-import anonymization.generalization.type.StringGeneralization;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.*;
@@ -12,7 +10,7 @@ public class CsvUtils {
     private static final String LIST_SEPARATOR_TAG = ",";
 
     public static void saveClassAsCsv(List<Object> objects, String path) {
-        List<String> csv = generateCSV(objects);
+        List<String> csv = convertObjectListIntoCSV(objects);
 
         try {
             FileUtils.saveFile((ArrayList<String>) csv, path);
@@ -37,7 +35,7 @@ public class CsvUtils {
             fileNotFound = true;
         }
 
-        List<String> newCsv = generateCSV(objects);
+        List<String> newCsv = convertObjectListIntoCSV(objects);
 
         //Remove the header of this new csv, because it has already created in the csv loaded
         if (!fileNotFound) {
@@ -54,7 +52,7 @@ public class CsvUtils {
         }
     }
 
-    private static List<String> generateCSV(List<Object> objects) {
+    public static List<String> convertObjectListIntoCSV(List<Object> objects) {
         ArrayList<String> csv = new ArrayList<>();
         LinkedHashMap<String, Method> getMap = new LinkedHashMap<>();
         String line = "";
@@ -70,7 +68,7 @@ public class CsvUtils {
 
             //Header
             for (Field field : fields) {
-                line += normalizeAttribute(field.getName()) + SEPARATOR_TAG;
+                line += normalizeAttributeToSave(field.getName()) + SEPARATOR_TAG;
             }
 
             csv.add(line);
@@ -138,17 +136,56 @@ public class CsvUtils {
         return getMap;
     }
 
-    private static String normalizeAttribute (String attributeName) {
+    public static LinkedHashMap<String, Method> extractSetMethodsFromFields(Object object) {
+        LinkedHashMap<String, Method> setMap = new LinkedHashMap<>();
+
+        Field[] fields = object.getClass().getDeclaredFields();
+        Method [] methods = object.getClass().getDeclaredMethods();
+
+        //Search, for each field, its get method
+        for (Field field : fields) {
+            String fieldName = field.getName().toLowerCase();
+
+            int i = 0;
+            while (i < methods.length && !methods[i].getName().toLowerCase().equals("set" + fieldName))
+                i++;
+
+            if (i < methods.length) {
+                setMap.put(field.getName(), methods[i]);
+            }
+        }
+
+        return setMap;
+    }
+
+    private static String normalizeAttributeToSave(String attributeName) {
         String attributeNameNormalized = "";
 
         String[] split = attributeName.split("(?=\\p{Upper})");
         for (String s : split) {
             if (s.length() > 1) {
-                attributeNameNormalized += s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase() + " ";
+                attributeNameNormalized += s.substring(0, 1).toUpperCase() + s.substring(1) + " ";
+            } else if (s.length() == 1) {
+                attributeNameNormalized += s.toUpperCase() + " ";
             }
         }
 
         return attributeNameNormalized.substring(0, attributeNameNormalized.length()-1);
+    }
+
+    public static String normalizeAttributeToLoad (String attributeName) {
+        String [] split = attributeName.split(" ");
+
+        String attributeNormalized = "";
+        for (int i = 0; i < split.length; i++) {
+            if (i == 0) {
+                attributeNormalized += split[i].toLowerCase();
+            } else {
+                attributeNormalized += split[i].substring(0, 1).toUpperCase() + split[i].substring(1);
+            }
+        }
+
+        return attributeNormalized;
     }
 
     private static String getArrayString (Object o) {
@@ -261,6 +298,23 @@ public class CsvUtils {
         }
 
         return toString;
+    }
+
+    public static String replaceDoubleSEPARATOR (String line) {
+        String newString = "";
+        char [] lineChars = line.toCharArray();
+
+        char prevChar = 0;
+        for (int i = 0; i < lineChars.length; i++) {
+            if (i != 0 && prevChar == lineChars[i] && String.valueOf(prevChar).equals(SEPARATOR_TAG)) {
+                newString += " ";
+            }
+
+            prevChar = lineChars[i];
+            newString += prevChar;
+        }
+
+        return newString;
     }
 
 }

@@ -2,7 +2,6 @@ package approaches.metaheuristics.geneticalgorithm;
 
 import anonymization.KAnonymity;
 import approaches.metaheuristics.geneticalgorithm.encoding.GeneralizationSolution;
-import controller.LatticeController;
 import jmetal.core.*;
 import jmetal.util.JMException;
 import utils.ArrayUtils;
@@ -17,8 +16,6 @@ public class AnonymizationAlgorithm extends Algorithm {
     private Operator crossover;
     private Operator mutation;
     private Operator horizontalMutation;
-
-    private LatticeController latticeController;
 
     private SolutionSet population;
 
@@ -154,8 +151,6 @@ public class AnonymizationAlgorithm extends Algorithm {
 
         //Reset history, in order to have indipendent results in a multirun experimentation
         this.kAnonymity.cleanHistoryMap();
-
-        this.latticeController = (LatticeController) getInputParameter("controller");
 
         selection = operators_.get("selection");
         crossover = operators_.get("crossover");

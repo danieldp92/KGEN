@@ -68,6 +68,28 @@ public class ArrayUtils {
         return max;
     }
 
+    public static int sum (List<Integer> list) {
+        int sum = 0;
+        for (int i : list) {
+            sum += i;
+        }
+
+        return sum;
+    }
+
+    public static List<Integer> fromString (String line) {
+        String tmpLine = line.substring(1, line.length()-1);
+        tmpLine = tmpLine.replaceAll(",", "");
+        String [] split = tmpLine.split(" ");
+
+        List<Integer> array = new ArrayList<>();
+        for (String s : split) {
+            array.add(Integer.parseInt(s));
+        }
+
+        return array;
+    }
+
     private static List<List<Integer>> getAllCombinations (List<Integer> maxVector) {
         List<List<Integer>> allCombinations = new ArrayList<List<Integer>>();
 

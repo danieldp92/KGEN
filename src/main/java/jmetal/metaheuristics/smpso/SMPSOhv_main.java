@@ -40,7 +40,7 @@ import java.util.logging.Logger;
 /**
  * This class executes the SMPSOhv algorithm described in:
  * Antonio J. Nebro, Juan José Durillo, Carlos Artemio Coello Coello:
- * Analysis of leader selection strategies in a multi-objective Particle Swarm Optimizer.
+ * Stat of leader selection strategies in a multi-objective Particle Swarm Optimizer.
  * IEEE Congress on Evolutionary Computation 2013: 3153-3160
  */
 public class SMPSOhv_main {

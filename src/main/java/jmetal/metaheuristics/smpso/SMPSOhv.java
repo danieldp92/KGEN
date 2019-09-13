@@ -41,7 +41,7 @@ import java.util.logging.Logger;
 
 /**
  * This class implements the SMPSOhv algorithm described in:
- * A.J Nebro, J.J. Durillo, C.A. Coello Coello. Analysis of Leader Selection Strategies in a
+ * A.J Nebro, J.J. Durillo, C.A. Coello Coello. Stat of Leader Selection Strategies in a
  * Multi-Objective Particle Swarm Optimizer. 2013 IEEE Congress on Evolutionary Computation. June 2013
  */
 public class SMPSOhv extends Algorithm {

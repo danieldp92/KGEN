@@ -3,7 +3,6 @@ package runner.experimentation;
 import approaches.exhaustive.ExhaustiveAlgorithm;
 import exception.DatasetNotFoundException;
 import runner.Main;
-import runner.experimentation.exceptions.ControllerNotFoundException;
 import runner.experimentation.thread.ExecutionThread;
 
 public class ExhaustiveExperimentation extends Experimentation{
@@ -14,15 +13,11 @@ public class ExhaustiveExperimentation extends Experimentation{
     }
 
     @Override
-    public void execute(int numberOfRun, double suppressionTreshold) throws DatasetNotFoundException, ControllerNotFoundException {
+    public void execute(int numberOfRun, double suppressionTreshold) throws DatasetNotFoundException {
         if (Main.SHOW_LOG_MESSAGE) System.out.println("\nEXHAUSTIVE");
         if (this.dataset == null) {
             throw new DatasetNotFoundException();
         }
-
-        /*if (this.latticeController == null) {
-            throw new ControllerNotFoundException();
-        }*/
 
         this.exhaustiveAlgorithm = new ExhaustiveAlgorithm(dataset, suppressionTreshold);
 
@@ -49,7 +44,7 @@ public class ExhaustiveExperimentation extends Experimentation{
         }
 
         saveInfoExperimentation(this.exhaustiveAlgorithm.getName(),
-                this.exhaustiveAlgorithm.getkAnonymity(), 1, null);
+                this.exhaustiveAlgorithm.getkAnonymity(), 1);
     }
 
 }

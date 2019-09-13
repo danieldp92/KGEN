@@ -1,8 +1,6 @@
 package runner.experimentation;
 
-import approaches.metaheuristics.geneticalgorithm.AnonymizationAlgorithm;
 import approaches.metaheuristics.geneticalgorithm.AnonymizationProblem;
-import approaches.metaheuristics.geneticalgorithm.AnonymizationSetting;
 import approaches.metaheuristics.randomsearch.RandomSearchSetting;
 import approaches.metaheuristics.utils.SolutionUtils;
 import approaches.ola.OLAAlgorithm;
@@ -13,8 +11,6 @@ import jmetal.core.Variable;
 import jmetal.metaheuristics.randomSearch.RandomSearch;
 import jmetal.util.JMException;
 import runner.Main;
-import runner.experimentation.exceptions.ControllerNotFoundException;
-import utils.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +27,7 @@ public class RandomSearchExperimentation extends Experimentation {
     }
 
     @Override
-    public void execute(int numberOfRun, double suppressionTreshold) throws DatasetNotFoundException, ControllerNotFoundException {
+    public void execute(int numberOfRun, double suppressionTreshold) throws DatasetNotFoundException {
         this.suppressionTreshold = suppressionTreshold;
 
         if (Main.SHOW_LOG_MESSAGE) System.out.println("\nRandom Search");
@@ -59,8 +55,6 @@ public class RandomSearchExperimentation extends Experimentation {
                 e.printStackTrace();
             }
 
-            List<List<List<Integer>>> allExactSolutions = null;
-
             if (randomSearchSolutions.size() > 0) {
                 this.solutions = new ArrayList<>();
                 for (int i = 0; i < randomSearchSolutions.size(); i++) {
@@ -73,11 +67,9 @@ public class RandomSearchExperimentation extends Experimentation {
                 SolutionUtils.removeGreaterElements(this.solutions);
 
                 this.executionTime = (double)(System.currentTimeMillis()-start)/1000;
-
-                if (Main.EXACT_METAHEURISTIC_VERIFICATION) allExactSolutions = getExactSolutions(solutions);
             }
 
-            saveInfoExperimentation("RANDOM", anonymizationProblem.getkAnonymity(), run, allExactSolutions);
+            saveInfoExperimentation("RANDOM", anonymizationProblem.getkAnonymity(), run);
         }
     }
 
@@ -93,25 +85,5 @@ public class RandomSearchExperimentation extends Experimentation {
         }
 
         return values;
-    }
-
-    private List<List<List<Integer>>> getExactSolutions (List<List<Integer>> solutions) {
-        // Find the best solution, for each solution found with KGEN, to evaluate every distance from the best solution
-        if (Main.SHOW_LOG_MESSAGE) System.out.println("Analyze all exact solutions for each pseudo optimal solution");
-        OLAAlgorithm olaAlgorithm = new OLAAlgorithm(dataset, suppressionTreshold);
-
-        List<List<List<Integer>>> allExactSolutions = new ArrayList<>();
-
-        int i = 1;
-        if (Main.SHOW_LOG_MESSAGE) System.out.print("Analizing solution 0 of " + solutions.size());
-        for (List<Integer> solution : solutions) {
-            if (Main.SHOW_LOG_MESSAGE) System.out.print("\rAnalizing solution " + i++ + " of " + solutions.size());
-            List<List<Integer>> exactSolutions = olaAlgorithm.run(anonymizationProblem.getkAnonymity().lowerBounds(), new ArrayList<>(solution));
-            allExactSolutions.add(exactSolutions);
-        }
-
-        if (Main.SHOW_LOG_MESSAGE) System.out.println("\nAll solutions successfully analyzed");
-
-        return allExactSolutions;
     }
 }

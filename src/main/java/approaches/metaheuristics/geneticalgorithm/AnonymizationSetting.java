@@ -3,7 +3,6 @@ package approaches.metaheuristics.geneticalgorithm;
 import approaches.metaheuristics.geneticalgorithm.operator.HorizontalMutation;
 import approaches.metaheuristics.geneticalgorithm.operator.LatticeCrossover;
 import approaches.metaheuristics.geneticalgorithm.operator.MultiObjectiveRouletteSelection;
-import controller.LatticeController;
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
 import jmetal.core.Problem;
@@ -23,15 +22,11 @@ public class AnonymizationSetting extends Settings {
     protected double horizontalMutationProbability;
     protected int numberOfAttributeToMutate;
 
-    private LatticeController latticeController;
-
-    public AnonymizationSetting (Problem problem, LatticeController controller) {
-        this.latticeController = controller;
-
+    public AnonymizationSetting (Problem problem) {
         this.problem_ = problem;
 
-        this.populationSize = 20;
-        this.maxEvaluations = 2000;
+        this.populationSize = 100;
+        this.maxEvaluations = 5000;
         this.crossoverProbability = 0.9;
         this.mutationProbability = 0.2;
         this.horizontalMutationProbability = 0.4;
@@ -46,8 +41,6 @@ public class AnonymizationSetting extends Settings {
     public Algorithm configure() throws JMException {
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         AnonymizationAlgorithm algorithm = new AnonymizationAlgorithm(this.problem_);
-
-        algorithm.setInputParameter("controller", this.latticeController);
 
         algorithm.setInputParameter("crossover", crossoverProbability);
         algorithm.setInputParameter("mutation", mutationProbability);

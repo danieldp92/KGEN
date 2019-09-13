@@ -3,7 +3,6 @@ package runner.experimentation;
 import approaches.ola.OLAAlgorithm;
 import exception.DatasetNotFoundException;
 import runner.Main;
-import runner.experimentation.exceptions.ControllerNotFoundException;
 import runner.experimentation.thread.ExecutionThread;
 
 public class OLAExperimentation extends Experimentation {
@@ -14,15 +13,11 @@ public class OLAExperimentation extends Experimentation {
     }
 
     @Override
-    public void execute(int numberOfRun, double suppressionTreshold) throws DatasetNotFoundException, ControllerNotFoundException {
+    public void execute(int numberOfRun, double suppressionTreshold) throws DatasetNotFoundException {
         if (Main.SHOW_LOG_MESSAGE) System.out.println("\nOLA");
         if (this.dataset == null) {
             throw new DatasetNotFoundException();
         }
-
-        /*if (this.latticeController == null) {
-            throw new ControllerNotFoundException();
-        }*/
 
         this.olaAlgorithm = new OLAAlgorithm(this.dataset, suppressionTreshold);
 
@@ -52,6 +47,6 @@ public class OLAExperimentation extends Experimentation {
         }*/
 
         saveInfoExperimentation(this.olaAlgorithm.getName(),
-                this.olaAlgorithm.getkAnonymity(), 1, null);
+                this.olaAlgorithm.getkAnonymity(), 1);
     }
 }

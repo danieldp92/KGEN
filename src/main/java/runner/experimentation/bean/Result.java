@@ -2,6 +2,7 @@ package runner.experimentation.bean;
 
 import anonymization.AnonymizationReport;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class Result {
@@ -10,7 +11,7 @@ public class Result {
     private int numberOfAttributesAnalyzed;
     private int numberOfExperimentation;
     private String algorithmName;
-    private Double executionTime;
+    private double executionTime;
     private int latticeSize;
     private List<Integer> bottomNode;
     private List<Integer> topNode;
@@ -20,17 +21,21 @@ public class Result {
     private int kValueWithSuppression;
     private double percentageOfSuppression;
     private List<Integer> rowToDelete;
-    private List<List<Integer>> bestSolutions;
 
+
+    public Result () {}
 
     public Result(String datasetName, int numberOfExperimentation, int numberOfAttributes, String algorithmName,
                   Double executionTime, int latticeSize, List<Integer> bottomNode, List<Integer> topNode,
-                  AnonymizationReport report, List<List<Integer>> bestSolutions) {
+                  AnonymizationReport report) {
+        DecimalFormat df = new DecimalFormat("#.###");
+        DecimalFormat dfMetr = new DecimalFormat("#.########");
+
         this.datasetName = datasetName;
         this.numberOfExperimentation = numberOfExperimentation;
         this.numberOfAttributes = numberOfAttributes;
         this.algorithmName = algorithmName;
-        this.executionTime = executionTime;
+        this.executionTime = Double.parseDouble(df.format(executionTime));
         this.latticeSize = latticeSize;
         this.bottomNode = bottomNode;
         this.topNode = topNode;
@@ -50,14 +55,12 @@ public class Result {
             this.rowToDelete = null;
         } else {
             this.solution = report.getLevelOfAnonymization();
-            this.logMetric = report.getLogMetric();
+            this.logMetric = Double.parseDouble(dfMetr.format(report.getLogMetric()));
             this.kValue = report.getkValue();
             this.kValueWithSuppression = report.getkValueWithSuppression();
-            this.percentageOfSuppression = report.getPercentageOfSuppression();
+            this.percentageOfSuppression = Double.parseDouble(dfMetr.format(report.getPercentageOfSuppression()));
             this.rowToDelete = report.getRowToDelete();
         }
-
-        this.bestSolutions = bestSolutions;
     }
 
     public String getDatasetName() {
@@ -80,7 +83,7 @@ public class Result {
         return algorithmName;
     }
 
-    public Double getExecutionTime() {
+    public double getExecutionTime() {
         return executionTime;
     }
 
@@ -120,7 +123,66 @@ public class Result {
         return rowToDelete;
     }
 
-    public List<List<Integer>> getBestSolutions() {
-        return bestSolutions;
+    public void setDatasetName(String datasetName) {
+        this.datasetName = datasetName;
+    }
+
+    public void setNumberOfAttributes(int numberOfAttributes) {
+        this.numberOfAttributes = numberOfAttributes;
+    }
+
+    public void setNumberOfAttributesAnalyzed(int numberOfAttributesAnalyzed) {
+        this.numberOfAttributesAnalyzed = numberOfAttributesAnalyzed;
+    }
+
+    public void setNumberOfExperimentation(int numberOfExperimentation) {
+        this.numberOfExperimentation = numberOfExperimentation;
+    }
+
+    public void setAlgorithmName(String algorithmName) {
+        this.algorithmName = algorithmName;
+    }
+
+    public void setExecutionTime(double executionTime) {
+        DecimalFormat df = new DecimalFormat("#.###");
+        this.executionTime = Double.parseDouble(df.format(executionTime));
+    }
+
+    public void setLatticeSize(int latticeSize) {
+        this.latticeSize = latticeSize;
+    }
+
+    public void setBottomNode(List<Integer> bottomNode) {
+        this.bottomNode = bottomNode;
+    }
+
+    public void setTopNode(List<Integer> topNode) {
+        this.topNode = topNode;
+    }
+
+    public void setSolution(List<Integer> solution) {
+        this.solution = solution;
+    }
+
+    public void setLogMetric(double logMetric) {
+        DecimalFormat dfMetr = new DecimalFormat("#.########");
+        this.logMetric = Double.parseDouble(dfMetr.format(logMetric));
+    }
+
+    public void setkValue(int kValue) {
+        this.kValue = kValue;
+    }
+
+    public void setkValueWithSuppression(int kValueWithSuppression) {
+        this.kValueWithSuppression = kValueWithSuppression;
+    }
+
+    public void setPercentageOfSuppression(double percentageOfSuppression) {
+        DecimalFormat dfMetr = new DecimalFormat("#.########");
+        this.percentageOfSuppression = Double.parseDouble(dfMetr.format(percentageOfSuppression));
+    }
+
+    public void setRowToDelete(List<Integer> rowToDelete) {
+        this.rowToDelete = rowToDelete;
     }
 }

@@ -24,7 +24,7 @@ package jmetal.qualityIndicator ;
 /**
  * This class implements the unary epsilon additive indicator as proposed in
  * E. Zitzler, E. Thiele, L. Laummanns, M., Fonseca, C., and Grunert da Fonseca.
- * V (2003): Performance Assesment of Multiobjective Optimizers: An Analysis and
+ * V (2003): Performance Assesment of Multiobjective Optimizers: An Stat and
  * Review. The code is the a Java version of the original metric implementation
  * by Eckart Zitzler.
  * It can be used also as a command line program just by typing
