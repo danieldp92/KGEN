@@ -1,12 +1,11 @@
 package ui.cui;
 
-import com.sun.org.apache.regexp.internal.RE;
 import exception.DatasetNotFoundException;
 import runner.experimentation.*;
 import runner.experimentation.bean.Result;
 import runner.experimentation.bean.Stat;
 import runner.experimentation.exceptions.ArgumentException;
-import runner.experimentation.thread.ExperimentationThread;
+import runner.experimentation.thread.ExperimentationRunner;
 import runner.experimentation.type.AlgorithmType;
 import runner.experimentation.util.ResultUtils;
 import runner.experimentation.util.StatisticalUtils;
@@ -25,6 +24,7 @@ public class AnonymizationCLI implements UI {
     public static final String [] ALGORITHM_ARGUMENTS = {"-a", "--algorithm"};
     public static final String [] CONFIG_ARGUMENTS = {"-c", "--config"};
     public static final String [] SAVE_ARGUMENTS = {"-o"};
+    public static final String [] STAT_ARGUMENTS = {"-s", "--stat"};
     public static final String [] HELP_ARGUMENTS = {"-h", "--help"};
 
     private static final String [] VALID_DATASET_EXTENSIONS = {"csv", "xlsx", "xls"};
@@ -43,12 +43,11 @@ public class AnonymizationCLI implements UI {
         Arguments arguments = argumentValidation(args);
 
         if (arguments instanceof ExperimentationArguments) {
-            ExperimentationThread experimentationThread = new ExperimentationThread((ExperimentationArguments) arguments);
-            experimentationThread.start();
+            ExperimentationRunner experimentationRunner = new ExperimentationRunner((ExperimentationArguments) arguments);
+            experimentationRunner.start();
         }
 
         else if (arguments instanceof AlgorithmArguments) {
-            List<Result> results = new ArrayList<>();
             Experimentation experimentation = null;
             AlgorithmArguments algorithmArguments = (AlgorithmArguments) arguments;
 
@@ -76,49 +75,38 @@ public class AnonymizationCLI implements UI {
             try {
                 experimentation.initDataset(algorithmArguments.getDatasetPath(), algorithmArguments.getConfigPath());
                 experimentation.execute(1, algorithmArguments.getTreshold());
-                results.addAll(experimentation.getResults());
             } catch (DatasetNotFoundException  e) {
                 e.printStackTrace();
             }
 
-            if (!results.isEmpty()) {
-                int numberOfQI = results.get(0).getNumberOfAttributesAnalyzed();
-
-                List<Stat> stats = null;
-                try {
-                    stats = StatisticalUtils.getStatsOfResults(results);
-                    StatisticalUtils.saveStatsIntoCsv(stats, algorithmArguments.getOutputPath() + STAT_NAME);
-                } catch (Exception e) {
-                    // Find the optimal solution, for the accuracy, in the oldest results
-                    List<Result> oldResults = ResultUtils.loadResultsFromCsv(algorithmArguments.getOutputPath() + RESULT_NAME);
-                    List<Result> optimalResults = new ArrayList<>();
-                    for (Result res : oldResults) {
-                        if (res.getNumberOfAttributesAnalyzed() == numberOfQI && res.getAlgorithmName().equals("OLA")) {
-                            optimalResults.add(res);
-                        }
-                    }
-
-                    if (optimalResults.isEmpty()) {
-                        for (Result res : oldResults) {
-                            if (res.getNumberOfAttributesAnalyzed() == numberOfQI && res.getAlgorithmName().equals("EXHAUSTIVE")) {
-                                optimalResults.add(res);
-                            }
-                        }
-                    }
-
-                    if (optimalResults.isEmpty()) {
-                        e.printStackTrace();
-                    }
-
-                    stats = StatisticalUtils.getStatsOfResults(results, optimalResults);
-                    StatisticalUtils.saveStatsIntoCsv(stats, algorithmArguments.getOutputPath() + STAT_NAME);
-                }
-            }
+            List<Result> results = ResultUtils.loadResultsFromCsv(algorithmArguments.getOutputPath() + RESULT_NAME);
+            List<Stat> stats = StatisticalUtils.getStatsOfResults(results);
+            StatisticalUtils.saveStatsIntoCsv(stats,algorithmArguments.getOutputPath() + STAT_NAME);
         }
 
         else if (arguments instanceof ConfigArguments) {
             ConfigArguments configArguments = (ConfigArguments) arguments;
             ConfigGenerator.generateConfigFileFromCLI(configArguments.getDatasetPath(), configArguments.getOutputPath());
+        }
+
+        else if (arguments instanceof StatArguments) {
+            StatArguments statArguments = (StatArguments) arguments;
+            List<Result> results = ResultUtils.loadResultsFromCsv(statArguments.getResultPath());
+
+            // If the path is null, use the directory of the jar file
+            if (statArguments.getOutputPath() == null) {
+                String outputDir = FileUtils.getDirOfJAR();
+                statArguments.setOutputPath(outputDir);
+            }
+
+            List<Stat> stats = StatisticalUtils.getStatsOfResults(results);
+
+            File statFile = new File(statArguments.getOutputPath() + STAT_NAME);
+            if (statFile.exists()) {
+                statFile.delete();
+            }
+
+            StatisticalUtils.saveStatsIntoCsv(stats, statArguments.getOutputPath() + STAT_NAME);
         }
 
         else {
@@ -166,10 +154,10 @@ public class AnonymizationCLI implements UI {
 
             if (args.length != 5) {
                 if (Arrays.asList(EXPERIMENTATION_ARGUMENTS).contains(args[0])) {
-                    throw new ArgumentException("ERROR! When you want to run an experimentation, please use this format:\n" +
+                    throw new ArgumentException("ERROR! When you want to start an experimentation, please use this format:\n" +
                             "-e numberOfRuns treshold <datasetPath> <configFilePath>");
                 } else {
-                    throw new ArgumentException("ERROR! When you want to run an algorithm, please use this format:\n" +
+                    throw new ArgumentException("ERROR! When you want to start an algorithm, please use this format:\n" +
                             "-a algorithmName treshold <datasetPath> <configFilePath>");
                 }
             }
@@ -255,7 +243,7 @@ public class AnonymizationCLI implements UI {
         // Config command -> -c <datasetPath>
         else if (Arrays.asList(CONFIG_ARGUMENTS).contains(args[0])) {
             if (args.length != 2) {
-                throw new ArgumentException("ERROR! When you want to run an experimentation, please use this format:\n" +
+                throw new ArgumentException("ERROR! When you want to start an experimentation, please use this format:\n" +
                         "-c <datasetPath>");
             }
 
@@ -272,10 +260,29 @@ public class AnonymizationCLI implements UI {
             arguments = new ConfigArguments(datasetPath, outputPath);
         }
 
+        // Stat command -> -s
+        else if (Arrays.asList(STAT_ARGUMENTS).contains(args[0])) {
+            if (args.length != 2) {
+                throw new ArgumentException("ERROR! When you want to start stat generator, please use this format:\n" +
+                        "-s <resultPath>");
+            }
+
+            String resultPath = args[1];
+            File resultFile = new File(resultPath);
+            if (!resultFile.exists()) {
+                throw new ArgumentException("ERROR! No result found in the path " + resultPath);
+            } else if (!Arrays.asList(VALID_DATASET_EXTENSIONS).contains(FileUtils.getFileExtension(resultFile))) {
+                throw new ArgumentException("ERROR! The only extension accepted for result file are the follows:\n " +
+                        "\t- csv\n\t- xlsx\n\t- xls");
+            }
+
+            arguments = new StatArguments(resultPath, outputPath);
+        }
+
         // Help command -> -h
         else if (Arrays.asList(HELP_ARGUMENTS).contains(args[0])) {
             if (args.length != 1) {
-                throw new ArgumentException("ERROR! When you want to run an experimentation, please use this format:\n" +
+                throw new ArgumentException("ERROR! When you want to start an experimentation, please use this format:\n" +
                         "\t-h");
             }
 
@@ -367,8 +374,6 @@ public class AnonymizationCLI implements UI {
         return true;
     }
 
-
-
     private static void showHelpMenu () {
         System.out.println("\tOptions\t\t\t\tDescription");
 
@@ -378,11 +383,16 @@ public class AnonymizationCLI implements UI {
                 "\t\t\t\t\tCommand line format: -a <algorithmName> <treshold> <datasetPath> <configPath>\n");
 
         System.out.println("\t-c --config" +
-                "\t\t\tGenerate a config file, that it's necessary to run the algorithm.\n" +
+                "\t\t\tGenerate a config file, that it's necessary to start the algorithm.\n" +
                 "\t\t\t\t\tCommand line format: -c <datasetPath>\n");
         System.out.println("\t-e --experimentation" +
-                "\t\tRun the entire experimentation, comparing all the algorithms available in the tool\n" +
+                "\t\tRun the entire experimentation, comparing all the algorithms\n" +
+                "\t\t\t\t\tavailable in the tool\n" +
                 "\t\t\t\t\tCommand line format: -e <numberOfRuns> <treshold> <datasetPath> <configPath>\n");
+        System.out.println("\t-s --stat" +
+                "\t\t\tRun the stat generator. From results generated by an experimentation,\n " +
+                "\t\t\t\t\tit's possible to extract all relevant statistical informations\n" +
+                "\t\t\t\t\tCommand line format: -s <resultPath>\n");
         System.out.println("\t-o" +
                 "\t\t\t\tAllow you to choose the destination folder for the output\n" +
                 "\t\t\t\t\tExample of usage: -o <outputPath>\n");

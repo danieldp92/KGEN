@@ -87,8 +87,8 @@ public abstract class Experimentation {
                     null, -1, null, null, null);
             results.add(result);
         } else {
-            ArrayList<Integer> bottomNode = kAnonymity.lowerBounds();
-            ArrayList<Integer> topNode = kAnonymity.upperBounds();
+            List<Integer> bottomNode = kAnonymity.lowerBounds();
+            List<Integer> topNode = kAnonymity.upperBounds();
 
             //Lattice size
             int latticeSize = 1;
@@ -103,6 +103,7 @@ public abstract class Experimentation {
             } else {
                 for (int i = 0; i < solutions.size(); i++) {
                     List<Integer> solution = solutions.get(i);
+                    executionTime = this.executionTime;
 
                     AnonymizationReport report = kAnonymity.getHistoryReports().get(solution.toString().hashCode());
                     Result tmpResult = new Result(datasetName, indexRun, numberOfAttributes, algorithmName,

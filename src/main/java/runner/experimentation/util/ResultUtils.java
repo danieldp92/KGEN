@@ -13,7 +13,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -156,14 +155,15 @@ public class ResultUtils {
     }
 
     public static void printResults (List<Result> results) {
-        System.out.println("RESULT INFO\n");
+        System.out.println("\nRESULT INFO\n");
 
         List<Object> resultsObj = new ArrayList<>(results);
         List<String> csv = CsvUtils.convertObjectListIntoCSV(resultsObj);
 
         for (String line : csv) {
-            line = line.replaceAll(SEPARATOR_TAG, "\t");
+            line = line.replaceAll(SEPARATOR_TAG, "\n");
             System.out.println(line);
+            System.out.println();
         }
     }
 }

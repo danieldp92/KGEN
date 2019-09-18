@@ -8,16 +8,9 @@ import utils.CsvUtils;
 import utils.FileUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class StatisticalUtils {
-    private static final int EXEC_TIME_TYPE = 0;
-    private static final int ACCURACY_TYPE = 1;
-    private static final int LOG_TYPE = 2;
-    private static final int SUPPRESSION_TYPE = 3;
-
-
     public static void saveStatsIntoCsv (List<Stat> stats, String csvPath) {
         List<Object> statsToConvert = new ArrayList<>();
         for (Stat stat : stats) {
@@ -27,153 +20,145 @@ public class StatisticalUtils {
         CsvUtils.appendClassAsCsv(statsToConvert, csvPath);
     }
 
-    public static List<Stat> getStatsOfResults (List<Result> results, List<Result> optimalResults) {
-        List<Result> resultsClone = new ArrayList<>(results);
+    public static List<Stat> getStatsOfResults (List<Result> results) {
         List<Stat> stats = new ArrayList<>();
 
-        List<Result> actualResults = new ArrayList<>();
-        Result prevResult = null;
+        /*
+        Map composition
+        -------------------------------------------------------
+        |number of qi|           Algorithms Map               |
+        |            |Algorithm name|Results of that algorithm|
+        -------------------------------------------------------
+         */
+        LinkedHashMap<Integer, LinkedHashMap<String, List<Result>>> configResultMap = initConfigMap(results);
 
-        while (!resultsClone.isEmpty()) {
-            Result actualResult = resultsClone.remove(0);
+        // Iterate on config
+        for (Map.Entry<Integer, LinkedHashMap<String, List<Result>>> entry : configResultMap.entrySet()) {
+            LinkedHashMap<String, List<Result>> algorithmMap = entry.getValue();
 
-            // If the actual result algorithm is different from the previous one, then generate a util for the previous algorithm
-            if ((prevResult != null && !prevResult.getAlgorithmName().equals(actualResult.getAlgorithmName())) || resultsClone.isEmpty()) {
-                // ActualResult is the last element of the array
-                if (resultsClone.isEmpty()) {
-                    actualResults.add(actualResult);
-                    prevResult = actualResult;
-                }
+            // Get the optimal solution
+            List<Result> optimalResults = null;
+            if (!algorithmMap.get("OLA").isEmpty()) {
+                optimalResults = algorithmMap.get("OLA");
+            }
 
-                double averageExecTime = getExecTimeMean(actualResults);
-                double averageAccuracy = getAccuracyMean(optimalResults, actualResults);
-                double averageLog = getLogMean(actualResults);
-                double averageSuppression = getSuppressionMean(actualResults);
+            else if (!algorithmMap.get("EXHAUSTIVE").isEmpty()) {
+                optimalResults = algorithmMap.get("EXHAUSTIVE");
+            }
 
-                Stat stat = new Stat(prevResult.getDatasetName(), String.valueOf(prevResult.getNumberOfAttributesAnalyzed()),
-                        prevResult.getAlgorithmName(), averageExecTime, averageAccuracy, averageLog, averageSuppression);
-
+            for (Map.Entry<String, List<Result>> algorithmEntry : algorithmMap.entrySet()) {
+                Stat stat = getStatOfResults(algorithmEntry.getValue(), optimalResults);
                 stats.add(stat);
-
-                actualResults.clear();
             }
-
-            prevResult = actualResult;
-            actualResults.add(actualResult);
         }
 
         return stats;
     }
 
-    public static List<Stat> getStatsOfResults (List<Result> results) throws Exception {
+    public static Stat getStatOfResults (List<Result> results, List<Result> optimalResults) {
+        Stat stat = null;
+
+        if (!results.isEmpty()) {
+            Result firstResult = results.get(0);
+
+            int maxRun = 0;
+
+            Double averageExecTime = null;
+            Double averageAccuraces = null;
+            Double averageLog = null;
+            Double averageSuppression = null;
+
+            List<Double> execTimes = new ArrayList<>();
+            List<Double> accuraces = new ArrayList<>();
+            List<Double> logs = new ArrayList<>();
+            List<Double> suppressions = new ArrayList<>();
+
+            for (Result result : results) {
+                if (result.getExecutionTime() != null)
+                    execTimes.add(result.getExecutionTime());
+
+                if (result.getSolution() != null && optimalResults != null) {
+                    accuraces.add(getAccuracy(optimalResults, result));
+                }
+
+                if (result.getLogMetric() != null) {
+                    logs.add(result.getLogMetric());
+                }
+
+                if (result.getPercentageOfSuppression() != null) {
+                    suppressions.add(result.getPercentageOfSuppression());
+                }
+
+                if (result.getNumberOfExperimentation() > maxRun) {
+                    maxRun = result.getNumberOfExperimentation();
+                }
+            }
+
+            if (!execTimes.isEmpty()) {
+                averageExecTime = ArrayUtils.doubleSum(execTimes) / execTimes.size();
+            }
+
+            if (!accuraces.isEmpty()) {
+                averageAccuraces = ArrayUtils.doubleSum(accuraces) / accuraces.size();
+            }
+
+            if (!logs.isEmpty()) {
+                averageLog = ArrayUtils.doubleSum(logs) / logs.size();
+            }
+
+            if (!suppressions.isEmpty()) {
+                averageSuppression = ArrayUtils.doubleSum(suppressions) / suppressions.size();
+            }
+
+            stat = new Stat(firstResult.getDatasetName(), String.valueOf(firstResult.getNumberOfAttributesAnalyzed()),
+                    firstResult.getAlgorithmName(), maxRun, averageExecTime, averageAccuraces, averageLog, averageSuppression);
+        }
+
+
+        return stat;
+    }
+
+    /**
+     * Map composition
+     *
+     *-------------------------------------------------------
+     *|number of qi|           Algorithms Map               |
+     *|            |Algorithm name|Results of that algorithm|
+     *-------------------------------------------------------
+     *
+     * @param results
+     * @return
+     */
+    private static LinkedHashMap<Integer, LinkedHashMap<String, List<Result>>> initConfigMap (List<Result> results) {
+        LinkedHashMap<Integer, LinkedHashMap<String, List<Result>>> configResultMap = new LinkedHashMap<>();
+
+        //Extract all config qi and all algorithm names
+        Set<Integer> numberOfQiList = new LinkedHashSet<>();
+        Set<String> algorithmNames = new LinkedHashSet<>();
+        for (Result result: results) {
+            numberOfQiList.add(result.getNumberOfAttributesAnalyzed());
+            algorithmNames.add(result.getAlgorithmName());
+        }
+
+        // Initialize the configMap
+        for (int numberOfQI : numberOfQiList) {
+            LinkedHashMap<String, List<Result>> algorithmMap = new LinkedHashMap<>();
+            for (String algorithmName : algorithmNames) {
+                algorithmMap.put(algorithmName, new ArrayList<>());
+            }
+
+            configResultMap.put(numberOfQI, algorithmMap);
+        }
+
         List<Result> resultsClone = new ArrayList<>(results);
-        if (results == null || results.isEmpty()) {
-            return null;
+        for (Result result : resultsClone) {
+            int numberOfQI = result.getNumberOfAttributesAnalyzed();
+            String algorithmName = result.getAlgorithmName();
+
+            configResultMap.get(numberOfQI).get(algorithmName).add(result);
         }
 
-        List<Result> optimalResults = new ArrayList<>();
-        for (Result res : results) {
-            if (res.getAlgorithmName().equals("OLA")) {
-                optimalResults.add(res);
-            }
-        }
-
-
-        // Try with EXHAUSTIVE ALGORITHM
-        if (optimalResults.isEmpty()) {
-            for (Result res : results) {
-                if (res.getAlgorithmName().equals("EXHAUSTIVE")) {
-                    optimalResults.add(res);
-                }
-            }
-        }
-
-        if (optimalResults.isEmpty()) {
-            throw new Exception("There are no optimal solution. Impossible to calculate accuracy");
-        }
-
-        List<Stat> stats = getStatsOfResults(results, optimalResults);
-
-        return stats;
-    }
-
-    public static double getExecTimeMean (List<Result> results) {
-        return getMean(results, EXEC_TIME_TYPE);
-    }
-
-    public static double getAccuracyMean (List<Result> optimalResults, List<Result> results) {
-        double mean = 0;
-        int counter = 0;
-
-        for (Result result : results) {
-            if (result.getSolution() != null) {
-                double accuracy = getAccuracy(optimalResults, result);
-                if (accuracy != -1) {
-                    mean += accuracy;
-                    counter++;
-                }
-            }
-        }
-
-        if (counter == 0) {
-            mean = -1;
-        }
-
-        return mean/counter;
-    }
-
-    public static double getLogMean (List<Result> results) {
-        return getMean(results, LOG_TYPE);
-    }
-
-    public static double getSuppressionMean (List<Result> results) {
-        return getMean(results, SUPPRESSION_TYPE);
-    }
-
-    private static double getMean(List<Result> results, int statType) {
-        double mean = 0;
-        int counter = 0;
-
-        for (Result result : results) {
-            double metric = 0;
-
-            switch (statType) {
-                case EXEC_TIME_TYPE:
-                    metric = result.getExecutionTime();
-                    break;
-                case ACCURACY_TYPE:
-                    if (result.getSolution() != null) {
-                        if (result.getAlgorithmName().equals("EXHAUSTIVE") || result.getAlgorithmName().equals("OLA")) {
-                            mean++;
-                            counter++;
-                        } else {
-                            double accuracy = getAccuracy(results, result);
-                            if (accuracy != -1) {
-                                mean += accuracy;
-                                counter++;
-                            }
-                        }
-                    }
-                    break;
-                case LOG_TYPE:
-                    metric = result.getLogMetric();
-                    break;
-                case SUPPRESSION_TYPE:
-                    metric = result.getPercentageOfSuppression();
-                    break;
-            }
-
-            if (metric != -1) {
-                counter++;
-                mean += metric;
-            }
-        }
-
-        if (counter == 0) {
-            mean = -1;
-        }
-
-        return mean/counter;
+        return configResultMap;
     }
 
     private static double getAccuracy (List<Result> exactResults, Result result) {

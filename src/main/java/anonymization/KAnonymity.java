@@ -231,7 +231,7 @@ public class KAnonymity {
         List<Integer> rowsToDeleteReport = new ArrayList<>();
 
 
-        // if k == 1, it's not necessary to run kAnonymity algorithm, because the anonymous dataset is equals to the original one
+        // if k == 1, it's not necessary to start kAnonymity algorithm, because the anonymous dataset is equals to the original one
         if (k > 1) {
             ArrayList<HashSet<Integer>> rowOccurrences = getRowsOccurrences(levelOfAnonymization);
 
@@ -607,5 +607,14 @@ public class KAnonymity {
             return false;
 
         return true;
+    }
+
+    private void printLOGAttributes() {
+        System.out.println("LOG\n");
+        for (Map.Entry<Integer, LOGMap> entry : this.generalizationMap.entrySet()) {
+            System.out.println("Name: " + ((Attribute)this.dataset.getHeader().get(entry.getKey())).getName());
+            System.out.println("LOG size: " + (entry.getValue().size()-1));
+            System.out.println();
+        }
     }
 }

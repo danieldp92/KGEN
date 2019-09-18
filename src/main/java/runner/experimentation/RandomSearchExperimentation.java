@@ -32,16 +32,16 @@ public class RandomSearchExperimentation extends Experimentation {
 
         if (Main.SHOW_LOG_MESSAGE) System.out.println("\nRandom Search");
 
-        this.anonymizationProblem = new AnonymizationProblem(dataset, this.suppressionTreshold);
-        this.randomSearchSetting = new RandomSearchSetting(anonymizationProblem);
-        RandomSearch randomSearch = null;
-        try {
-            randomSearch = (RandomSearch) randomSearchSetting.configure();
-        } catch (JMException e) {
-            e.printStackTrace();
-        }
-
         for (int run = 1; run <= numberOfRun; run++) {
+            this.anonymizationProblem = new AnonymizationProblem(dataset, this.suppressionTreshold);
+            this.randomSearchSetting = new RandomSearchSetting(anonymizationProblem);
+            RandomSearch randomSearch = null;
+            try {
+                randomSearch = (RandomSearch) randomSearchSetting.configure();
+            } catch (JMException e) {
+                e.printStackTrace();
+            }
+
             if (Main.SHOW_LOG_MESSAGE) System.out.println("Random Search " + run);
 
             long start = System.currentTimeMillis();

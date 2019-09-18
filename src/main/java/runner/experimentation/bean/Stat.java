@@ -6,77 +6,104 @@ public class Stat {
     private String datasetName;
     private String numberOfQuasiIdentifiers;
     private String algorithmName;
-    private double averageExecutionTime;
-    private double averageAccuracy;
-    private double averageLOG;
-    private double averageSuppression;
+    private Integer numberOfRuns;
+    private Double averageExecutionTime;
+    private Double averageAccuracy;
+    private Double averageLOG;
+    private Double averageSuppression;
 
-    public Stat(String datasetName, String numberOfQuasiIdentifiers, String algorithmName, double averageExecutionTime, double averageAccuracy, double averageLOG, double averageSuppression) {
+    public Stat(String datasetName, String numberOfQuasiIdentifiers, String algorithmName, Integer numberOfRuns, Double averageExecutionTime, Double averageAccuracy, Double averageLOG, Double averageSuppression) {
         DecimalFormat df = new DecimalFormat("#.###");
         DecimalFormat dfMetr = new DecimalFormat("#.########");
 
         this.datasetName = datasetName;
         this.numberOfQuasiIdentifiers = numberOfQuasiIdentifiers;
         this.algorithmName = algorithmName;
-        this.averageExecutionTime = Double.parseDouble(df.format(averageExecutionTime));
-        this.averageAccuracy = Double.parseDouble(dfMetr.format(averageAccuracy));
-        this.averageLOG = Double.parseDouble(dfMetr.format(averageLOG));
-        this.averageSuppression = Double.parseDouble(dfMetr.format(averageSuppression));
+        this.numberOfRuns = numberOfRuns;
+
+        this.averageExecutionTime = averageExecutionTime;
+        if (this.averageExecutionTime != null) {
+            this.averageExecutionTime = Double.parseDouble(df.format(averageExecutionTime));
+        }
+
+        this.averageAccuracy = averageAccuracy;
+        if (this.averageAccuracy != null) {
+            this.averageAccuracy = Double.parseDouble(dfMetr.format(averageAccuracy));
+            ;
+        }
+
+        this.averageLOG = averageLOG;
+        if (this.averageLOG != null) {
+            this.averageLOG = Double.parseDouble(dfMetr.format(averageLOG));
+        }
+
+        this.averageSuppression = averageSuppression;
+        if (this.averageSuppression != null) {
+            this.averageSuppression = Double.parseDouble(dfMetr.format(averageSuppression));
+        }
     }
 
     public String getDatasetName() {
         return datasetName;
     }
 
-    public void setDatasetName(String datasetName) {
-        this.datasetName = datasetName;
-    }
-
     public String getNumberOfQuasiIdentifiers() {
         return numberOfQuasiIdentifiers;
-    }
-
-    public void setNumberOfQuasiIdentifiers(String numberOfQuasiIdentifiers) {
-        this.numberOfQuasiIdentifiers = numberOfQuasiIdentifiers;
     }
 
     public String getAlgorithmName() {
         return algorithmName;
     }
 
+    public Integer getNumberOfRuns() {
+        return numberOfRuns;
+    }
+
+    public Double getAverageExecutionTime() {
+        return averageExecutionTime;
+    }
+
+    public Double getAverageAccuracy() {
+        return averageAccuracy;
+    }
+
+    public Double getAverageLOG() {
+        return averageLOG;
+    }
+
+    public Double getAverageSuppression() {
+        return averageSuppression;
+    }
+
+    public void setDatasetName(String datasetName) {
+        this.datasetName = datasetName;
+    }
+
+    public void setNumberOfQuasiIdentifiers(String numberOfQuasiIdentifiers) {
+        this.numberOfQuasiIdentifiers = numberOfQuasiIdentifiers;
+    }
+
     public void setAlgorithmName(String algorithmName) {
         this.algorithmName = algorithmName;
     }
 
-    public double getAverageExecutionTime() {
-        return averageExecutionTime;
+    public void setNumberOfRuns(Integer numberOfRuns) {
+        this.numberOfRuns = numberOfRuns;
     }
 
-    public void setAverageExecutionTime(double averageExecutionTime) {
+    public void setAverageExecutionTime(Double averageExecutionTime) {
         this.averageExecutionTime = averageExecutionTime;
     }
 
-    public double getAverageAccuracy() {
-        return averageAccuracy;
-    }
-
-    public void setAverageAccuracy(double averageAccuracy) {
+    public void setAverageAccuracy(Double averageAccuracy) {
         this.averageAccuracy = averageAccuracy;
     }
 
-    public double getAverageLOG() {
-        return averageLOG;
-    }
-
-    public void setAverageLOG(double averageLOG) {
+    public void setAverageLOG(Double averageLOG) {
         this.averageLOG = averageLOG;
     }
 
-    public double getAverageSuppression() {
-        return averageSuppression;
-    }
-
-    public void setAverageSuppression(double averageSuppression) {
+    public void setAverageSuppression(Double averageSuppression) {
         this.averageSuppression = averageSuppression;
     }
 }

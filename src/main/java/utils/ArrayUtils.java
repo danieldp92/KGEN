@@ -77,6 +77,15 @@ public class ArrayUtils {
         return sum;
     }
 
+    public static double doubleSum (List<Double> list) {
+        double sum = 0;
+        for (double i : list) {
+            sum += i;
+        }
+
+        return sum;
+    }
+
     public static List<Integer> fromString (String line) {
         String tmpLine = line.substring(1, line.length()-1);
         tmpLine = tmpLine.replaceAll(",", "");

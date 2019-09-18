@@ -37,8 +37,8 @@ public class CsvUtils {
 
         List<String> newCsv = convertObjectListIntoCSV(objects);
 
-        //Remove the header of this new csv, because it has already created in the csv loaded
         if (!fileNotFound) {
+            //Remove the header of this new csv, because it has already created in the csv loaded
             newCsv.remove(0);
         }
 
@@ -82,8 +82,8 @@ public class CsvUtils {
                     Method method = getMap.get(oField.getName());
                     try {
                         Object methodReturnValue = method.invoke(o);
-                        if (methodReturnValue == null || methodReturnValue.toString().equals("-1") || methodReturnValue.toString().equals("-1.0")) {
-                            line += "" + SEPARATOR_TAG;
+                        if (methodReturnValue == null) {
+                            line += "-" + SEPARATOR_TAG;
                         } else {
                             int type = TypeUtils.objectInstanceOf(methodReturnValue);
 

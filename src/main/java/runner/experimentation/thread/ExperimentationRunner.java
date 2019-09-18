@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExperimentationThread extends Thread {
+public class ExperimentationRunner {
     public static final String RESULT_NAME = "result.csv";
     public static final String STAT_NAME = "stat.csv";
 
@@ -30,7 +30,7 @@ public class ExperimentationThread extends Thread {
     private double suppressionTreshold;
 
 
-    public ExperimentationThread (ExperimentationArguments experimentationArguments) {
+    public ExperimentationRunner(ExperimentationArguments experimentationArguments) {
         this.datasetPath = experimentationArguments.getDatasetPath();
         this.configPath = experimentationArguments.getConfigPath();
         this.numberOfRuns = experimentationArguments.getNumberOfRuns();
@@ -43,8 +43,7 @@ public class ExperimentationThread extends Thread {
         }
     }
 
-    @Override
-    public void run() {
+    public void start() {
         List<Result> results = new ArrayList<>();
         List<Integer> algorithmTypes = new ArrayList<>();
         algorithmTypes.add(AlgorithmType.EXHAUSTIVE_ALGORITHM);
@@ -95,59 +94,7 @@ public class ExperimentationThread extends Thread {
             }
         }
 
-        List<Stat> stats = null;
-        try {
-            stats = StatisticalUtils.getStatsOfResults(results);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        List<Stat> stats = StatisticalUtils.getStatsOfResults(results);
         StatisticalUtils.saveStatsIntoCsv(stats, this.resultPath + STAT_NAME);
-
-        System.exit(0);
     }
-
-    private Result getStub () {
-        String datasetName = "F2_DATASET";
-        int numberOfAttributes = 57;
-        int numberOfAttributesAnalyzed = 43;
-        int numberOfExperimentation = 1;
-        String algorithmName = "STUB";
-        Double executionTime = 5.55;
-        int latticeSize = 30;
-
-        List<Integer> bottomNode = new ArrayList<>();
-        bottomNode.add(0);
-        bottomNode.add(0);
-        bottomNode.add(0);
-
-        List<Integer> topNode = new ArrayList<>();
-        topNode.add(3);
-        topNode.add(3);
-        topNode.add(3);
-
-        List<Integer> solution = new ArrayList<>();
-        solution.add(2);
-        solution.add(2);
-        solution.add(2);
-
-        // Report
-        AnonymizationReport report = new AnonymizationReport();
-
-        double logMetric = 0.5;
-        int kValue = 2;
-        int kValueWithSuppression = 2;
-        double percentageOfSuppression = 0;
-        List<Integer> rowToDelete = new ArrayList<>();
-
-        report.setLevelOfAnonymization(solution);
-        report.setLogMetric(logMetric);
-        report.setkValue(kValue);
-        report.setkValueWithSuppression(kValueWithSuppression);
-        report.setPercentageOfSuppression(percentageOfSuppression);
-        report.setRowToDelete(rowToDelete);
-
-        return new Result(datasetName, numberOfExperimentation, numberOfAttributes, algorithmName, executionTime,
-                latticeSize, bottomNode, topNode, report);
-    }
-
 }

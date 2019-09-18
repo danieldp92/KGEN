@@ -40,10 +40,10 @@ import java.util.logging.Logger;
  */
 public class NSGAIIStudy extends Experiment {
   /**
-   * Configures the algorithms in each independent run
+   * Configures the algorithms in each independent start
    * @param problemName The problem to solve
    * @param problemIndex
-   * @param algorithm Array containing the algorithms to run
+   * @param algorithm Array containing the algorithms to start
    * @throws ClassNotFoundException 
    */
   public synchronized void algorithmSettings(String problemName, 

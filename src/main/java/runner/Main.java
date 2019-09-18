@@ -19,7 +19,7 @@ public class Main {
 
         //ResultUtils.loadResultsFromCsv("C:\\Users\\20190482\\Documents\\GitHub\\KGEN\\results\\Accuracy\\resultsWithTreshold_0.005.csv");
         //Run GUI
-        //LatticeGui.run(args);
+        //LatticeGui.start(args);
     }
 
     public static void accuracy() throws IOException {

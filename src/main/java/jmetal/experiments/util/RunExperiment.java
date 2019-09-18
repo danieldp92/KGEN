@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
- * Class implementing the steps to run an experiment
+ * Class implementing the steps to start an experiment
  */
 public class RunExperiment extends Thread {
 
@@ -135,7 +135,7 @@ public class RunExperiment extends Thread {
 
 				problem = algorithm[0].getProblem() ;
 				
-				// STEP 5: run the algorithms
+				// STEP 5: start the algorithms
 				
 				// STEP 6: create output directories
 				File experimentDirectory;
@@ -150,11 +150,11 @@ public class RunExperiment extends Thread {
 					System.out.println("Creating " + directory);
 				}
 
-				// STEP 7: run the algorithm
+				// STEP 7: start the algorithm
 				System.out.println(Thread.currentThread().getName() + " Running algorithm: " + 
 						algorithmNameList_[alg] +
 						", problem: " + problemList_[problemId] +
-						", run: " + runs);
+						", start: " + runs);
 				try {
 					try {
 						resultFront= algorithm[alg].execute();

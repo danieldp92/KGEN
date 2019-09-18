@@ -8,18 +8,18 @@ import java.util.List;
 public class Result {
     private String datasetName;
     private int numberOfAttributes;
-    private int numberOfAttributesAnalyzed;
+    private Integer numberOfAttributesAnalyzed;
     private int numberOfExperimentation;
     private String algorithmName;
-    private double executionTime;
+    private Double executionTime;
     private int latticeSize;
     private List<Integer> bottomNode;
     private List<Integer> topNode;
     private List<Integer> solution;
-    private double logMetric;
-    private int kValue;
-    private int kValueWithSuppression;
-    private double percentageOfSuppression;
+    private Double logMetric;
+    private Integer kValue;
+    private Integer kValueWithSuppression;
+    private Double percentageOfSuppression;
     private List<Integer> rowToDelete;
 
 
@@ -34,24 +34,28 @@ public class Result {
         this.datasetName = datasetName;
         this.numberOfExperimentation = numberOfExperimentation;
         this.numberOfAttributes = numberOfAttributes;
+        this.numberOfAttributesAnalyzed = null;
         this.algorithmName = algorithmName;
-        this.executionTime = Double.parseDouble(df.format(executionTime));
+
+        this.executionTime = executionTime;
+        if (executionTime != null) {
+            this.executionTime = Double.parseDouble(df.format(executionTime));
+        }
+
         this.latticeSize = latticeSize;
         this.bottomNode = bottomNode;
         this.topNode = topNode;
 
-        if (this.bottomNode == null) {
-            this.numberOfAttributesAnalyzed = -1;
-        } else {
+        if (this.bottomNode != null) {
             this.numberOfAttributesAnalyzed = this.bottomNode.size();
         }
 
         if (report == null) {
             this.solution = null;
-            this.logMetric = -1;
-            this.kValue = -1;
-            this.kValueWithSuppression = -1;
-            this.percentageOfSuppression = -1;
+            this.logMetric = null;
+            this.kValue = null;
+            this.kValueWithSuppression = null;
+            this.percentageOfSuppression = null;
             this.rowToDelete = null;
         } else {
             this.solution = report.getLevelOfAnonymization();
@@ -71,7 +75,7 @@ public class Result {
         return numberOfAttributes;
     }
 
-    public int getNumberOfAttributesAnalyzed() {
+    public Integer getNumberOfAttributesAnalyzed() {
         return numberOfAttributesAnalyzed;
     }
 
@@ -83,7 +87,7 @@ public class Result {
         return algorithmName;
     }
 
-    public double getExecutionTime() {
+    public Double getExecutionTime() {
         return executionTime;
     }
 
@@ -103,19 +107,19 @@ public class Result {
         return solution;
     }
 
-    public double getLogMetric() {
+    public Double getLogMetric() {
         return logMetric;
     }
 
-    public int getkValue() {
+    public Integer getkValue() {
         return kValue;
     }
 
-    public int getkValueWithSuppression() {
+    public Integer getkValueWithSuppression() {
         return kValueWithSuppression;
     }
 
-    public double getPercentageOfSuppression() {
+    public Double getPercentageOfSuppression() {
         return percentageOfSuppression;
     }
 
@@ -131,7 +135,7 @@ public class Result {
         this.numberOfAttributes = numberOfAttributes;
     }
 
-    public void setNumberOfAttributesAnalyzed(int numberOfAttributesAnalyzed) {
+    public void setNumberOfAttributesAnalyzed(Integer numberOfAttributesAnalyzed) {
         this.numberOfAttributesAnalyzed = numberOfAttributesAnalyzed;
     }
 
@@ -143,7 +147,7 @@ public class Result {
         this.algorithmName = algorithmName;
     }
 
-    public void setExecutionTime(double executionTime) {
+    public void setExecutionTime(Double executionTime) {
         DecimalFormat df = new DecimalFormat("#.###");
         this.executionTime = Double.parseDouble(df.format(executionTime));
     }
@@ -164,20 +168,20 @@ public class Result {
         this.solution = solution;
     }
 
-    public void setLogMetric(double logMetric) {
+    public void setLogMetric(Double logMetric) {
         DecimalFormat dfMetr = new DecimalFormat("#.########");
         this.logMetric = Double.parseDouble(dfMetr.format(logMetric));
     }
 
-    public void setkValue(int kValue) {
+    public void setkValue(Integer kValue) {
         this.kValue = kValue;
     }
 
-    public void setkValueWithSuppression(int kValueWithSuppression) {
+    public void setkValueWithSuppression(Integer kValueWithSuppression) {
         this.kValueWithSuppression = kValueWithSuppression;
     }
 
-    public void setPercentageOfSuppression(double percentageOfSuppression) {
+    public void setPercentageOfSuppression(Double percentageOfSuppression) {
         DecimalFormat dfMetr = new DecimalFormat("#.########");
         this.percentageOfSuppression = Double.parseDouble(dfMetr.format(percentageOfSuppression));
     }

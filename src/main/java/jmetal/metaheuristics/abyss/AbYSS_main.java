@@ -38,7 +38,7 @@ import java.util.HashMap;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 /**
- * This class is the runner program used to configure and run AbYSS, a
+ * This class is the runner program used to configure and start AbYSS, a
  * multiobjective scatter search metaheuristics, which is described in:
  *   A.J. Nebro, F. Luna, E. Alba, B. Dorronsoro, J.J. Durillo, A. Beham 
  *   "AbYSS: Adapting Scatter Search to Multiobjective Optimization." 

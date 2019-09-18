@@ -32,13 +32,13 @@ import jmetal.util.AchievementScalarizingFunction;
 public class GWASFGAStudy3D extends Experiment {
 
 	/**
-	 * Configures the algorithms in each independent run
+	 * Configures the algorithms in each independent start
 	 *
 	 * @param problem
 	 *            The problem to solve
 	 * @param problemIndex
 	 * @param algorithm
-	 *            Array containing the algorithms to run
+	 *            Array containing the algorithms to start
 	 * @throws ClassNotFoundException
 	 */
 	public synchronized void algorithmSettings(String problemName, int problemIndex, Algorithm[] algorithm) throws ClassNotFoundException {

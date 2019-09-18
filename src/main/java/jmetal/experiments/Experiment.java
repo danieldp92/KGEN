@@ -74,7 +74,7 @@ public abstract class Experiment {
 
   // Inicio modificación planificación Threads
   public boolean finished_;  // Flag to indicate when the experiment has ended
-  public static int algorithmIndex; // Index of the next algorithm to run
+  public static int algorithmIndex; // Index of the next algorithm to start
   public static int problemIndex; // Index of the next problem to solve
   public static int irunIndex; // Counter of the independent runs
   // Fin modificación planificación Threads
@@ -225,7 +225,7 @@ public abstract class Experiment {
 
   /**
    * Especifies the experiments.settings of each algorith. This method is checked in each
-   * experiment run
+   * experiment start
    *
    * @param problemName   Problem to solve
    * @param problemId Index of the problem in problemList_

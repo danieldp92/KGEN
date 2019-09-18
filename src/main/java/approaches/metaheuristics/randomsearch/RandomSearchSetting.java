@@ -14,7 +14,7 @@ public class RandomSearchSetting extends Settings {
     public RandomSearchSetting(Problem problem) {
         this.problem_ = problem;
 
-        this.maxEvaluations_ = 2000;
+        this.maxEvaluations_ = 5000;
     }
 
     @Override

@@ -109,7 +109,7 @@ public class Hypervolume {
     double  minValue, value;
 
     if (noPoints < 1)  
-      System.err.println("run-time error");
+      System.err.println("start-time error");
     
     minValue = front[0][objective];
     for (i = 1; i < noPoints; i++) {
@@ -154,7 +154,7 @@ public class Hypervolume {
       //noNondominatedPoints = front.length;
       if (noObjectives < 3) {
         if (noNondominatedPoints < 1)  
-          System.err.println("run-time error");
+          System.err.println("start-time error");
       
         tempVolume = front[0][0];
       } else

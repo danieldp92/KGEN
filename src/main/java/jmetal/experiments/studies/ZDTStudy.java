@@ -42,7 +42,7 @@ import java.util.logging.Logger;
 public class ZDTStudy extends Experiment {
 
   /**
-   * Configures the algorithms in each independent run
+   * Configures the algorithms in each independent start
    * @param problemName The problem to solve
    * @param problemIndex
    * @throws ClassNotFoundException 
