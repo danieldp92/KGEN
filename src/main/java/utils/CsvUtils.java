@@ -9,17 +9,6 @@ public class CsvUtils {
     private static final String SEPARATOR_TAG = ";";
     private static final String LIST_SEPARATOR_TAG = ",";
 
-    public static void saveClassAsCsv(List<Object> objects, String path) {
-        List<String> csv = convertObjectListIntoCSV(objects);
-
-        try {
-            FileUtils.saveFile((ArrayList<String>) csv, path);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-    }
-
     /**
      * This method add new results on a csv already created
      * @param objects
@@ -44,11 +33,25 @@ public class CsvUtils {
 
         csv.addAll(newCsv);
 
+        boolean fileOpened = true;
+        boolean showErrorMessage = true;
 
-        try {
-            FileUtils.saveFile((ArrayList<String>) csv, path);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        while (fileOpened) {
+            try {
+                FileUtils.saveFile((ArrayList<String>) csv, path);
+                fileOpened = false;
+            } catch (FileNotFoundException e) {
+                if (showErrorMessage) {
+                    System.out.println("\n" + e.getMessage());
+                    System.out.println("Please, close the file <" + path + ">");
+                    showErrorMessage = false;
+                }
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {}
+
+            }
         }
     }
 
@@ -299,22 +302,4 @@ public class CsvUtils {
 
         return toString;
     }
-
-    public static String replaceDoubleSEPARATOR (String line) {
-        String newString = "";
-        char [] lineChars = line.toCharArray();
-
-        char prevChar = 0;
-        for (int i = 0; i < lineChars.length; i++) {
-            if (i != 0 && prevChar == lineChars[i] && String.valueOf(prevChar).equals(SEPARATOR_TAG)) {
-                newString += " ";
-            }
-
-            prevChar = lineChars[i];
-            newString += prevChar;
-        }
-
-        return newString;
-    }
-
 }

@@ -7,43 +7,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7d3d6fdf-844a-40dc-bf4f-7f3c5e11fca1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/anonymization/KAnonymity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/anonymization/KAnonymity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/approaches/metaheuristics/randomsearch/RandomSearchSetting.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/approaches/metaheuristics/randomsearch/RandomSearchSetting.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jmetal/experiments/Experiment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jmetal/experiments/Experiment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/ConstrainedProblemsStudy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/ConstrainedProblemsStudy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/GWASFGAStudy3D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/GWASFGAStudy3D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/NSGAIIStudy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/NSGAIIStudy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/StandardStudy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/StandardStudy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/StandardStudy2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/StandardStudy2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/WASFGAStudy2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/WASFGAStudy2D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/ZDTStudy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/ZDTStudy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/ZDTStudy2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/ZDTStudy2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/jMetalExperiment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/jMetalExperiment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/pMOEADStudy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jmetal/experiments/studies/pMOEADStudy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jmetal/experiments/util/RunExperiment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jmetal/experiments/util/RunExperiment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jmetal/metaheuristics/abyss/AbYSS_main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jmetal/metaheuristics/abyss/AbYSS_main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/jmetal/qualityIndicator/Hypervolume.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/jmetal/qualityIndicator/Hypervolume.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/runner/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/runner/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/runner/experimentation/Experimentation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/runner/experimentation/Experimentation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/runner/experimentation/RandomSearchExperimentation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/runner/experimentation/RandomSearchExperimentation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/runner/experimentation/bean/Result.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/runner/experimentation/bean/Result.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/runner/experimentation/bean/Stat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/runner/experimentation/bean/Stat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/runner/experimentation/thread/ExperimentationThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/runner/experimentation/thread/ExperimentationRunner.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/runner/experimentation/util/ResultUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/runner/experimentation/util/ResultUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/runner/experimentation/util/StatisticalUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/runner/experimentation/util/StatisticalUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ui/cui/AnonymizationCLI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/cui/AnonymizationCLI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/utils/ArrayUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/ArrayUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/utils/CsvUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/CsvUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/anonymization/KAnonymity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/anonymization/KAnonymity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/approaches/metaheuristics/randomsearch/RandomSearchSetting.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/approaches/metaheuristics/randomsearch/RandomSearchSetting.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/runner/experimentation/Experimentation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/runner/experimentation/Experimentation.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/runner/experimentation/RandomSearchExperimentation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/runner/experimentation/RandomSearchExperimentation.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/runner/experimentation/bean/Result.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/runner/experimentation/bean/Result.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/runner/experimentation/util/ResultUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/runner/experimentation/util/ResultUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/runner/experimentation/util/StatisticalUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/runner/experimentation/util/StatisticalUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ui/cui/AnonymizationCLI.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ui/cui/AnonymizationCLI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/utils/ArrayUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/utils/ArrayUtils.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -72,11 +39,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/ui/cui/AnonymizationCLI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="317">
-              <caret line="108" column="40" selection-start-line="108" selection-start-column="40" selection-end-line="108" selection-end-column="40" />
+            <state relative-caret-position="57">
+              <caret line="46" column="37" selection-start-line="46" selection-start-column="37" selection-end-line="46" selection-end-column="37" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="docComment;method#argumentValidation#0;class#AnonymizationCLI#0" />
@@ -90,13 +57,76 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/util/ResultUtils.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="544">
+              <caret line="55" column="9" lean-forward="true" selection-start-line="55" selection-start-column="9" selection-end-line="55" selection-end-column="9" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#loadResultsFromCsv#0;class#ResultUtils#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/thread/ExperimentationRunner.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="878">
-              <caret line="83" column="56" lean-forward="true" selection-start-line="83" selection-start-column="56" selection-end-line="83" selection-end-column="56" />
+            <state relative-caret-position="275">
+              <caret line="92" column="31" lean-forward="true" selection-start-line="92" selection-start-column="31" selection-end-line="92" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/util/StatisticalUtils.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="330">
+              <caret line="22" column="29" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="29" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#getStatOfResults#0;class#StatisticalUtils#0" />
+                <element signature="docComment;method#initConfigMap#0;class#StatisticalUtils#0" />
+                <element signature="method#initConfigMap#0;class#StatisticalUtils#0" />
+                <element signature="method#getAccuracy#0;class#StatisticalUtils#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/utils/CsvUtils.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1105">
+              <caret line="303" column="5" selection-start-line="303" selection-start-column="5" selection-end-line="303" selection-end-column="5" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="docComment;method#appendClassAsCsv#0;class#CsvUtils#0" />
+                <element signature="method#convertObjectListIntoCSV#0;class#CsvUtils#0" />
+                <element signature="method#extractGetMethodsFromFields#0;class#CsvUtils#0" />
+                <element signature="method#extractSetMethodsFromFields#0;class#CsvUtils#0" />
+                <element signature="method#normalizeAttributeToSave#0;class#CsvUtils#0" />
+                <element signature="method#normalizeAttributeToLoad#0;class#CsvUtils#0" />
+                <element signature="method#getArrayString#0;class#CsvUtils#0" />
+                <element signature="method#getMapString#0;class#CsvUtils#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/Experimentation.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="284">
+              <caret line="19" column="59" selection-start-line="19" selection-start-column="59" selection-end-line="19" selection-end-column="59" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="method#Experimentation#0;class#Experimentation#0" />
+                <element signature="method#initRandomDataset#0;class#Experimentation#0" />
               </folding>
             </state>
           </provider>
@@ -182,25 +212,25 @@
         <option value="$PROJECT_DIR$/src/main/java/anonymization/KAnonymity.java" />
         <option value="$PROJECT_DIR$/src/main/java/approaches/metaheuristics/randomsearch/RandomSearchSetting.java" />
         <option value="$PROJECT_DIR$/src/main/java/runner/experimentation/RandomSearchExperimentation.java" />
-        <option value="$PROJECT_DIR$/src/main/java/runner/experimentation/Experimentation.java" />
         <option value="$PROJECT_DIR$/src/main/java/utils/ArrayUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/ui/cui/arguments/StatArguments.java" />
-        <option value="$PROJECT_DIR$/src/main/java/runner/experimentation/util/ResultUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/runner/experimentation/bean/Result.java" />
-        <option value="$PROJECT_DIR$/src/main/java/utils/CsvUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/runner/experimentation/thread/ExperimentationThread.java" />
-        <option value="$PROJECT_DIR$/src/main/java/runner/experimentation/thread/ExperimentationRunner.java" />
-        <option value="$PROJECT_DIR$/src/main/java/runner/experimentation/util/StatisticalUtils.java" />
         <option value="$PROJECT_DIR$/src/main/java/runner/experimentation/bean/Stat.java" />
         <option value="$PROJECT_DIR$/src/main/java/ui/cui/AnonymizationCLI.java" />
+        <option value="$PROJECT_DIR$/src/main/java/runner/experimentation/util/ResultUtils.java" />
+        <option value="$PROJECT_DIR$/src/main/java/runner/experimentation/util/StatisticalUtils.java" />
+        <option value="$PROJECT_DIR$/src/main/java/utils/CsvUtils.java" />
+        <option value="$PROJECT_DIR$/src/main/java/runner/experimentation/Experimentation.java" />
+        <option value="$PROJECT_DIR$/src/main/java/runner/experimentation/thread/ExperimentationRunner.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="2411" />
-    <option name="y" value="256" />
-    <option name="width" value="642" />
-    <option name="height" value="342" />
+    <option name="x" value="-11" />
+    <option name="y" value="-11" />
+    <option name="width" value="1943" />
+    <option name="height" value="1043" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -210,6 +240,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -390,8 +422,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -527,11 +557,12 @@
       <workItem from="1568621414026" duration="4023000" />
       <workItem from="1568709361262" duration="6961000" />
       <workItem from="1568798681720" duration="13802000" />
+      <workItem from="1568840492817" duration="3232000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="676065000" />
+    <option name="totallyTimeSpent" value="679297000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -543,9 +574,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1912" y="-8" width="1936" height="1176" extended-state="6" />
+    <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4893048" visible="true" weight="0.18443497" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4893048" visible="true" weight="0.28906882" />
       <window_info id="Image Layers" order="1" />
       <window_info id="Designer" order="2" />
       <window_info id="UI Designer" order="3" />
@@ -598,17 +630,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/anonymization/generalization/type/PlaceGeneralization.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="20" column="30" lean-forward="true" selection-start-line="20" selection-start-column="30" selection-end-line="20" selection-end-column="30" />
-          <folding>
-            <element signature="e#732#733#0" expanded="true" />
-            <element signature="e#769#770#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/anonymization/generalization/graph/GeneralizationTree.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
@@ -758,19 +779,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="856">
           <caret line="214" column="5" selection-start-line="206" selection-start-column="4" selection-end-line="214" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utils/FileUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="29" column="25" lean-forward="true" selection-start-line="29" selection-start-column="25" selection-end-line="29" selection-end-column="25" />
-          <folding>
-            <element signature="method#getFileExtension#0;class#FileUtils#0" />
-            <element signature="method#saveFile#0;class#FileUtils#0" />
-            <element signature="method#loadFile#0;class#FileUtils#0" />
-            <element signature="method#loadFile#1;class#FileUtils#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -929,18 +937,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/Experimentation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="478">
-          <caret line="113" column="9" selection-start-line="113" selection-start-column="9" selection-end-line="113" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#Experimentation#0;class#Experimentation#0" />
-            <element signature="method#initRandomDataset#0;class#Experimentation#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/approaches/metaheuristics/geneticalgorithm/AnonymizationAlgorithm.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -979,17 +975,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/util/ResultUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
-          <caret line="154" column="5" lean-forward="true" selection-start-line="154" selection-start-column="5" selection-end-line="154" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#loadResultsFromCsv#0;class#ResultUtils#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/utils/ArrayUtils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
@@ -1001,25 +986,6 @@
             <element signature="method#max#0;class#ArrayUtils#0" />
             <element signature="method#fromString#0;class#ArrayUtils#0" />
             <element signature="method#getAllCombinations#0;class#ArrayUtils#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utils/CsvUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="389">
-          <caret line="27" column="31" lean-forward="true" selection-start-line="27" selection-start-column="23" selection-end-line="27" selection-end-column="39" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="docComment;method#appendClassAsCsv#0;class#CsvUtils#0" />
-            <element signature="method#appendClassAsCsv#0;class#CsvUtils#0" />
-            <element signature="method#convertObjectListIntoCSV#0;class#CsvUtils#0" />
-            <element signature="method#extractGetMethodsFromFields#0;class#CsvUtils#0" />
-            <element signature="method#extractSetMethodsFromFields#0;class#CsvUtils#0" />
-            <element signature="method#normalizeAttributeToSave#0;class#CsvUtils#0" />
-            <element signature="method#getArrayString#0;class#CsvUtils#0" />
-            <element signature="method#getMapString#0;class#CsvUtils#0" />
-            <element signature="method#replaceDoubleSEPARATOR#0;class#CsvUtils#0" />
           </folding>
         </state>
       </provider>
@@ -1082,20 +1048,63 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/thread/ExperimentationRunner.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/ui/cui/AnonymizationCLI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="878">
-          <caret line="83" column="56" lean-forward="true" selection-start-line="83" selection-start-column="56" selection-end-line="83" selection-end-column="56" />
+        <state relative-caret-position="57">
+          <caret line="46" column="37" selection-start-line="46" selection-start-column="37" selection-end-line="46" selection-end-column="37" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="docComment;method#argumentValidation#0;class#AnonymizationCLI#0" />
+            <element signature="method#argumentValidation#0;class#AnonymizationCLI#0" />
+            <element signature="method#extractOutputFromArguments#0;class#AnonymizationCLI#0" />
+            <element signature="method#removeOArgs#0;class#AnonymizationCLI#0" />
+            <element signature="method#isConfigFileValid#0;class#AnonymizationCLI#0" />
+            <element signature="method#showHelpMenu#0;class#AnonymizationCLI#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_191/src.zip!/java/io/PrintWriter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="261" column="11" selection-start-line="261" selection-start-column="11" selection-end-line="261" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/utils/FileUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="32" column="25" lean-forward="true" selection-start-line="32" selection-start-column="24" selection-end-line="32" selection-end-column="25" />
+          <folding>
+            <element signature="method#getFileExtension#0;class#FileUtils#0" />
+            <element signature="method#loadFile#0;class#FileUtils#0" />
+            <element signature="method#loadFile#1;class#FileUtils#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/utils/CsvUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1105">
+          <caret line="303" column="5" selection-start-line="303" selection-start-column="5" selection-end-line="303" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="docComment;method#appendClassAsCsv#0;class#CsvUtils#0" />
+            <element signature="method#convertObjectListIntoCSV#0;class#CsvUtils#0" />
+            <element signature="method#extractGetMethodsFromFields#0;class#CsvUtils#0" />
+            <element signature="method#extractSetMethodsFromFields#0;class#CsvUtils#0" />
+            <element signature="method#normalizeAttributeToSave#0;class#CsvUtils#0" />
+            <element signature="method#normalizeAttributeToLoad#0;class#CsvUtils#0" />
+            <element signature="method#getArrayString#0;class#CsvUtils#0" />
+            <element signature="method#getMapString#0;class#CsvUtils#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/util/StatisticalUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="23" selection-start-line="13" selection-start-column="23" selection-end-line="13" selection-end-column="23" />
+        <state relative-caret-position="330">
+          <caret line="22" column="29" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="29" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#getStatOfResults#0;class#StatisticalUtils#0" />
@@ -1106,18 +1115,35 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/ui/cui/AnonymizationCLI.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/Experimentation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
-          <caret line="108" column="40" selection-start-line="108" selection-start-column="40" selection-end-line="108" selection-end-column="40" />
+        <state relative-caret-position="284">
+          <caret line="19" column="59" selection-start-line="19" selection-start-column="59" selection-end-line="19" selection-end-column="59" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="docComment;method#argumentValidation#0;class#AnonymizationCLI#0" />
-            <element signature="method#argumentValidation#0;class#AnonymizationCLI#0" />
-            <element signature="method#extractOutputFromArguments#0;class#AnonymizationCLI#0" />
-            <element signature="method#removeOArgs#0;class#AnonymizationCLI#0" />
-            <element signature="method#isConfigFileValid#0;class#AnonymizationCLI#0" />
-            <element signature="method#showHelpMenu#0;class#AnonymizationCLI#0" />
+            <element signature="method#Experimentation#0;class#Experimentation#0" />
+            <element signature="method#initRandomDataset#0;class#Experimentation#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/thread/ExperimentationRunner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="92" column="31" lean-forward="true" selection-start-line="92" selection-start-column="31" selection-end-line="92" selection-end-column="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/runner/experimentation/util/ResultUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="55" column="9" lean-forward="true" selection-start-line="55" selection-start-column="9" selection-end-line="55" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#loadResultsFromCsv#0;class#ResultUtils#0" />
           </folding>
         </state>
       </provider>

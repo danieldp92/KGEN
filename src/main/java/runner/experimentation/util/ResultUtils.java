@@ -43,7 +43,6 @@ public class ResultUtils {
         }
 
         String header = csv.remove(0);
-        header.replaceAll("::", "; ;");
         String [] splitHeader = header.split(SEPARATOR_TAG);
         for (int i = 0; i < splitHeader.length; i++) {
             splitHeader[i] = CsvUtils.normalizeAttributeToLoad(splitHeader[i]);
@@ -59,7 +58,6 @@ public class ResultUtils {
         LinkedHashMap<String, Method> setMap = CsvUtils.extractSetMethodsFromFields(result);
 
         for (String line : csv) {
-            line = CsvUtils.replaceDoubleSEPARATOR(line);
             result = new Result();
 
             String [] split = line.split(SEPARATOR_TAG);
@@ -71,18 +69,12 @@ public class ResultUtils {
                 String stringValue = split[i];
                 Object value = null;
 
-                if (fieldMap.get(name).getType().isAssignableFrom(Integer.TYPE) ||
-                        fieldMap.get(name).getType().isAssignableFrom(Integer.class) ) {
-                    if (stringValue.equals(" ")) {
-                        value = -1;
-                    } else {
+                if (!stringValue.equals("-")) {
+                    if (fieldMap.get(name).getType().isAssignableFrom(Integer.TYPE) ||
+                            fieldMap.get(name).getType().isAssignableFrom(Integer.class) ) {
                         value = Integer.valueOf(stringValue);
-                    }
-                } else if (fieldMap.get(name).getType().isAssignableFrom(Double.TYPE) ||
-                        fieldMap.get(name).getType().isAssignableFrom(Double.class)) {
-                    if (stringValue.equals(" ")) {
-                        value = -1.0;
-                    } else {
+                    } else if (fieldMap.get(name).getType().isAssignableFrom(Double.TYPE) ||
+                            fieldMap.get(name).getType().isAssignableFrom(Double.class)) {
                         try {
                             value = Double.valueOf(stringValue);
                         } catch (NumberFormatException ex) {
@@ -93,14 +85,12 @@ public class ResultUtils {
                                 e.printStackTrace();
                             }
                         }
-                    }
-                } else if (fieldMap.get(name).getType().isAssignableFrom(String.class)) {
-                    if (!stringValue.equals(" ")) {
+                    } else if (fieldMap.get(name).getType().isAssignableFrom(String.class)) {
                         value = stringValue;
-                    }
-                } else if (fieldMap.get(name).getType().isAssignableFrom(List.class)) {
-                    if (!stringValue.equals("[]") && !stringValue.equals(" ")) {
-                        value = ArrayUtils.fromString(stringValue);
+                    } else if (fieldMap.get(name).getType().isAssignableFrom(List.class)) {
+                        if (!stringValue.equals("[]")) {
+                            value = ArrayUtils.fromString(stringValue);
+                        }
                     }
                 }
 
@@ -112,7 +102,6 @@ public class ResultUtils {
             }
 
             results.add(result);
-
         }
 
         return results;

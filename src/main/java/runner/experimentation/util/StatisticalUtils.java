@@ -38,11 +38,11 @@ public class StatisticalUtils {
 
             // Get the optimal solution
             List<Result> optimalResults = null;
-            if (!algorithmMap.get("OLA").isEmpty()) {
+            if (algorithmMap.get("OLA") != null && !algorithmMap.get("OLA").isEmpty()) {
                 optimalResults = algorithmMap.get("OLA");
             }
 
-            else if (!algorithmMap.get("EXHAUSTIVE").isEmpty()) {
+            else if (algorithmMap.get("EXHAUSTIVE") != null && !algorithmMap.get("EXHAUSTIVE").isEmpty()) {
                 optimalResults = algorithmMap.get("EXHAUSTIVE");
             }
 

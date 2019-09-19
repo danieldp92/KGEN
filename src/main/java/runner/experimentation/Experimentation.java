@@ -18,7 +18,7 @@ import java.util.List;
 
 public abstract class Experimentation {
     private static final double MAX_EVALUATION_TIME_MIN = 2;
-    public static final double MAX_EVALUATION_TIME = MAX_EVALUATION_TIME_MIN * 60 * 1000;      //expressed in millisec (10 minutes)
+    public static final double MAX_EVALUATION_TIME = MAX_EVALUATION_TIME_MIN * 60 * 1000;      //expressed in millisec
 
     private List<Result> results;
 
