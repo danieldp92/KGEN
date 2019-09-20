@@ -8,17 +8,25 @@ import dataset.type.AttributeType;
 import dataset.type.Identifier;
 import dataset.type.QuasiIdentifier;
 import exception.IOPropertiesException;
+import exception.InvalidCSVFile;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 public class DatasetUtils {
     private static final int PROPERTY_FIELDS = 4;
 
+    public static Dataset readFromCSV (String path, String nullValue) throws IOException {
+        File csvFile = new File(path);
+        if (!FileUtils.getFileExtension(csvFile).equals("csv")) {
+            throw new InvalidCSVFile();
+        }
 
-    public static Dataset readFromCSV (List<String> csvText) throws IOException {
+        List<String> csv = FileUtils.loadFile(path);
+        return readFromCSV(csv, nullValue);
+    }
+
+    public static Dataset readFromCSV (List<String> csvText, String nullValue) {
         Dataset dataset = null;
         DatasetRow header = new DatasetRow();
         ArrayList<DatasetColumn> columns = new ArrayList<DatasetColumn>();
@@ -35,7 +43,14 @@ public class DatasetUtils {
         for (String line : csvText) {
             String [] values = line.split(";");
             for (int i = 0; i < values.length; i++) {
-                Attribute attribute = new Attribute(((Attribute)header.get(i)).getName(), values[i]);
+                String value = values[i];
+
+                // If the value red is the nullValue, then there is nothing in this cell
+                if (value.equals(nullValue)) {
+                    value = null;
+                }
+
+                Attribute attribute = new Attribute(((Attribute)header.get(i)).getName(), value);
                 columns.get(i).add(attribute);
             }
         }

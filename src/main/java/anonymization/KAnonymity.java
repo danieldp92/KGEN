@@ -1,5 +1,6 @@
 package anonymization;
 
+import anonymization.exceptions.NoLowerBoundFound;
 import anonymization.generalization.exception.LevelNotValidException;
 import anonymization.generalization.generator.GeneralizationGraphGenerator;
 import anonymization.generalization.graph.GeneralizationTree;
@@ -30,8 +31,8 @@ public class KAnonymity {
 
     private Dataset dataset;
     private List<String> placeCsv;
-    private ArrayList<Integer> lowerBounds;
-    private ArrayList<Integer> upperBounds;
+    public ArrayList<Integer> lowerBounds;
+    public ArrayList<Integer> upperBounds;
 
     private PlaceGeneralization placeGeneralization;
     private DateGeneralization dateGeneralization;
@@ -213,6 +214,8 @@ public class KAnonymity {
      * @throws Exception
      */
     public AnonymizationReport runKAnonymity (ArrayList<Integer> levelOfAnonymization, int k) throws Exception {
+        boolean memorize = true;
+
         int hash = levelOfAnonymization.toString().hashCode();
 
         AnonymizationReport report = historyReports.get(hash);
@@ -224,7 +227,14 @@ public class KAnonymity {
         //Variables report
         report = new AnonymizationReport();
         List<Integer> levelOfAnonymizationReport = new ArrayList<>(levelOfAnonymization);
-        double logMetricReport = getLOG(levelOfAnonymization);
+
+        double logMetricReport = -1;
+        try {
+            logMetricReport = getLOG(levelOfAnonymization);
+        } catch (NoLowerBoundFound ex) {
+            memorize = false;
+        }
+
         int kValueReport = 1;
         int kValueWithSuppressionReport = 1;
         double percentageOfSuppressionReport = 0;
@@ -289,7 +299,8 @@ public class KAnonymity {
 
 
         // Add the report of this solution to the history
-        this.historyReports.put(hash, report);
+        if (memorize)
+            this.historyReports.put(hash, report);
 
         return report;
     }
@@ -314,15 +325,34 @@ public class KAnonymity {
 
 
     // ANONYMIZATION BOUNDS ####################################################################
-    public ArrayList<Integer> lowerBounds () {
+    public ArrayList<Integer> lowerBounds (double suppressionThreshold) {
         if (this.lowerBounds != null) {
             return this.lowerBounds;
+        }
+
+        if (this.upperBounds == null) {
+            this.upperBounds = upperBounds();
         }
 
         ArrayList<Integer> lowerBounds = new ArrayList<Integer>();
 
         boolean isAnonymized = false;
-        for (int i = 0; i < dataset.getHeader().size(); i++) {
+        for (int i = 0; i < upperBounds.size(); i++) {
+            ArrayList<Integer> tmpUB = new ArrayList<>(upperBounds);
+            int maxLOGValueOfI = upperBounds.get(i);
+            for (int j = 0; j <= maxLOGValueOfI; j++) {
+                tmpUB.set(i, j);
+                isAnonymized = isKAnonymous(tmpUB, MIN_K_LEVEL, suppressionThreshold);
+
+                if (isAnonymized) {
+                    lowerBounds.add(j);
+                    break;
+                }
+            }
+        }
+
+        this.lowerBounds = lowerBounds;
+        /*for (int i = 0; i < dataset.getHeader().size(); i++) {
             Attribute headerAttribute = (Attribute) dataset.getHeader().get(i);
 
             if (headerAttribute.getType() instanceof QuasiIdentifier) {
@@ -344,7 +374,7 @@ public class KAnonymity {
                     }
                 }
             }
-        }
+        }*/
 
         return lowerBounds;
     }
@@ -544,12 +574,10 @@ public class KAnonymity {
         return datasetColumn;
     }
 
-    private double getLOG (ArrayList<Integer> levelOfAnonymization) {
-        if (this.lowerBounds == null)
-            this.lowerBounds = lowerBounds();
-
-        if (this.upperBounds == null)
-            this.upperBounds = upperBounds();
+    private double getLOG (ArrayList<Integer> levelOfAnonymization) throws NoLowerBoundFound {
+        if (lowerBounds == null) {
+            throw new NoLowerBoundFound();
+        }
 
         double sum = 0;
         int maxVariable = 0;

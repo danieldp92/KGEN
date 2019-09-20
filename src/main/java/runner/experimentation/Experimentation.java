@@ -9,6 +9,7 @@ import exception.IOPropertiesException;
 import runner.experimentation.bean.Result;
 import utils.DatasetUtils;
 import runner.experimentation.util.ResultUtils;
+import utils.FileUtils;
 import utils.XlsUtils;
 
 import java.io.File;
@@ -19,6 +20,10 @@ import java.util.List;
 public abstract class Experimentation {
     private static final double MAX_EVALUATION_TIME_MIN = 2;
     public static final double MAX_EVALUATION_TIME = MAX_EVALUATION_TIME_MIN * 60 * 1000;      //expressed in millisec
+
+    public static final String CSV_EXTENSION = "csv";
+    public static final String XLXS_EXTENSION = "xlsx";
+    public static final String XLS_EXTENSION = "xls";
 
     private List<Result> results;
 
@@ -33,13 +38,30 @@ public abstract class Experimentation {
         this.results = new ArrayList<>();
     }
 
-    public void initDataset (String datasetPath, String configPath) throws DatasetNotFoundException {
+    public void initDataset (String datasetPath, String configPath, String nullValue) throws DatasetNotFoundException {
         File datasetFile = new File(datasetPath);
 
         if (datasetFile.exists()) {
-            String datasetName = datasetFile.getName().split("\\.")[0];
+            String datasetName = "";
 
-            this.dataset = XlsUtils.readXlsx(datasetPath);
+            String [] split = datasetFile.getName().split("\\.");
+            for (int i = 0; i < split.length-1; i++) {
+                datasetName += split[i];
+            }
+
+            String datasetExtension = FileUtils.getFileExtension(datasetFile);
+            if (datasetExtension.equals(XLS_EXTENSION) || datasetExtension.equals(XLXS_EXTENSION)) {
+                this.dataset = XlsUtils.readXlsx(datasetPath);
+            } else if (datasetExtension.equals(CSV_EXTENSION)) {
+                try {
+                    this.dataset = DatasetUtils.readFromCSV(datasetPath, nullValue);
+                } catch (IOException e) {
+                    throw new DatasetNotFoundException();
+                }
+            } else {
+                throw new DatasetNotFoundException();
+            }
+
             this.dataset.setName(datasetName);
             try {
                 DatasetUtils.loadProperties(this.dataset, configPath);
@@ -87,8 +109,8 @@ public abstract class Experimentation {
                     null, -1, null, null, null);
             results.add(result);
         } else {
-            List<Integer> bottomNode = kAnonymity.lowerBounds();
-            List<Integer> topNode = kAnonymity.upperBounds();
+            List<Integer> bottomNode = kAnonymity.lowerBounds;
+            List<Integer> topNode = kAnonymity.upperBounds;
 
             //Lattice size
             int latticeSize = 1;

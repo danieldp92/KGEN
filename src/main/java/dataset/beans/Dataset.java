@@ -8,11 +8,6 @@ public class Dataset {
     private ArrayList<DatasetRow> data;
     private ArrayList<DatasetColumn> columns;
 
-    /*public Dataset (DatasetRow pHeader, ArrayList<DatasetRow> pData) {
-        this.header = pHeader;
-        this.data = pData;
-    }*/
-
     public Dataset (DatasetRow pHeader, ArrayList<DatasetColumn> pColumns) {
         this.header = pHeader;
         this.columns = pColumns;

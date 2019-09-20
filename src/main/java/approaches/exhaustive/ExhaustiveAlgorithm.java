@@ -25,7 +25,7 @@ public class ExhaustiveAlgorithm extends Algorithm {
         this.kAnonymity = new KAnonymity(dataset);
 
         ArrayList<Integer> topNode = this.kAnonymity.upperBounds();
-        ArrayList<Integer> bottomNode = this.kAnonymity.lowerBounds();
+        ArrayList<Integer> bottomNode = this.kAnonymity.lowerBounds(suppressionTreshold);
 
         Lattice lattice = LatticeGenerator.generateOnlyNodes(bottomNode, topNode);
 

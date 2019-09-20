@@ -73,7 +73,7 @@ public class AnonymizationCLI implements UI {
             }
 
             try {
-                experimentation.initDataset(algorithmArguments.getDatasetPath(), algorithmArguments.getConfigPath());
+                experimentation.initDataset(algorithmArguments.getDatasetPath(), algorithmArguments.getConfigPath(), "");
                 experimentation.execute(1, algorithmArguments.getTreshold());
             } catch (DatasetNotFoundException  e) {
                 e.printStackTrace();

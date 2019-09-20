@@ -30,7 +30,7 @@ public class AnonymizationProblem extends Problem {
         this.suppressionTreshold = suppressionTreshold;
 
         //Lower and Upper bounds
-        ArrayList<Integer> lowerBounds = this.kAnonymity.lowerBounds();
+        ArrayList<Integer> lowerBounds = this.kAnonymity.lowerBounds(suppressionTreshold);
         ArrayList<Integer> upperBounds = this.kAnonymity.upperBounds();
 
 

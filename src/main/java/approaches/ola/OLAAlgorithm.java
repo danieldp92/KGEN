@@ -30,7 +30,7 @@ public class OLAAlgorithm extends Algorithm {
 
         // Top and Bottom nodes
         ArrayList<Integer> topNode = kAnonymity.upperBounds();
-        ArrayList<Integer> bottomNode = kAnonymity.lowerBounds();
+        ArrayList<Integer> bottomNode = kAnonymity.lowerBounds(suppressionTreshold);
 
         KMin(new Node(bottomNode), new Node(topNode));
 

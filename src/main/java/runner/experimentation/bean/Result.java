@@ -148,8 +148,12 @@ public class Result {
     }
 
     public void setExecutionTime(Double executionTime) {
-        DecimalFormat df = new DecimalFormat("#.###");
-        this.executionTime = Double.parseDouble(df.format(executionTime));
+        if (executionTime == null) {
+            this.executionTime = null;
+        } else {
+            DecimalFormat df = new DecimalFormat("#.###");
+            this.executionTime = Double.parseDouble(df.format(executionTime));
+        }
     }
 
     public void setLatticeSize(int latticeSize) {
@@ -169,8 +173,12 @@ public class Result {
     }
 
     public void setLogMetric(Double logMetric) {
-        DecimalFormat dfMetr = new DecimalFormat("#.########");
-        this.logMetric = Double.parseDouble(dfMetr.format(logMetric));
+        if (logMetric == null) {
+            this.logMetric = null;
+        } else {
+            DecimalFormat dfMetr = new DecimalFormat("#.########");
+            this.logMetric = Double.parseDouble(dfMetr.format(logMetric));
+        }
     }
 
     public void setkValue(Integer kValue) {
@@ -182,8 +190,12 @@ public class Result {
     }
 
     public void setPercentageOfSuppression(Double percentageOfSuppression) {
-        DecimalFormat dfMetr = new DecimalFormat("#.########");
-        this.percentageOfSuppression = Double.parseDouble(dfMetr.format(percentageOfSuppression));
+        if (percentageOfSuppression == null) {
+            this.percentageOfSuppression = null;
+        } else {
+            DecimalFormat dfMetr = new DecimalFormat("#.########");
+            this.percentageOfSuppression = Double.parseDouble(dfMetr.format(percentageOfSuppression));
+        }
     }
 
     public void setRowToDelete(List<Integer> rowToDelete) {

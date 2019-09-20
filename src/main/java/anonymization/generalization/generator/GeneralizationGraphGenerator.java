@@ -43,13 +43,7 @@ public class GeneralizationGraphGenerator {
     }
 
     public static GeneralizationTree generatePlaceHierarchy (List<String> csvText) {
-        Dataset placeDataset = null;
-        try {
-            placeDataset = DatasetUtils.readFromCSV(csvText);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        Dataset placeDataset = DatasetUtils.readFromCSV(csvText, "");
         GeneralizationTree placeTree = generatePlaceHierarchy(placeDataset);
 
         return placeTree;
