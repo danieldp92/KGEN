@@ -39,11 +39,25 @@ public class StatisticalUtils {
             // Get the optimal solution
             List<Result> optimalResults = null;
             if (algorithmMap.get("OLA") != null && !algorithmMap.get("OLA").isEmpty()) {
-                optimalResults = algorithmMap.get("OLA");
+                // Remove all results with null solution
+                List<Result> tmpOlaResults = new ArrayList<>(algorithmMap.get("OLA"));
+                for (int i = 0; i < tmpOlaResults.size(); i++) {
+                    if (tmpOlaResults.get(i).getSolution() == null) {
+                        tmpOlaResults.remove(i--);
+                    }
+                }
+
+                optimalResults = tmpOlaResults;
             }
 
             else if (algorithmMap.get("EXHAUSTIVE") != null && !algorithmMap.get("EXHAUSTIVE").isEmpty()) {
-                optimalResults = algorithmMap.get("EXHAUSTIVE");
+                List<Result> tmpExhaustiveResults = new ArrayList<>(algorithmMap.get("OLA"));
+                for (int i = 0; i < tmpExhaustiveResults.size(); i++) {
+                    if (tmpExhaustiveResults.get(i).getSolution() == null) {
+                        tmpExhaustiveResults.remove(i--);
+                    }
+                }
+                optimalResults = tmpExhaustiveResults;
             }
 
             for (Map.Entry<String, List<Result>> algorithmEntry : algorithmMap.entrySet()) {
@@ -93,6 +107,12 @@ public class StatisticalUtils {
                     maxRun = result.getNumberOfExperimentation();
                 }
             }
+
+
+            execTimes.removeAll(Collections.singletonList(null));
+            accuraces.removeAll(Collections.singletonList(null));
+            logs.removeAll(Collections.singletonList(null));
+            suppressions.removeAll(Collections.singletonList(null));
 
             if (!execTimes.isEmpty()) {
                 averageExecTime = ArrayUtils.doubleSum(execTimes) / execTimes.size();
@@ -161,10 +181,10 @@ public class StatisticalUtils {
         return configResultMap;
     }
 
-    private static double getAccuracy (List<Result> exactResults, Result result) {
-        double accuracy = -1;
+    private static Double getAccuracy (List<Result> exactResults, Result result) {
+        Double accuracy = null;
 
-        if (result.getSolution() != null) {
+        if (result != null && result.getSolution() != null && exactResults != null) {
             for (Result res : exactResults) {
                 boolean sameStrategyPath = LatticeUtils.sameStrategyPath(res.getSolution(), result.getSolution());
 
@@ -172,7 +192,7 @@ public class StatisticalUtils {
                     double tmpAccuracy = 1 - (double)(ArrayUtils.sum(result.getSolution()) - ArrayUtils.sum(res.getSolution())) /
                             (ArrayUtils.sum(res.getTopNode()) - ArrayUtils.sum(res.getSolution()));
 
-                    if (tmpAccuracy > accuracy) {
+                    if (accuracy == null || tmpAccuracy > accuracy) {
                         accuracy = tmpAccuracy;
                     }
                 }

@@ -3,6 +3,7 @@ package approaches.ola;
 import anonymization.KAnonymity;
 import approaches.Algorithm;
 import dataset.beans.Dataset;
+import exception.TooNodeException;
 import lattice.LatticeUtils;
 import lattice.bean.Lattice;
 import lattice.bean.Node;
@@ -24,7 +25,7 @@ public class OLAAlgorithm extends Algorithm {
     }
 
     @Override
-    public List<List<Integer>> run() {
+    public List<List<Integer>> run() throws TooNodeException {
         this.kAnonymity = new KAnonymity(dataset);
         this.latticeUtils = new LatticeUtils(this.kAnonymity, suppressionTreshold);
 
@@ -42,7 +43,7 @@ public class OLAAlgorithm extends Algorithm {
         return solutions;
     }
 
-    public List<List<Integer>> run(ArrayList<Integer> bottomNode, ArrayList<Integer> topNode) {
+    public List<List<Integer>> run(ArrayList<Integer> bottomNode, ArrayList<Integer> topNode) throws TooNodeException {
         this.kAnonymity = new KAnonymity(dataset);
         this.latticeUtils = new LatticeUtils(this.kAnonymity, suppressionTreshold);
 
@@ -56,7 +57,7 @@ public class OLAAlgorithm extends Algorithm {
         return solutions;
     }
 
-    public void KMin (Node bottomNode, Node topNode) {
+    public void KMin (Node bottomNode, Node topNode) throws TooNodeException {
         Lattice lattice = LatticeGenerator.generateOnlyNodes(bottomNode.getActualGeneralization(), topNode.getActualGeneralization());
         bottomNode = lattice.getNode1();
         topNode = lattice.getNode2();

@@ -2,6 +2,7 @@ package approaches;
 
 import anonymization.KAnonymity;
 import dataset.beans.Dataset;
+import exception.TooNodeException;
 
 import java.util.List;
 
@@ -19,5 +20,5 @@ public abstract class Algorithm {
         return name;
     }
 
-    abstract public List<List<Integer>> run();
+    abstract public List<List<Integer>> run() throws TooNodeException;
 }

@@ -4,6 +4,7 @@ import anonymization.AnonymizationReport;
 import anonymization.KAnonymity;
 import approaches.Algorithm;
 import dataset.beans.Dataset;
+import exception.TooNodeException;
 import lattice.bean.Lattice;
 import lattice.bean.Node;
 import lattice.generator.LatticeGenerator;
@@ -21,7 +22,7 @@ public class ExhaustiveAlgorithm extends Algorithm {
     }
 
     @Override
-    public List<List<Integer>> run() {
+    public List<List<Integer>> run() throws TooNodeException {
         this.kAnonymity = new KAnonymity(dataset);
 
         ArrayList<Integer> topNode = this.kAnonymity.upperBounds();

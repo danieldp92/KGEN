@@ -1,5 +1,6 @@
 package lattice.generator;
 
+import exception.TooNodeException;
 import lattice.bean.Edge;
 import lattice.bean.Lattice;
 import lattice.bean.Node;
@@ -25,19 +26,27 @@ public class LatticeGenerator {
         return lattice;
     }
 
-    public static Lattice generateOnlyNodes (ArrayList<Integer> minLattice, ArrayList<Integer> maxLattice) {
-        Lattice lattice = new Lattice();
+    public static Lattice generateOnlyNodes (ArrayList<Integer> minLattice, ArrayList<Integer> maxLattice) throws TooNodeException {
+        Lattice lattice = null;
 
-        ArrayList<Set<ArrayList<Integer>>> levels = getLevels(minLattice, maxLattice);
+        try {
+            lattice = new Lattice();
 
-        ArrayList<Node> nodes = generateNodes(levels);
+            ArrayList<Set<ArrayList<Integer>>> levels = getLevels(minLattice, maxLattice);
 
-        Node node1 = getNode(nodes, minLattice);
-        Node node2 = getNode(nodes, maxLattice);
+            ArrayList<Node> nodes = generateNodes(levels);
 
-        lattice.setNodes(nodes);
-        lattice.setNode1(node1);
-        lattice.setNode2(node2);
+            Node node1 = getNode(nodes, minLattice);
+            Node node2 = getNode(nodes, maxLattice);
+
+            lattice.setNodes(nodes);
+            lattice.setNode1(node1);
+            lattice.setNode2(node2);
+        } catch (OutOfMemoryError ex) {
+            throw new TooNodeException();
+        }
+
+
 
         return lattice;
     }

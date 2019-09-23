@@ -70,8 +70,9 @@ public class ArrayUtils {
 
     public static int sum (List<Integer> list) {
         int sum = 0;
-        for (int i : list) {
-            sum += i;
+        for (Integer i : list) {
+            if (i != null)
+                sum += i;
         }
 
         return sum;
@@ -79,8 +80,9 @@ public class ArrayUtils {
 
     public static double doubleSum (List<Double> list) {
         double sum = 0;
-        for (double i : list) {
-            sum += i;
+        for (Double i : list) {
+            if (i != null)
+                sum += i;
         }
 
         return sum;
