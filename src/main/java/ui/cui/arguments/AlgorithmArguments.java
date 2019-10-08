@@ -7,7 +7,6 @@ public class AlgorithmArguments extends Arguments {
     private double treshold;
     private String datasetPath;
     private String configPath;
-    private String outputPath;
 
     public AlgorithmArguments(int algorithmType, double treshold, String datasetPath, String configPath, String outputPath) {
         this.algorithmType = algorithmType;
@@ -31,13 +30,5 @@ public class AlgorithmArguments extends Arguments {
 
     public String getConfigPath() {
         return configPath;
-    }
-
-    public String getOutputPath() {
-        return outputPath;
-    }
-
-    public void setOutputPath(String outputPath) {
-        this.outputPath = outputPath;
     }
 }

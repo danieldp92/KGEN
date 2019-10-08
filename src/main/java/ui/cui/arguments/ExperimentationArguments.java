@@ -5,7 +5,6 @@ public class ExperimentationArguments extends Arguments {
     private double treshold;
     private String datasetPath;
     private String configPath;
-    private String outputPath;
 
     public ExperimentationArguments(int numberOfRuns, double treshold, String datasetPath, String configPath, String outputPath) {
         this.numberOfRuns = numberOfRuns;
@@ -29,9 +28,5 @@ public class ExperimentationArguments extends Arguments {
 
     public String getConfigPath() {
         return configPath;
-    }
-
-    public String getOutputPath() {
-        return outputPath;
     }
 }

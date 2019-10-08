@@ -1,51 +1,69 @@
 package approaches.exhaustive;
 
-import anonymization.AnonymizationReport;
 import anonymization.KAnonymity;
 import approaches.Algorithm;
+import dataset.beans.Attribute;
 import dataset.beans.Dataset;
+import dataset.type.QuasiIdentifier;
 import exception.TooNodeException;
 import lattice.bean.Lattice;
 import lattice.bean.Node;
 import lattice.generator.LatticeGenerator;
+import runner.experimentation.Experimentation;
+import runner.experimentation.exceptions.LimitExceedException;
 import utils.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExhaustiveAlgorithm extends Algorithm {
-
     public ExhaustiveAlgorithm (Dataset dataset, double suppressionTreshold) {
         this.dataset = dataset;
         this.name = "EXHAUSTIVE";
-        this.suppressionTreshold = suppressionTreshold;
+        this.suppressionThreshold = suppressionTreshold;
+
+        /*ArrayList<Integer> lowerBounds = new ArrayList<>();
+        for (Object o : dataset.getHeader()) {
+            Attribute attribute = (Attribute) o;
+            if (attribute.getType() instanceof QuasiIdentifier) {
+                lowerBounds.add(0);
+            }
+        }*/
+
+        this.kAnonymity = new KAnonymity(dataset, suppressionThreshold);
     }
 
     @Override
-    public List<List<Integer>> run() throws TooNodeException {
-        this.kAnonymity = new KAnonymity(dataset);
+    public List<List<Integer>> run() throws TooNodeException, LimitExceedException {
+        List<List<Integer>> results = new ArrayList<>();
 
-        ArrayList<Integer> topNode = this.kAnonymity.upperBounds();
-        ArrayList<Integer> bottomNode = this.kAnonymity.lowerBounds(suppressionTreshold);
+        long start = System.currentTimeMillis();
+
+        ArrayList<Integer> topNode = this.kAnonymity.upperBounds;
+        ArrayList<Integer> bottomNode = this.kAnonymity.lowerBounds;
 
         Lattice lattice = LatticeGenerator.generateOnlyNodes(bottomNode, topNode);
-
-
-        List<List<Integer>> results = new ArrayList<>();
 
         int indexNode = 0;
 
         // Apply kAnonymity on every node in the lattice
         while (indexNode < lattice.getNodes().size()) {
+            // Time exit condition
+            if ((System.currentTimeMillis() - start) > Experimentation.MAX_EVALUATION_TIME) {
+                throw new LimitExceedException("Limit time of " + (Experimentation.MAX_EVALUATION_TIME/1000) + "s exceeded");
+            }
 
             Node node = lattice.getNodes().get(indexNode);
-            boolean kAnon = this.kAnonymity.isKAnonymous(node.getActualGeneralization(), KAnonymity.MIN_K_LEVEL, this.suppressionTreshold);
+            boolean kAnon = this.kAnonymity.isKAnonymous(node.getActualGeneralization(), KAnonymity.MIN_K_LEVEL, this.suppressionThreshold);
 
             if (kAnon) {
                 results.add(node.getActualGeneralization());
             }
 
             indexNode++;
+
+            setChanged();
+            notifyObservers(indexNode);
         }
 
         // Remove from results every kAnonymized node that is greater of an

@@ -12,15 +12,21 @@ import java.util.*;
 
 public class StatisticalUtils {
     public static void saveStatsIntoCsv (List<Stat> stats, String csvPath) {
-        List<Object> statsToConvert = new ArrayList<>();
-        for (Stat stat : stats) {
-            statsToConvert.add(stat);
-        }
+        if (stats != null) {
+            List<Object> statsToConvert = new ArrayList<>();
+            for (Stat stat : stats) {
+                statsToConvert.add(stat);
+            }
 
-        CsvUtils.appendClassAsCsv(statsToConvert, csvPath);
+            CsvUtils.appendClassAsCsv(statsToConvert, csvPath);
+        }
     }
 
     public static List<Stat> getStatsOfResults (List<Result> results) {
+        if (results == null) {
+            return null;
+        }
+
         List<Stat> stats = new ArrayList<>();
 
         /*

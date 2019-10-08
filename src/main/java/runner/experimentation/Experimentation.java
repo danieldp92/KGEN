@@ -10,6 +10,7 @@ import runner.experimentation.bean.Result;
 import utils.DatasetUtils;
 import runner.experimentation.util.ResultUtils;
 import utils.FileUtils;
+import utils.ObjectUtils;
 import utils.XlsUtils;
 
 import java.io.File;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Experimentation {
-    private static final double MAX_EVALUATION_TIME_MIN = 2;
+    private static final double MAX_EVALUATION_TIME_MIN = 900;
     public static final double MAX_EVALUATION_TIME = MAX_EVALUATION_TIME_MIN * 60 * 1000;      //expressed in millisec
 
     public static final String CSV_EXTENSION = "csv";
@@ -50,17 +51,18 @@ public abstract class Experimentation {
             }
 
             String datasetExtension = FileUtils.getFileExtension(datasetFile);
-            if (datasetExtension.equals(XLS_EXTENSION) || datasetExtension.equals(XLXS_EXTENSION)) {
-                this.dataset = XlsUtils.readXlsx(datasetPath);
-            } else if (datasetExtension.equals(CSV_EXTENSION)) {
-                try {
+            try {
+                if (datasetExtension.equals(XLS_EXTENSION) || datasetExtension.equals(XLXS_EXTENSION)) {
+                    this.dataset = DatasetUtils.readFromXls(datasetPath);
+                } else if (datasetExtension.equals(CSV_EXTENSION)) {
                     this.dataset = DatasetUtils.readFromCSV(datasetPath, nullValue);
-                } catch (IOException e) {
+                } else {
                     throw new DatasetNotFoundException();
                 }
-            } else {
+            } catch (IOException e) {
                 throw new DatasetNotFoundException();
             }
+
 
             this.dataset.setName(datasetName);
             try {
@@ -92,10 +94,28 @@ public abstract class Experimentation {
     abstract public void execute(int numberOfRun, double suppressionTreshold) throws DatasetNotFoundException;
 
     public void saveInfoExperimentation(String algorithmName, KAnonymity kAnonymity, int indexRun) {
-        List<Result> newResults = getResults(algorithmName, kAnonymity, indexRun);
-        ResultUtils.saveResultsIntoCsv(newResults, resultPath);
+        String resultsObjectPath = resultPath.substring(0, resultPath.lastIndexOf(File.separator)+1) + algorithmName + "_results";
 
+        List<Result> newResults = getResults(algorithmName, kAnonymity, indexRun);
         this.results.addAll(newResults);
+
+        // Save result object in a tmp file
+        if (this.results != null) {
+            try {
+                ObjectUtils.writerObject(this.results, resultsObjectPath);
+            } catch (IOException e) {}
+        }
+
+
+        try {
+            ResultUtils.saveResultsIntoCsv(newResults, resultPath);
+
+            // Delete tmp file previously created
+            File tmpFile = new File(resultsObjectPath);
+            tmpFile.delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private List<Result> getResults (String algorithmName, KAnonymity kAnonymity, int indexRun) {
@@ -106,16 +126,19 @@ public abstract class Experimentation {
 
         if (kAnonymity == null) {
             Result result = new Result(datasetName, indexRun, numberOfAttributes, algorithmName,
-                    null, -1, null, null, null);
+                    null, null, null, null, null);
             results.add(result);
         } else {
             List<Integer> bottomNode = kAnonymity.lowerBounds;
             List<Integer> topNode = kAnonymity.upperBounds;
 
             //Lattice size
-            int latticeSize = 1;
+            Integer latticeSize = 1;
             for (int i = 0; i < topNode.size(); i++) {
                 latticeSize *= (topNode.get(i) - bottomNode.get(i) + 1);
+            }
+            if (latticeSize < 0) {
+                latticeSize = null;
             }
 
             if (this.solutions == null) {

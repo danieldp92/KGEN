@@ -1,9 +1,12 @@
 package runner;
 
+import runner.experimentation.bean.Result;
 import runner.experimentation.exceptions.ArgumentException;
+import runner.experimentation.util.ResultUtils;
 import ui.cui.AnonymizationCLI;
 import utils.ArrayUtils;
 import utils.FileUtils;
+import utils.ObjectUtils;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -11,12 +14,23 @@ import java.util.List;
 
 public class Main {
     public static final boolean SHOW_LOG_MESSAGE = false;
-    public static final boolean EXACT_METAHEURISTIC_VERIFICATION = false;
 
     public static void main (String [] args) throws IOException, ArgumentException {
         AnonymizationCLI anonymizationCLI = new AnonymizationCLI();
         anonymizationCLI.run(args);
 
+        /*try {
+            List<Result> results = (List<Result>) ObjectUtils.readerObject("C:\\Users\\20190482\\Documents\\GitHub\\KGEN\\out\\artifacts\\KGEN_jar\\KGEN_results_20");
+            for (Result result : results) {
+                System.out.println(result.toString());
+                System.out.println();
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }*/
+
+
+        // GUI
         //ResultUtils.loadResultsFromCsv("C:\\Users\\20190482\\Documents\\GitHub\\KGEN\\results\\Accuracy\\resultsWithTreshold_0.005.csv");
         //Run GUI
         //LatticeGui.start(args);

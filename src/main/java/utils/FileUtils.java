@@ -1,6 +1,7 @@
 package utils;
 
-import jmetal.core.SolutionSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import runner.Main;
 
 import java.io.*;
@@ -9,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtils {
-
     public static String getFileExtension (File file) {
         String name = file.getName();
         String [] split = name.split("\\.");
@@ -20,12 +20,17 @@ public class FileUtils {
     public static String getDirOfJAR () {
         String jarPath = null;
         try {
-            jarPath = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath().replaceAll("/", "\\\\");
+            jarPath = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+            if (System.getProperty("os.name").startsWith("Windows")) {
+                jarPath = jarPath.replaceAll("/", "\\\\");
+            }
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            System.exit(0);
         }
 
         String outputDir = new File(jarPath).getParent() + File.separator;
+        System.out.println(outputDir);
 
         return outputDir;
     }

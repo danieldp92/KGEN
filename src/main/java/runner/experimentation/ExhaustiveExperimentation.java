@@ -23,11 +23,10 @@ public class ExhaustiveExperimentation extends Experimentation{
 
         long start = System.currentTimeMillis();
 
-        ExecutionThread executionThread = new ExecutionThread(exhaustiveAlgorithm);
+        ExecutionThread executionThread = new ExecutionThread(exhaustiveAlgorithm, 1);
         executionThread.start();
 
-        while (executionThread.isAlive() &&
-                (System.currentTimeMillis() - start) < MAX_EVALUATION_TIME) {
+        while (executionThread.isAlive()) {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
@@ -35,12 +34,9 @@ public class ExhaustiveExperimentation extends Experimentation{
             }
         }
 
-        if ((System.currentTimeMillis() - start) < MAX_EVALUATION_TIME) {
-            this.solutions = executionThread.getSolutions();
+        this.solutions = executionThread.getSolutions();
+        if (this.solutions != null) {
             this.executionTime = (double)(System.currentTimeMillis()-start)/1000;
-        } else {
-            if (Main.SHOW_LOG_MESSAGE) System.out.println("Expired time");
-            executionThread.stop();
         }
 
         saveInfoExperimentation(this.exhaustiveAlgorithm.getName(),

@@ -80,6 +80,7 @@ public class CsvUtils {
             for (Object o : objects) {
                 line = "";
 
+                // TO DO: FIX NULLPOINTEREXCEPTION
                 Field [] oFields = o.getClass().getDeclaredFields();
                 for (Field oField : oFields) {
                     Method method = getMap.get(oField.getName());

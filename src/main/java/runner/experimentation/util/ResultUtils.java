@@ -12,9 +12,7 @@ import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 public class ResultUtils {
     private static final String SEPARATOR_TAG = ";";
@@ -24,9 +22,7 @@ public class ResultUtils {
         List<String> csv = null;
         try {
             csv = FileUtils.loadFile(csvPath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) {}
 
         List<Result> results = loadResultsFromCsv(csv);
 
@@ -38,7 +34,7 @@ public class ResultUtils {
 
         List<Result> results = new ArrayList<>();
 
-        if (csv.isEmpty()) {
+        if (csv == null || csv.isEmpty()) {
             return null;
         }
 
@@ -143,6 +139,62 @@ public class ResultUtils {
         }
     }
 
+    /**
+     * Extract all configurations analyzed, given the results
+     * @param results
+     * @return
+     */
+    public static List<Integer> extractQIAnalyzed (List<Result> results) {
+        Set<Integer> qiAnalyzed = new LinkedHashSet<>();
+
+        for (Result result : results) {
+            qiAnalyzed.add(result.getNumberOfAttributesAnalyzed());
+        }
+
+        return new ArrayList<>(qiAnalyzed);
+    }
+
+    /**
+     * Extract all algorithm analyzed, given the results
+     * @param results
+     * @return
+     */
+    public static List<String> extractAlgorithmAnalyzed (List<Result> results) {
+        Set<String> algorithmAnalyzed = new LinkedHashSet<>();
+
+        for (Result result : results) {
+            algorithmAnalyzed.add(result.getAlgorithmName());
+        }
+
+        return new ArrayList<>(algorithmAnalyzed);
+    }
+
+    public static List<Integer> extractQIAnalyzedOfAlgorithm (List<Result> results, String algorithmName) {
+        Set<Integer> qiAnalysed = new LinkedHashSet<>();
+
+        for (Result result : results) {
+            if (result.getAlgorithmName().equals(algorithmName)) {
+                qiAnalysed.add(result.getNumberOfAttributesAnalyzed());
+            }
+        }
+
+        return new ArrayList<>(qiAnalysed);
+    }
+
+    public static List<Result> extractResults (List<Result> results, String algorithmName, int qiConfig, boolean nullSolution) {
+        List<Result> resultsToReturn = new ArrayList<>();
+
+        for (Result result : results) {
+            if (result.getAlgorithmName().equals(algorithmName) &&
+                    result.getNumberOfAttributesAnalyzed() == qiConfig &&
+                    (result.getSolution() != null || nullSolution)) {
+                resultsToReturn.add(result);
+            }
+        }
+
+        return resultsToReturn;
+    }
+
     public static void printResults (List<Result> results) {
         System.out.println("\nRESULT INFO\n");
 
@@ -155,4 +207,6 @@ public class ResultUtils {
             System.out.println();
         }
     }
+
+
 }

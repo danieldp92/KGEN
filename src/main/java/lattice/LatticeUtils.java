@@ -12,7 +12,7 @@ public class LatticeUtils {
     private KAnonymity kAnonymity;
     private double suppressionTreshold;
 
-    private LinkedHashMap<Integer, Boolean> taggedMap;
+    public LinkedHashMap<Integer, Boolean> taggedMap;
 
     public LatticeUtils (KAnonymity kAnonymity, double suppressionTreshold) {
         this.kAnonymity = kAnonymity;

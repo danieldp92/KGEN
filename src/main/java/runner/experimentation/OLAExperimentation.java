@@ -23,7 +23,7 @@ public class OLAExperimentation extends Experimentation {
 
         // Run the algorithm in a separate thread. In this way,
         // it's possible to handle the algorithm timeout
-        ExecutionThread executionThread = new ExecutionThread(olaAlgorithm);
+        ExecutionThread executionThread = new ExecutionThread(olaAlgorithm, 1);
         executionThread.start();
 
         long start = System.currentTimeMillis();
@@ -37,14 +37,10 @@ public class OLAExperimentation extends Experimentation {
             }
         }
 
-        // The algorithm has a solution
-        //if ((System.currentTimeMillis() - start) < MAX_EVALUATION_TIME) {
-            this.solutions = executionThread.getSolutions();
+        this.solutions = executionThread.getSolutions();
+        if (this.solutions != null) {
             this.executionTime = (double)(System.currentTimeMillis()-start)/1000;
-        /*} else {
-            if (Main.SHOW_LOG_MESSAGE) System.out.println("Expired time");
-            executionThread.stop();
-        }*/
+        }
 
         saveInfoExperimentation(this.olaAlgorithm.getName(),
                 this.olaAlgorithm.getkAnonymity(), 1);

@@ -15,85 +15,78 @@ import java.util.Iterator;
 
 public class XlsUtils {
 
-    public static Dataset readXlsx(String path) {
+    public static Dataset readXlsx(String path) throws IOException {
         Dataset dataset = null;
         DatasetRow header = new DatasetRow();
         ArrayList<DatasetColumn> columns = new ArrayList<DatasetColumn>();
 
         File excelFile = new File(path);
+        FileInputStream excelIS = new FileInputStream(excelFile);
 
-        try {
-            FileInputStream excelIS = new FileInputStream(excelFile);
+        String fileExtension = FileUtils.getFileExtension(excelFile);
 
-            String fileExtension = FileUtils.getFileExtension(excelFile);
+        Workbook workbook = null;
+        if (fileExtension.equals("xlsx")) {
+            workbook = new XSSFWorkbook(excelIS);
+        } else {
+            workbook = new HSSFWorkbook(excelIS);
+        }
 
-            Workbook workbook = null;
-            if (fileExtension.equals("xlsx")) {
-                workbook = new XSSFWorkbook(excelIS);
-            } else {
-                workbook = new HSSFWorkbook(excelIS);
-            }
+        Sheet datatypeSheet = workbook.getSheetAt(0);
+        Iterator<Row> iterator = datatypeSheet.iterator();
+        int numberOfRows = 0;
+        while (iterator.hasNext()) {
+            iterator.next();
+            numberOfRows++;
+        }
 
-            Sheet datatypeSheet = workbook.getSheetAt(0);
-            Iterator<Row> iterator = datatypeSheet.iterator();
-            int numberOfRows = 0;
-            while (iterator.hasNext()) {
-                iterator.next();
-                numberOfRows++;
-            }
+        iterator = datatypeSheet.iterator();
 
-            iterator = datatypeSheet.iterator();
+        boolean attributeRow = true;
 
-            boolean attributeRow = true;
+        while (iterator.hasNext()) {
+            Row currentRow = iterator.next();
 
-            while (iterator.hasNext()) {
-                Row currentRow = iterator.next();
+            if (attributeRow) {
+                Iterator<Cell> cellIterator = currentRow.iterator();
 
-                if (attributeRow) {
-                    Iterator<Cell> cellIterator = currentRow.iterator();
+                while (cellIterator.hasNext()) {
+                    Cell currentCell = cellIterator.next();
+                    String value = currentCell.toString();
 
-                    while (cellIterator.hasNext()) {
-                        Cell currentCell = cellIterator.next();
-                        String value = currentCell.toString();
-
-                        header.add(new Attribute(value, null));
-                        columns.add(new DatasetColumn());
-                    }
-
-                    attributeRow = false;
+                    header.add(new Attribute(value, null));
+                    columns.add(new DatasetColumn());
                 }
 
-                else {
-                    DatasetRow datasetRow = new DatasetRow();
-                    for (int i = 0; i < header.size(); i++) {
-                        Cell cell = currentRow.getCell(i);
-                        Object value = null;
+                attributeRow = false;
+            }
 
-                        if (cell != null) {
-                            CellType type = cell.getCellType();
-                            value = cell.toString();
+            else {
+                DatasetRow datasetRow = new DatasetRow();
+                for (int i = 0; i < header.size(); i++) {
+                    Cell cell = currentRow.getCell(i);
+                    Object value = null;
 
-                            if (type.equals(CellType.NUMERIC)) {
-                                if (HSSFDateUtil.isCellDateFormatted(cell)) {
-                                    value = cell.getDateCellValue();
-                                } else {
-                                    value = cell.getNumericCellValue();
-                                }
+                    if (cell != null) {
+                        CellType type = cell.getCellType();
+                        value = cell.toString();
+
+                        if (type.equals(CellType.NUMERIC)) {
+                            if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                                value = cell.getDateCellValue();
                             } else {
-                                value = cell.toString();
+                                value = cell.getNumericCellValue();
                             }
+                        } else {
+                            value = cell.toString();
                         }
-
-                        Attribute headerAttribute = (Attribute) header.get(i);
-                        Attribute newAttribute = new Attribute(headerAttribute.getName(), value);
-                        columns.get(i).add(newAttribute);
                     }
+
+                    Attribute headerAttribute = (Attribute) header.get(i);
+                    Attribute newAttribute = new Attribute(headerAttribute.getName(), value);
+                    columns.get(i).add(newAttribute);
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         dataset = new Dataset(header, columns);
@@ -147,41 +140,5 @@ public class XlsUtils {
             }
 
         }
-    }
-
-    public static ArrayList<CellType> getDatasetAttributeType (String path) {
-        ArrayList<CellType> attributeTypes = new ArrayList<CellType>();
-
-        try {
-            FileInputStream excelFile = new FileInputStream(new File(path));
-            Workbook workbook = new XSSFWorkbook(excelFile);
-            Sheet datatypeSheet = workbook.getSheetAt(0);
-            Iterator<Row> iterator = datatypeSheet.iterator();
-
-            //Jump to 2 row
-            if (iterator.hasNext())
-                iterator.next();
-
-
-            if (iterator.hasNext()) {
-                Row currentRow = iterator.next();
-                Iterator<Cell> cellIterator = currentRow.iterator();
-
-                while (cellIterator.hasNext()) {
-                    Cell currentCell = cellIterator.next();
-                    attributeTypes.add(currentCell.getCellType());
-                }
-
-            } else {
-                return null;
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return attributeTypes;
     }
 }

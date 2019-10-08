@@ -43,7 +43,7 @@ public class LatticeGenerator {
             lattice.setNode1(node1);
             lattice.setNode2(node2);
         } catch (OutOfMemoryError ex) {
-            throw new TooNodeException();
+            throw new TooNodeException("Too many node to process. The algorithm has been stopped");
         }
 
 

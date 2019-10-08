@@ -7,6 +7,7 @@ import dataset.beans.DatasetRow;
 import dataset.type.AttributeType;
 import dataset.type.Identifier;
 import dataset.type.QuasiIdentifier;
+import exception.DatasetNotFoundException;
 import exception.IOPropertiesException;
 import exception.InvalidCSVFile;
 
@@ -14,7 +15,48 @@ import java.io.*;
 import java.util.*;
 
 public class DatasetUtils {
+    private static final String SEPARATOR_TAG = ",";
     private static final int PROPERTY_FIELDS = 4;
+
+    private static final String CSV_EXTENSION = "csv";
+    private static final String XLXS_EXTENSION = "xlsx";
+    private static final String XLS_EXTENSION = "xls";
+
+    public static Dataset readAndInit (String datasetPath, String configPath, String nullValue) throws DatasetNotFoundException, IOPropertiesException {
+        Dataset dataset = null;
+
+        File datasetFile = new File(datasetPath);
+        if (datasetFile.exists()) {
+            String datasetName = "";
+
+            String [] split = datasetFile.getName().split("\\.");
+            for (int i = 0; i < split.length-1; i++) {
+                datasetName += split[i];
+            }
+
+            String datasetExtension = FileUtils.getFileExtension(datasetFile);
+            try {
+                if (datasetExtension.equals(XLS_EXTENSION) || datasetExtension.equals(XLXS_EXTENSION)) {
+                    dataset = DatasetUtils.readFromXls(datasetPath);
+                } else if (datasetExtension.equals(CSV_EXTENSION)) {
+                    dataset = DatasetUtils.readFromCSV(datasetPath, nullValue);
+                } else {
+                    throw new DatasetNotFoundException();
+                }
+            } catch (IOException e) {
+                throw new DatasetNotFoundException();
+            }
+
+
+            dataset.setName(datasetName);
+
+            DatasetUtils.loadProperties(dataset, configPath);
+        } else {
+            throw new DatasetNotFoundException();
+        }
+
+        return dataset;
+    }
 
     public static Dataset readFromCSV (String path, String nullValue) throws IOException {
         File csvFile = new File(path);
@@ -32,7 +74,7 @@ public class DatasetUtils {
         ArrayList<DatasetColumn> columns = new ArrayList<DatasetColumn>();
 
         // Header
-        String [] headerAttributes = csvText.remove(0).split(";");
+        String [] headerAttributes = csvText.remove(0).split(SEPARATOR_TAG);
         for (String headerAttribute : headerAttributes) {
             Attribute attribute = new Attribute(headerAttribute, null);
             header.add(attribute);
@@ -41,7 +83,7 @@ public class DatasetUtils {
 
         // Columns
         for (String line : csvText) {
-            String [] values = line.split(";");
+            String [] values = line.split(SEPARATOR_TAG);
             for (int i = 0; i < values.length; i++) {
                 String value = values[i];
 
@@ -60,12 +102,10 @@ public class DatasetUtils {
         return dataset;
     }
 
-
-
-
-
-
-
+    public static Dataset readFromXls (String path) throws IOException {
+        Dataset dataset = XlsUtils.readXlsx(path);
+        return dataset;
+    }
 
     public static void loadProperties (Dataset dataset, String propertiesPath) throws IOPropertiesException {
         List<String> properties = null;

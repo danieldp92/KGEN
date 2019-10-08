@@ -3,6 +3,7 @@ package runner.experimentation;
 import approaches.metaheuristics.geneticalgorithm.AnonymizationAlgorithm;
 import approaches.metaheuristics.geneticalgorithm.AnonymizationProblem;
 import approaches.metaheuristics.geneticalgorithm.AnonymizationSetting;
+import approaches.metaheuristics.geneticalgorithm.KGENAlgorithm;
 import approaches.metaheuristics.utils.SolutionUtils;
 import exception.DatasetNotFoundException;
 import jmetal.core.Solution;
@@ -10,15 +11,12 @@ import jmetal.core.SolutionSet;
 import jmetal.core.Variable;
 import jmetal.util.JMException;
 import runner.Main;
+import runner.experimentation.thread.ExecutionThread;
 
 import java.util.ArrayList;
 
 public class KGENExperimentation extends Experimentation{
-    private AnonymizationProblem anonymizationProblem;
-    private AnonymizationSetting anonymizationSetting;
-    private AnonymizationAlgorithm anonymizationAlgorithm;
-
-    private double suppressionTreshold;
+    private KGENAlgorithm kgenAlgorithm;
 
     public KGENExperimentation(String resultPath) {
         super(resultPath);
@@ -26,57 +24,32 @@ public class KGENExperimentation extends Experimentation{
 
     @Override
     public void execute(int numberOfRun, double suppressionTreshold) throws DatasetNotFoundException {
-        this.suppressionTreshold = suppressionTreshold;
-
-        if (Main.SHOW_LOG_MESSAGE) System.out.println("\nKGEN");
-        //Initialize the genetic algorithm
-        this.anonymizationProblem = new AnonymizationProblem(dataset, suppressionTreshold);
-        this.anonymizationSetting = new AnonymizationSetting(this.anonymizationProblem);
-        try {
-            this.anonymizationAlgorithm = (AnonymizationAlgorithm) this.anonymizationSetting.configure();
-        } catch (JMException e) {
-            e.printStackTrace();
+        if (this.dataset == null) {
+            throw new DatasetNotFoundException();
         }
 
-        for (int run = 1; run <= numberOfRun; run++) {
-            if (Main.SHOW_LOG_MESSAGE) System.out.println("KGEN " + run);
+        this.kgenAlgorithm = new KGENAlgorithm(this.dataset, suppressionTreshold);
+
+        for (int i = 1; i <= numberOfRun; i++) {
+            ExecutionThread executionThread = new ExecutionThread(kgenAlgorithm, i);
+            executionThread.start();
+
             long start = System.currentTimeMillis();
-
-            SolutionSet bestSolutions = null;
-            try {
-                bestSolutions = this.anonymizationAlgorithm.execute();
-            } catch (JMException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            if (bestSolutions.size() > 0) {
-                this.solutions = new ArrayList<>();
-                for (int i = 0; i < bestSolutions.size(); i++) {
-                    this.solutions.add(getSolutionValues(bestSolutions.get(i)));
+            while (executionThread.isAlive()) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    System.out.println(e.getMessage());
+                    System.exit(0);
                 }
-
-                //Remove all k-anonymous solutions that are of the same strategy path (except for the minimal k-anonymous node)
-                SolutionUtils.removeGreaterElements(this.solutions);
-
-                this.executionTime = (double)(System.currentTimeMillis()-start)/1000;
             }
 
-            saveInfoExperimentation("KGEN", anonymizationProblem.getkAnonymity(), run);
-        }
-
-    }
-
-    private static ArrayList<Integer> getSolutionValues (Solution solution) {
-        ArrayList<Integer> values = new ArrayList<Integer>();
-
-        for (Variable var : solution.getDecisionVariables()) {
-            try {
-                values.add((int) var.getValue());
-            } catch (JMException e) {
-                e.printStackTrace();
+            this.solutions = executionThread.getSolutions();
+            if (this.solutions != null) {
+                this.executionTime = (double)(System.currentTimeMillis() - start) / 1000;
             }
-        }
 
-        return values;
+            saveInfoExperimentation(this.kgenAlgorithm.getName(), this.kgenAlgorithm.getkAnonymity(), i);
+        }
     }
 }

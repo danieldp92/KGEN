@@ -2,31 +2,24 @@ package approaches.metaheuristics.geneticalgorithm;
 
 import anonymization.AnonymizationReport;
 import anonymization.KAnonymity;
-import dataset.beans.Dataset;
 import jmetal.core.Problem;
 import jmetal.core.Solution;
 import jmetal.core.Variable;
 import jmetal.encodings.solutionType.IntSolutionType;
 import jmetal.util.JMException;
-import lattice.bean.Lattice;
-import lattice.generator.LatticeGenerator;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class AnonymizationProblem extends Problem {
     public static final int ffLOG_OBJECTIVE = 0;
     public static final int ffKLV_OBJECTIVE = 1;
 
-    private Dataset dataset;
     private KAnonymity kAnonymity;
     private double suppressionTreshold;
 
-    public AnonymizationProblem (Dataset dataset, double suppressionTreshold) {
+    public AnonymizationProblem (KAnonymity kAnonymity, double suppressionTreshold) {
         //Dataset variables
-        this.dataset = dataset;
-        this.kAnonymity = new KAnonymity(dataset);
+        this.kAnonymity = kAnonymity;
         this.suppressionTreshold = suppressionTreshold;
 
         //Lower and Upper bounds
@@ -52,10 +45,6 @@ public class AnonymizationProblem extends Problem {
         }
 
         this.solutionType_ = new IntSolutionType(this);
-    }
-
-    public Dataset getDataset() {
-        return dataset;
     }
 
     public KAnonymity getkAnonymity () {

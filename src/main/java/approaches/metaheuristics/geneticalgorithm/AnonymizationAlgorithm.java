@@ -2,8 +2,10 @@ package approaches.metaheuristics.geneticalgorithm;
 
 import anonymization.KAnonymity;
 import approaches.metaheuristics.geneticalgorithm.encoding.GeneralizationSolution;
+import exception.TooNodeException;
 import jmetal.core.*;
 import jmetal.util.JMException;
+import runner.experimentation.exceptions.LimitExceedException;
 import utils.ArrayUtils;
 
 import java.util.ArrayList;
@@ -17,36 +19,52 @@ public class AnonymizationAlgorithm extends Algorithm {
     private Operator mutation;
     private Operator horizontalMutation;
 
-    private SolutionSet population;
-
-    private KAnonymity kAnonymity;
     private int populationSize;
     private int maxEvaluations;
-    private int evaluation;
 
-    private List<List<Integer>> results;
+    private KGENAlgorithm kgenAlgorithm;
 
     /**
      * Constructor
      *
      * @param problem The problem to be solved
      */
-    public AnonymizationAlgorithm(Problem problem) throws JMException {
+    public AnonymizationAlgorithm(Problem problem) {
         super(problem);
     }
+
+
+    // INIT ####################################################################################
+
+    private void init () {
+        selection = operators_.get("selection");
+        crossover = operators_.get("crossover");
+        mutation = operators_.get("mutation");
+        horizontalMutation = operators_.get("horizontalMutation");
+
+        populationSize = ((Integer)getInputParameter("populationSize")).intValue();
+        maxEvaluations = ((Integer)getInputParameter("maxEvaluations")).intValue();
+
+        ((AnonymizationProblem)problem_).getkAnonymity().cleanHistoryMap();
+    }
+
+
+    // GET & SET ###############################################################################
+
+    public void setKgenAlgorithm(KGENAlgorithm kgenAlgorithm) {
+        this.kgenAlgorithm = kgenAlgorithm;
+    }
+
+
+    // EXEC ####################################################################################
 
     public SolutionSet execute() throws JMException, ClassNotFoundException {
         init();
 
-        this.results = new ArrayList<>();
-
-        long startTime = 0;
-
-
-        this.population = new SolutionSet(populationSize);
+        List<List<Integer>> results = new ArrayList<>();
+        SolutionSet population = new SolutionSet(populationSize);
 
         //Starting population
-        startTime = System.currentTimeMillis();
         for (int i = 0; i < populationSize; i++) {
             GeneralizationSolution newSolution = new GeneralizationSolution(problem_);
             problem_.evaluate(newSolution);
@@ -54,8 +72,7 @@ public class AnonymizationAlgorithm extends Algorithm {
             population.add(newSolution);
         }
 
-        startTime = System.currentTimeMillis();
-        evaluation = 0;
+        int evaluation = 0;
 
         while (evaluation < maxEvaluations) {
             //SolutionUtils.printPopulation(population);
@@ -92,11 +109,13 @@ public class AnonymizationAlgorithm extends Algorithm {
                     }
 
                     evaluation += 2;
+
+                    kgenAlgorithm.setChanged();
+                    kgenAlgorithm.notifyObservers(evaluation);
                 }
             }
 
             union.addAll(offspringPopulation);
-
             SolutionSet tmpUnion = new SolutionSet(union.size());
             for (int j = 0; j < union.size(); j++) {
                 tmpUnion.add(union.get(j));
@@ -115,7 +134,7 @@ public class AnonymizationAlgorithm extends Algorithm {
             }
 
             //Insert best solutions in results
-            saveBestSolutions(population);
+            saveBestSolutions(results, population);
         }
 
         for (int i = 0; i < population.size(); i++) {
@@ -145,22 +164,7 @@ public class AnonymizationAlgorithm extends Algorithm {
         return population;
     }
 
-    private void init () {
-        //((AnonymizationProblem)problem_).initKAnonymity();
-        this.kAnonymity = ((AnonymizationProblem) problem_).getkAnonymity();
 
-        //Reset history, in order to have indipendent results in a multirun experimentation
-        this.kAnonymity.cleanHistoryMap();
-
-        selection = operators_.get("selection");
-        crossover = operators_.get("crossover");
-        mutation = operators_.get("mutation");
-        horizontalMutation = operators_.get("horizontalMutation");
-
-        populationSize = ((Integer)getInputParameter("populationSize")).intValue();
-        maxEvaluations = ((Integer)getInputParameter("maxEvaluations")).intValue();
-        evaluation = 0;
-    }
 
     private ArrayList<Integer> getSolutionValues (Solution solution) throws JMException {
         ArrayList<Integer> values = new ArrayList<Integer>();
@@ -172,7 +176,7 @@ public class AnonymizationAlgorithm extends Algorithm {
         return values;
     }
 
-    private void saveBestSolutions (SolutionSet population) throws JMException {
+    private void saveBestSolutions (List<List<Integer>> results, SolutionSet population) throws JMException {
         for (int i = 0; i < population.size(); i++) {
             if (population.get(i).getObjective(AnonymizationProblem.ffKLV_OBJECTIVE) > 1) {
                 List<Integer> min = getSolutionValues(population.get(i));

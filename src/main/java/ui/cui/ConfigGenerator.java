@@ -3,19 +3,17 @@ package ui.cui;
 import dataset.beans.Attribute;
 import dataset.beans.Dataset;
 import dataset.beans.DatasetRow;
+import utils.CsvUtils;
 import utils.DatasetUtils;
 import utils.FileUtils;
 import utils.XlsUtils;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigGenerator {
-    private static final String SEPARATOR_TAG = ":";
+    private static final String SEPARATOR_TAG = ",";
 
     public static void generateConfigFileFromCLI (String datasetPath, String outputPath) {
         System.out.println("CONFIG FILE GENERATION");
@@ -26,7 +24,18 @@ public class ConfigGenerator {
         int choose = -1;
 
         // Read dataset
-        Dataset dataset = XlsUtils.readXlsx(datasetPath);
+        Dataset dataset = null;
+        String datasetExt = FileUtils.getFileExtension(new File(datasetPath));
+        try {
+            if (datasetExt.equals("csv")) {
+                dataset = DatasetUtils.readFromCSV(datasetPath, "?");
+            } else {
+                dataset = DatasetUtils.readFromXls(datasetPath);
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            System.exit(0);
+        }
 
         DatasetRow header = dataset.getHeader();
         for (Object attributeObject : header) {

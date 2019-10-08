@@ -5,14 +5,17 @@ import runner.experimentation.*;
 import runner.experimentation.bean.Result;
 import runner.experimentation.bean.Stat;
 import runner.experimentation.exceptions.ArgumentException;
+import runner.experimentation.exceptions.ConfigFileException;
 import runner.experimentation.thread.ExperimentationRunner;
 import runner.experimentation.type.AlgorithmType;
 import runner.experimentation.util.ResultUtils;
 import runner.experimentation.util.StatisticalUtils;
 import ui.UI;
 import ui.cui.arguments.*;
+import ui.cui.arguments_cli.DiscoverCLI;
 import utils.FileUtils;
 
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,9 +28,10 @@ public class AnonymizationCLI implements UI {
     public static final String [] CONFIG_ARGUMENTS = {"-c", "--config"};
     public static final String [] SAVE_ARGUMENTS = {"-o"};
     public static final String [] STAT_ARGUMENTS = {"-s", "--stat"};
+    public static final String [] DISCOVER_ARGUMENTS = {"-d"};
     public static final String [] HELP_ARGUMENTS = {"-h", "--help"};
 
-    private static final String [] VALID_DATASET_EXTENSIONS = {"csv", "xlsx", "xls"};
+    public static final String [] VALID_DATASET_EXTENSIONS = {"csv", "xlsx", "xls"};
     private static final String [] ALGORITHM_NAMES = {"EXHAUSTIVE", "OLA", "KGEN", "RANDOM"};
     private static final String [] CONFIG_ID_TYPE = {"i", "qi"};
     private static final String [] CONFIG_DATE_TYPE = {"int", "double", "string", "date", "place"};
@@ -42,6 +46,12 @@ public class AnonymizationCLI implements UI {
     public void run(String [] args) throws ArgumentException {
         Arguments arguments = argumentValidation(args);
 
+        if (arguments.getOutputPath() == null) {
+            String outputDir = FileUtils.getDirOfJAR();
+            arguments.setOutputPath(outputDir);
+        }
+
+
         if (arguments instanceof ExperimentationArguments) {
             ExperimentationRunner experimentationRunner = new ExperimentationRunner((ExperimentationArguments) arguments);
             experimentationRunner.start();
@@ -51,37 +61,33 @@ public class AnonymizationCLI implements UI {
             Experimentation experimentation = null;
             AlgorithmArguments algorithmArguments = (AlgorithmArguments) arguments;
 
-            // If the path is null, use the directory of the jar file
-            if (algorithmArguments.getOutputPath() == null) {
-                String outputDir = FileUtils.getDirOfJAR();
-                algorithmArguments.setOutputPath(outputDir);
-            }
+            File configFile = new File(algorithmArguments.getConfigPath());
 
             switch (algorithmArguments.getAlgorithmType()) {
                 case AlgorithmType.EXHAUSTIVE_ALGORITHM:
-                    experimentation = new ExhaustiveExperimentation(algorithmArguments.getOutputPath() + RESULT_NAME);
+                    experimentation = new ExhaustiveExperimentation(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
                     break;
                 case AlgorithmType.OLA_ALGORITHM:
-                    experimentation = new OLAExperimentation(algorithmArguments.getOutputPath() + RESULT_NAME);
+                    experimentation = new OLAExperimentation(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
                     break;
                 case AlgorithmType.KGEN_ALGORITHM:
-                    experimentation = new KGENExperimentation(algorithmArguments.getOutputPath() + RESULT_NAME);
+                    experimentation = new KGENExperimentation(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
                     break;
                 case AlgorithmType.RANDOM_ALGORITHM:
-                    experimentation = new RandomSearchExperimentation(algorithmArguments.getOutputPath() + RESULT_NAME);
+                    experimentation = new RandomSearchExperimentation(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
                     break;
             }
 
             try {
-                experimentation.initDataset(algorithmArguments.getDatasetPath(), algorithmArguments.getConfigPath(), "");
+                experimentation.initDataset(algorithmArguments.getDatasetPath(), algorithmArguments.getConfigPath(), "?");
                 experimentation.execute(1, algorithmArguments.getTreshold());
             } catch (DatasetNotFoundException  e) {
                 e.printStackTrace();
             }
 
-            List<Result> results = ResultUtils.loadResultsFromCsv(algorithmArguments.getOutputPath() + RESULT_NAME);
+            List<Result> results = ResultUtils.loadResultsFromCsv(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
             List<Stat> stats = StatisticalUtils.getStatsOfResults(results);
-            StatisticalUtils.saveStatsIntoCsv(stats,algorithmArguments.getOutputPath() + STAT_NAME);
+            StatisticalUtils.saveStatsIntoCsv(stats,algorithmArguments.getOutputPath() + configFile.getName() + STAT_NAME);
         }
 
         else if (arguments instanceof ConfigArguments) {
@@ -93,12 +99,6 @@ public class AnonymizationCLI implements UI {
             StatArguments statArguments = (StatArguments) arguments;
             List<Result> results = ResultUtils.loadResultsFromCsv(statArguments.getResultPath());
 
-            // If the path is null, use the directory of the jar file
-            if (statArguments.getOutputPath() == null) {
-                String outputDir = FileUtils.getDirOfJAR();
-                statArguments.setOutputPath(outputDir);
-            }
-
             List<Stat> stats = StatisticalUtils.getStatsOfResults(results);
 
             File statFile = new File(statArguments.getOutputPath() + STAT_NAME);
@@ -109,6 +109,14 @@ public class AnonymizationCLI implements UI {
             StatisticalUtils.saveStatsIntoCsv(stats, statArguments.getOutputPath() + STAT_NAME);
         }
 
+        else if (arguments instanceof DiscoverArguments) {
+            try {
+                DiscoverCLI.showCLI((DiscoverArguments) arguments);
+            } catch (IOException | DatasetNotFoundException e) {
+                System.out.println(e.getMessage());
+                System.exit(0);
+            }
+        }
         else {
             showHelpMenu();
         }
@@ -132,12 +140,16 @@ public class AnonymizationCLI implements UI {
         if (outputPath != null) {
             args = removeOArgs(args);
 
-            // Check if the path is a directory
             File outputDir = new File(outputPath);
-            if (!outputDir.exists()) {
-                throw new ArgumentException("ERROR! The outputPath doesn't exist. Please, insert a valid path");
-            } else if (outputDir.isFile()) {
-                throw new ArgumentException("ERROR! The outputPath must be a directory");
+            if (Arrays.asList(EXPERIMENTATION_ARGUMENTS).contains(args[0]) || Arrays.asList(ALGORITHM_ARGUMENTS).contains(args[0])) {
+                // Check if the path is a directory
+                if (!outputDir.exists()) {
+                    throw new ArgumentException("ERROR! The outputPath doesn't exist. Please, insert a valid path");
+                }
+
+                else if (!outputDir.isDirectory()) {
+                    throw new ArgumentException("ERROR! The outputPath must be a directory. Please, insert a valid path");
+                }
             }
         }
 
@@ -224,11 +236,12 @@ public class AnonymizationCLI implements UI {
                 throw new ArgumentException("ERROR! Config file must be a txt file");
             } else {
                 try {
-                    if (!isConfigFileValid(configFilePath)) {
-                        throw new ArgumentException("ERROR! The config file passed is not well formed");
-                    }
+                    isConfigFileValid(configFilePath);
                 } catch (IOException e) {
                     throw new ArgumentException("ERROR! Impossible to load config file");
+                } catch (ConfigFileException e) {
+                    System.out.println(e.getMessage());
+                    System.exit(0);
                 }
             }
 
@@ -277,6 +290,15 @@ public class AnonymizationCLI implements UI {
             }
 
             arguments = new StatArguments(resultPath, outputPath);
+        }
+
+        else if (Arrays.asList(DISCOVER_ARGUMENTS).contains(args[0])) {
+            try {
+                DiscoverCLI.showCLI((DiscoverArguments) arguments);
+            } catch (IOException | DatasetNotFoundException e) {
+                System.out.println(e.getMessage());
+                System.exit(0);
+            }
         }
 
         // Help command -> -h
@@ -333,45 +355,43 @@ public class AnonymizationCLI implements UI {
         return newArgs;
     }
 
-    private static boolean isConfigFileValid (String configFilePath) throws IOException {
+    private static void isConfigFileValid (String configFilePath) throws IOException, ConfigFileException {
         List<String> configTxt = FileUtils.loadFile(configFilePath);
 
         if (configTxt.isEmpty()) {
-            return false;
+            throw new ConfigFileException("The config file is empty!");
         } else {
             // Remove the header and check if there are other attributes
             configTxt.remove(0);
             if (configTxt.isEmpty()) {
-                return false;
+                throw new ConfigFileException("The config file contains only header!");
             }
         }
 
         for (String line : configTxt) {
             String [] split = line.split(SEPARATOR_TAG);
             if (split.length != 4) {
-                return false;
+                throw new ConfigFileException("The config file contains more or less then 4 elements");
             }
 
             // Check on split[1]
             String idType = split[1];
             if (!Arrays.asList(CONFIG_ID_TYPE).contains(idType)) {
-                return false;
+                throw new ConfigFileException("The second element of config file is not IdType");
             }
 
             // Check on split[2]
             String dateType = split[2];
             if (!Arrays.asList(CONFIG_DATE_TYPE).contains(dateType)) {
-                return false;
+                throw new ConfigFileException("The third element of config file is not DateType");
             }
 
             // Check on split[3]
             String pk = split[3];
             if (!Arrays.asList(CONFIG_PK).contains(pk)) {
-                return false;
+                throw new ConfigFileException("The last element of config file is not PK");
             }
         }
-
-        return true;
     }
 
     private static void showHelpMenu () {

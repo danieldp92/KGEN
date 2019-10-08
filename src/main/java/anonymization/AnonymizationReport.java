@@ -1,5 +1,6 @@
 package anonymization;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AnonymizationReport {
@@ -9,6 +10,7 @@ public class AnonymizationReport {
     private int kValueWithSuppression;
     private double percentageOfSuppression;
     private List<Integer> rowToDelete;
+    private boolean partial;
 
     public List<Integer> getLevelOfAnonymization() {
         return levelOfAnonymization;
@@ -56,5 +58,36 @@ public class AnonymizationReport {
 
     public void setRowToDelete(List<Integer> rowToDelete) {
         this.rowToDelete = rowToDelete;
+    }
+
+    public boolean isPartial() {
+        return partial;
+    }
+
+    public void setPartial(boolean partial) {
+        this.partial = partial;
+    }
+
+    @Override
+    protected Object clone() {
+        AnonymizationReport anonymizationReportClone = new AnonymizationReport();
+
+        anonymizationReportClone.setLevelOfAnonymization(new ArrayList<>(this.levelOfAnonymization));
+
+        double logClone = this.logMetric;
+        anonymizationReportClone.setLogMetric(logClone);
+
+        int kClone = this.kValue;
+        anonymizationReportClone.setkValue(kClone);
+
+        int kSuppClone = this.kValueWithSuppression;
+        anonymizationReportClone.setkValueWithSuppression(kSuppClone);
+
+        double percClone = this.percentageOfSuppression;
+        anonymizationReportClone.setPercentageOfSuppression(percClone);
+
+        anonymizationReportClone.setRowToDelete(new ArrayList<>(this.rowToDelete));
+
+        return anonymizationReportClone;
     }
 }

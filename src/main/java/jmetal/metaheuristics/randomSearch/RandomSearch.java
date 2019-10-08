@@ -21,6 +21,7 @@
 
 package jmetal.metaheuristics.randomSearch;
 
+import approaches.metaheuristics.randomsearch.RandomAlgorithm;
 import jmetal.core.Algorithm;
 import jmetal.core.Problem;
 import jmetal.core.Solution;
@@ -32,6 +33,7 @@ import jmetal.util.NonDominatedSolutionList;
  * This class implements a simple random search algorithm.
  */
 public class RandomSearch extends Algorithm {
+  private RandomAlgorithm randomAlgorithm;
 
   /**
   * Constructor
@@ -40,6 +42,10 @@ public class RandomSearch extends Algorithm {
   public RandomSearch(Problem problem){
     super (problem) ;
   } // RandomSearch
+
+  public void setRandomAlgorithm(RandomAlgorithm randomAlgorithm) {
+    this.randomAlgorithm = randomAlgorithm;
+  }
 
   /**
   * Runs the RandomSearch algorithm.
@@ -66,6 +72,9 @@ public class RandomSearch extends Algorithm {
       problem_.evaluateConstraints(newSolution);
       evaluations++;
       ndl.add(newSolution);
+
+      this.randomAlgorithm.setChanged();
+      this.randomAlgorithm.notifyObservers(evaluations);
     } //for
 
     return ndl;

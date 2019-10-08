@@ -2,17 +2,18 @@ package runner.experimentation.bean;
 
 import anonymization.AnonymizationReport;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class Result {
+public class Result implements Serializable {
     private String datasetName;
     private int numberOfAttributes;
     private Integer numberOfAttributesAnalyzed;
     private int numberOfExperimentation;
     private String algorithmName;
     private Double executionTime;
-    private int latticeSize;
+    private Integer latticeSize;
     private List<Integer> bottomNode;
     private List<Integer> topNode;
     private List<Integer> solution;
@@ -26,7 +27,7 @@ public class Result {
     public Result () {}
 
     public Result(String datasetName, int numberOfExperimentation, int numberOfAttributes, String algorithmName,
-                  Double executionTime, int latticeSize, List<Integer> bottomNode, List<Integer> topNode,
+                  Double executionTime, Integer latticeSize, List<Integer> bottomNode, List<Integer> topNode,
                   AnonymizationReport report) {
         DecimalFormat df = new DecimalFormat("#.###");
         DecimalFormat dfMetr = new DecimalFormat("#.########");
@@ -91,7 +92,7 @@ public class Result {
         return executionTime;
     }
 
-    public int getLatticeSize() {
+    public Integer getLatticeSize() {
         return latticeSize;
     }
 
@@ -156,7 +157,7 @@ public class Result {
         }
     }
 
-    public void setLatticeSize(int latticeSize) {
+    public void setLatticeSize(Integer latticeSize) {
         this.latticeSize = latticeSize;
     }
 
@@ -200,5 +201,25 @@ public class Result {
 
     public void setRowToDelete(List<Integer> rowToDelete) {
         this.rowToDelete = rowToDelete;
+    }
+
+    @Override
+    public String toString() {
+        String toString = "Dataset name: " + datasetName + "\n" +
+                "Number Of Attribute: " + numberOfAttributes + "\n" +
+                "Number Of Attribute Analyzed: " + numberOfAttributesAnalyzed + "\n" +
+                "Experimentation number: " + numberOfExperimentation + "\n" +
+                "Algorithm name: " + algorithmName + "\n" +
+                "Execution time: " + executionTime + "\n" +
+                "Bottom Node: " + bottomNode + "\n" +
+                "Top Node: " + topNode + "\n" +
+                "Solution: " + solution + "\n" +
+                "Log metric: " + logMetric + "\n" +
+                "K-Value: " + kValue + "\n" +
+                "K-Value with suppression: " + kValueWithSuppression + "\n" +
+                "Percentage Of Suppression: " + percentageOfSuppression+ "\n" +
+                "Row to delete: " + rowToDelete;
+
+        return toString;
     }
 }

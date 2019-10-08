@@ -1,6 +1,7 @@
 package runner.experimentation;
 
 import approaches.metaheuristics.geneticalgorithm.AnonymizationProblem;
+import approaches.metaheuristics.randomsearch.RandomAlgorithm;
 import approaches.metaheuristics.randomsearch.RandomSearchSetting;
 import approaches.metaheuristics.utils.SolutionUtils;
 import approaches.ola.OLAAlgorithm;
@@ -11,16 +12,13 @@ import jmetal.core.Variable;
 import jmetal.metaheuristics.randomSearch.RandomSearch;
 import jmetal.util.JMException;
 import runner.Main;
+import runner.experimentation.thread.ExecutionThread;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RandomSearchExperimentation extends Experimentation {
-    private AnonymizationProblem anonymizationProblem;
-    private RandomSearchSetting randomSearchSetting;
-    private RandomSearch randomSearch;
-
-    private double suppressionTreshold;
+    private RandomAlgorithm randomAlgorithm;
 
     public RandomSearchExperimentation(String resultPath) {
         super(resultPath);
@@ -28,12 +26,40 @@ public class RandomSearchExperimentation extends Experimentation {
 
     @Override
     public void execute(int numberOfRun, double suppressionTreshold) throws DatasetNotFoundException {
-        this.suppressionTreshold = suppressionTreshold;
+        if (this.dataset == null) {
+            throw new DatasetNotFoundException();
+        }
+
+        this.randomAlgorithm = new RandomAlgorithm(this.dataset, suppressionTreshold);
+
+        for (int i = 1; i <= numberOfRun; i++) {
+            ExecutionThread executionThread = new ExecutionThread(randomAlgorithm, i);
+            executionThread.start();
+
+            long start = System.currentTimeMillis();
+            while (executionThread.isAlive()) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    System.out.println(e.getMessage());
+                    System.exit(0);
+                }
+            }
+
+            this.solutions = executionThread.getSolutions();
+            if (this.solutions != null) {
+                this.executionTime = (double)(System.currentTimeMillis() - start) / 1000;
+            }
+
+            saveInfoExperimentation(this.randomAlgorithm.getName(), this.randomAlgorithm.getkAnonymity(), i);
+        }
+
+        /*this.suppressionThreshold = suppressionThreshold;
 
         if (Main.SHOW_LOG_MESSAGE) System.out.println("\nRandom Search");
 
         for (int run = 1; run <= numberOfRun; run++) {
-            this.anonymizationProblem = new AnonymizationProblem(dataset, this.suppressionTreshold);
+            this.anonymizationProblem = new AnonymizationProblem(dataset, this.suppressionThreshold);
             this.randomSearchSetting = new RandomSearchSetting(anonymizationProblem);
             RandomSearch randomSearch = null;
             try {
@@ -70,20 +96,6 @@ public class RandomSearchExperimentation extends Experimentation {
             }
 
             saveInfoExperimentation("RANDOM", anonymizationProblem.getkAnonymity(), run);
-        }
-    }
-
-    private static ArrayList<Integer> getSolutionValues (Solution solution) {
-        ArrayList<Integer> values = new ArrayList<Integer>();
-
-        for (Variable var : solution.getDecisionVariables()) {
-            try {
-                values.add((int) var.getValue());
-            } catch (JMException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return values;
+        }*/
     }
 }

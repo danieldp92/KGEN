@@ -13,35 +13,6 @@ import java.io.*;
 import java.util.*;
 
 public class GeneralizationGraphGenerator {
-    //private static final String PLACEINFO_XLS_PATH = System.getProperty("user.dir") + File.separator + "dataset" + File.separator +
-    //        "netherland_place_info.xls";
-
-    public static GeneralizationTree generatePlaceHierarchy (String placeInfoPath) {
-        Dataset placeDataset = XlsUtils.readXlsx(placeInfoPath);
-        GeneralizationTree placeTree = generatePlaceHierarchy(placeDataset);
-
-        return placeTree;
-    }
-
-    public static GeneralizationTree generatePlaceHierarchy (InputStream placeInfoInputStream) {
-        BufferedReader br = new BufferedReader(new InputStreamReader(placeInfoInputStream));
-
-        List<String> csv = new ArrayList<>();
-        String line;
-
-        try {
-            while ((line = br.readLine()) != null) {
-                csv.add(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        GeneralizationTree placeTree = generatePlaceHierarchy(csv);
-
-        return placeTree;
-    }
-
     public static GeneralizationTree generatePlaceHierarchy (List<String> csvText) {
         Dataset placeDataset = DatasetUtils.readFromCSV(csvText, "");
         GeneralizationTree placeTree = generatePlaceHierarchy(placeDataset);

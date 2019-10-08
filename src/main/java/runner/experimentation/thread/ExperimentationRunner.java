@@ -35,11 +35,13 @@ public class ExperimentationRunner {
         this.configPath = experimentationArguments.getConfigPath();
         this.numberOfRuns = experimentationArguments.getNumberOfRuns();
         this.suppressionTreshold = experimentationArguments.getTreshold();
+        this.resultPath = experimentationArguments.getOutputPath();
 
-        if (experimentationArguments.getOutputPath() == null) {
-            this.resultPath = FileUtils.getDirOfJAR();
-        } else {
-            this.resultPath = experimentationArguments.getOutputPath() + File.separator;
+        char [] tmp = this.resultPath.toCharArray();
+        String lastCh = String.valueOf(tmp[tmp.length-1]);
+
+        if (!lastCh.equals(File.separator)) {
+            this.resultPath += File.separator;
         }
     }
 
@@ -54,23 +56,25 @@ public class ExperimentationRunner {
         Experimentation experimentation = null;
 
         if (Main.SHOW_LOG_MESSAGE) System.out.println("\nCONFIG: " + configPath);
+        File configFile = new File(configPath);
 
         for (int algorithmType : algorithmTypes) {
+
             switch (algorithmType) {
                 case AlgorithmType.OLA_ALGORITHM:
-                    experimentation = new OLAExperimentation(resultPath + RESULT_NAME);
+                    experimentation = new OLAExperimentation(resultPath + configFile.getName() + RESULT_NAME);
 
                     break;
                 case AlgorithmType.EXHAUSTIVE_ALGORITHM:
-                    experimentation = new ExhaustiveExperimentation(resultPath + RESULT_NAME);
+                    experimentation = new ExhaustiveExperimentation(resultPath + configFile.getName() + RESULT_NAME);
 
                     break;
                 case AlgorithmType.KGEN_ALGORITHM:
-                    experimentation = new KGENExperimentation(resultPath + RESULT_NAME);
+                    experimentation = new KGENExperimentation(resultPath + configFile.getName() + RESULT_NAME);
 
                     break;
                 case AlgorithmType.RANDOM_ALGORITHM:
-                    experimentation = new RandomSearchExperimentation(resultPath + RESULT_NAME);
+                    experimentation = new RandomSearchExperimentation(resultPath + configFile.getName() + RESULT_NAME);
 
                     break;
                 default: break;
@@ -79,7 +83,7 @@ public class ExperimentationRunner {
 
             //Initialize the dataset
             try {
-                experimentation.initDataset(datasetPath, configPath, "");
+                experimentation.initDataset(datasetPath, configPath, "?");
             } catch (DatasetNotFoundException e) {
                 System.out.println("Dataset not found");
                 System.exit(0);
@@ -95,6 +99,6 @@ public class ExperimentationRunner {
         }
 
         List<Stat> stats = StatisticalUtils.getStatsOfResults(results);
-        StatisticalUtils.saveStatsIntoCsv(stats, this.resultPath + STAT_NAME);
+        StatisticalUtils.saveStatsIntoCsv(stats, this.resultPath + configFile.getName() + STAT_NAME);
     }
 }

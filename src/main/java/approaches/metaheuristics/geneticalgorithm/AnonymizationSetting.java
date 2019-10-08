@@ -8,6 +8,7 @@ import jmetal.core.Operator;
 import jmetal.core.Problem;
 import jmetal.experiments.Settings;
 import jmetal.operators.mutation.MutationFactory;
+import jmetal.operators.selection.SelectionFactory;
 import jmetal.util.JMException;
 
 import java.util.HashMap;
@@ -46,6 +47,7 @@ public class AnonymizationSetting extends Settings {
         algorithm.setInputParameter("mutation", mutationProbability);
 
         Operator selection = new MultiObjectiveRouletteSelection(parameters);
+        //Operator selection = SelectionFactory.getSelectionOperator("BinaryTournament", parameters);
         parameters.put("probability", crossoverProbability);
         parameters.put("kAnonymity", ((AnonymizationProblem)problem_).getkAnonymity());
         Operator crossover = new LatticeCrossover(parameters);
