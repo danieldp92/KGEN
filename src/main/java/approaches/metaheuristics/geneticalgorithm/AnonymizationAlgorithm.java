@@ -1,11 +1,12 @@
 package approaches.metaheuristics.geneticalgorithm;
 
-import anonymization.KAnonymity;
 import approaches.metaheuristics.geneticalgorithm.encoding.GeneralizationSolution;
-import exception.TooNodeException;
+import approaches.metaheuristics.geneticalgorithm.thread.evaluation.EvaluationThread;
+import approaches.metaheuristics.geneticalgorithm.thread.evaluation.MultiThreadEvaluation;
+import approaches.metaheuristics.geneticalgorithm.thread.ga_cycle.MultiThreadCycle;
+import approaches.metaheuristics.utils.SolutionUtils;
 import jmetal.core.*;
 import jmetal.util.JMException;
-import runner.experimentation.exceptions.LimitExceedException;
 import utils.ArrayUtils;
 
 import java.util.ArrayList;
@@ -21,8 +22,11 @@ public class AnonymizationAlgorithm extends Algorithm {
 
     private int populationSize;
     private int maxEvaluations;
+    private int maxNumberOfThreads;
 
     private KGENAlgorithm kgenAlgorithm;
+
+    private List<EvaluationThread> evaluationThreads;
 
     /**
      * Constructor
@@ -44,8 +48,12 @@ public class AnonymizationAlgorithm extends Algorithm {
 
         populationSize = ((Integer)getInputParameter("populationSize")).intValue();
         maxEvaluations = ((Integer)getInputParameter("maxEvaluations")).intValue();
+        maxNumberOfThreads = ((Integer)getInputParameter("maxNumberOfThreads")).intValue();
 
         ((AnonymizationProblem)problem_).getkAnonymity().cleanHistoryMap();
+
+        // Init threads
+        this.evaluationThreads = new ArrayList<>();
     }
 
 
@@ -58,7 +66,7 @@ public class AnonymizationAlgorithm extends Algorithm {
 
     // EXEC ####################################################################################
 
-    public SolutionSet execute() throws JMException, ClassNotFoundException {
+    public SolutionSet sexecute() throws JMException, ClassNotFoundException {
         init();
 
         List<List<Integer>> results = new ArrayList<>();
@@ -67,10 +75,17 @@ public class AnonymizationAlgorithm extends Algorithm {
         //Starting population
         for (int i = 0; i < populationSize; i++) {
             GeneralizationSolution newSolution = new GeneralizationSolution(problem_);
-            problem_.evaluate(newSolution);
 
-            population.add(newSolution);
+            EvaluationThread evaluationThread = new EvaluationThread((AnonymizationProblem) problem_);
+            evaluationThread.configure(i, newSolution);
+            evaluationThread.start();
+            this.evaluationThreads.add(evaluationThread);
+
+            //problem_.evaluate(newSolution);
+            //population.add(newSolution);
         }
+
+
 
         int evaluation = 0;
 
@@ -160,6 +175,86 @@ public class AnonymizationAlgorithm extends Algorithm {
 
             population.add(newSolution);
         }
+
+        return population;
+    }
+
+
+    public SolutionSet execute() throws JMException, ClassNotFoundException {
+        init();
+
+        // Threads
+        MultiThreadEvaluation multiThreadEvaluation = new MultiThreadEvaluation(maxNumberOfThreads,
+                (AnonymizationProblem) problem_);
+        MultiThreadCycle multiThreadCycle = new MultiThreadCycle(maxNumberOfThreads, populationSize/2,
+                selection, crossover, horizontalMutation, mutation);
+
+
+        List<List<Integer>> results = new ArrayList<>();
+        SolutionSet population = new SolutionSet(populationSize);
+
+        //Starting population
+        for (int i = 0; i < populationSize; i++) {
+            GeneralizationSolution newSolution = new GeneralizationSolution(problem_);
+            population.add(newSolution);
+        }
+
+        population = multiThreadEvaluation.parallelExecution(population);
+
+        int evaluation = 0;
+        while (evaluation < maxEvaluations) {
+            // Generation cycle (selection - crossover - mutation are executed by the multithread)
+            SolutionSet offsprings = multiThreadCycle.parallelExecution(population);
+            offsprings = multiThreadEvaluation.parallelExecution(offsprings);
+
+            offsprings.setCapacity(offsprings.size()+population.size());
+            offsprings.union(population);
+
+            evaluation += populationSize/2;
+
+            kgenAlgorithm.setChanged();
+            kgenAlgorithm.notifyObservers(evaluation);
+
+            // Survival
+            population.clear();
+            for (int i = 0; i < populationSize; i++) {
+                Solution survivalSolution = (Solution) selection.execute(offsprings);
+                population.add(survivalSolution);
+            }
+
+
+            //Increase penalties
+            for (int j = 0; j < population.size(); j++) {
+                ((GeneralizationSolution)population.get(j)).increasePenalty();
+            }
+
+            //Insert best solutions in results
+            saveBestSolutions(results, population);
+        }
+
+        for (int i = 0; i < population.size(); i++) {
+            if (population.get(i).getObjective(AnonymizationProblem.ffKLV_OBJECTIVE) == 1) {
+                population.remove(i--);
+            }
+        }
+
+        Set<List<Integer>> tmpResults = new LinkedHashSet<>();
+        for (List<Integer> result : results) {
+            tmpResults.add(result);
+        }
+
+        population.clear();
+
+        for (List<Integer> result : tmpResults) {
+            GeneralizationSolution newSolution = new GeneralizationSolution(problem_);
+            for (int i = 0; i < result.size(); i++) {
+                newSolution.getDecisionVariables()[i].setValue(result.get(i));
+            }
+
+            population.add(newSolution);
+        }
+
+        population = multiThreadEvaluation.parallelExecution(population);
 
         return population;
     }

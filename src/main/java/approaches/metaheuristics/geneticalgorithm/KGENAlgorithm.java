@@ -27,7 +27,7 @@ public class KGENAlgorithm extends Algorithm {
 
     private void initAlgorithm() {
         AnonymizationProblem anonymizationProblem = new AnonymizationProblem(this.kAnonymity, this.suppressionThreshold);
-        AnonymizationSetting anonymizationSetting = new AnonymizationSetting(anonymizationProblem);
+        AnonymizationSetting anonymizationSetting = new AnonymizationSetting(anonymizationProblem, this.suppressionThreshold);
         this.anonymizationAlgorithm = null;
         try {
             this.anonymizationAlgorithm = (AnonymizationAlgorithm) anonymizationSetting.configure();

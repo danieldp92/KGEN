@@ -74,7 +74,6 @@ public class MultiObjectiveRouletteSelection extends Selection {
 
         solutionSelected = candidateSolutions.get(index);
 
-
         return solutionSelected;
     }
 

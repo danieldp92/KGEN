@@ -13,11 +13,13 @@ import java.util.HashMap;
 
 public class LatticeCrossover extends Crossover {
     private KAnonymity kAnonymity;
+    private double suppressionThreshold;
 
     public LatticeCrossover(HashMap<String, Object> parameters) {
         super(parameters);
 
         this.kAnonymity = (KAnonymity) parameters.get("kAnonymity");
+        this.suppressionThreshold = (double) parameters.get("suppressionThreshold");
     }
 
     public Object execute(Object object) throws JMException {
@@ -56,7 +58,7 @@ public class LatticeCrossover extends Crossover {
             if (kAnonParent0 && kAnonParent1) {
                 boolean kAnonMinLatticeNode = false;
                 try {
-                    kAnonMinLatticeNode = this.kAnonymity.isKAnonymous(getSolutionValues(min), KAnonymity.MIN_K_LEVEL, 0);
+                    kAnonMinLatticeNode = this.kAnonymity.isKAnonymous(getSolutionValues(min), KAnonymity.MIN_K_LEVEL, suppressionThreshold);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -72,7 +74,7 @@ public class LatticeCrossover extends Crossover {
             } else if (!kAnonParent0 && !kAnonParent1) {
                 dynamicOffsprings.add(max);
 
-                boolean kAnonMaxLatticeNode = this.kAnonymity.isKAnonymous(getSolutionValues(max), KAnonymity.MIN_K_LEVEL, 0);
+                boolean kAnonMaxLatticeNode = this.kAnonymity.isKAnonymous(getSolutionValues(max), KAnonymity.MIN_K_LEVEL, suppressionThreshold);
                 if (!kAnonMaxLatticeNode) {
                     dynamicOffsprings.add((GeneralizationSolution) randomBetweenSolutions(parents[0], max));
                     dynamicOffsprings.add((GeneralizationSolution) randomBetweenSolutions(parents[1], max));

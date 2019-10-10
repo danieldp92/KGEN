@@ -22,8 +22,11 @@ public class AnonymizationSetting extends Settings {
     protected double mutationProbability;
     protected double horizontalMutationProbability;
     protected int numberOfAttributeToMutate;
+    protected double suppressionThreshold;
 
-    public AnonymizationSetting (Problem problem) {
+    protected int maxNumberOfThreads;
+
+    public AnonymizationSetting (Problem problem, double suppressionThreshold) {
         this.problem_ = problem;
 
         this.populationSize = 100;
@@ -36,6 +39,10 @@ public class AnonymizationSetting extends Settings {
         if (this.numberOfAttributeToMutate % 2 != 0) {
             this.numberOfAttributeToMutate++;
         }
+
+        this.suppressionThreshold = suppressionThreshold;
+
+        this.maxNumberOfThreads = 50;
     }
 
 
@@ -50,6 +57,7 @@ public class AnonymizationSetting extends Settings {
         //Operator selection = SelectionFactory.getSelectionOperator("BinaryTournament", parameters);
         parameters.put("probability", crossoverProbability);
         parameters.put("kAnonymity", ((AnonymizationProblem)problem_).getkAnonymity());
+        parameters.put("suppressionThreshold", suppressionThreshold);
         Operator crossover = new LatticeCrossover(parameters);
         parameters.put("probability", mutationProbability);
         Operator mutation = MutationFactory.getMutationOperator("BitFlipMutation", parameters);
@@ -64,6 +72,7 @@ public class AnonymizationSetting extends Settings {
 
         algorithm.setInputParameter("populationSize", populationSize);
         algorithm.setInputParameter("maxEvaluations", maxEvaluations);
+        algorithm.setInputParameter("maxNumberOfThreads", maxNumberOfThreads);
 
         return algorithm;
     }

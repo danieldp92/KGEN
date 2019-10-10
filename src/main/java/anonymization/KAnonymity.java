@@ -22,6 +22,7 @@ import utils.FileUtils;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class KAnonymity {
     public static final int MIN_K_LEVEL = 2;
@@ -41,6 +42,7 @@ public class KAnonymity {
     private GeneralizationMap generalizationMap;
 
     private LinkedHashMap<Integer, AnonymizationReport> historyReports;
+    private ReentrantLock lock;
 
     public KAnonymity(Dataset dataset, double suppressionThreshold) {
         this.dataset = dataset;
@@ -70,6 +72,8 @@ public class KAnonymity {
 
         this.lowerBounds = get0LowerBound(upperBounds.size());
         //this.lowerBounds = lowerBounds(suppressionThreshold);
+
+        lock = new ReentrantLock();
     }
 
 
@@ -307,9 +311,13 @@ public class KAnonymity {
 
         // Add the report of this solution to the history
         if (memorize) {
-            this.historyReports.put(hash, report);
+            lock.lock();
+            try {
+                this.historyReports.put(hash, report);
+            } finally {
+                lock.unlock();
+            }
         }
-
 
         return report;
     }

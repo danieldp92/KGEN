@@ -2,6 +2,7 @@ package approaches.metaheuristics.utils;
 
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
+import jmetal.core.Variable;
 import jmetal.util.JMException;
 import utils.ArrayUtils;
 
@@ -9,6 +10,57 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SolutionUtils {
+
+    public static List<Solution> fromSolutionSetToList(SolutionSet solutionSet) {
+        List<Solution> solutions = new ArrayList<>();
+        for (int i = 0; i < solutionSet.size(); i++) {
+            solutions.add(solutionSet.get(i));
+        }
+
+        return solutions;
+    }
+
+    public static SolutionSet fromListToSolutionSet(List<Solution> solutions) {
+        SolutionSet solutionSet = new SolutionSet(solutions.size());
+        for (Solution solution : solutions) {
+            solutionSet.add(solution);
+        }
+
+        return solutionSet;
+    }
+
+    public static List<Integer> getSolutionLowerBounds (Solution solution) {
+        List<Integer> lowerBounds = new ArrayList<>();
+        for (Variable variable : solution.getDecisionVariables()) {
+            try {
+                lowerBounds.add((int) variable.getLowerBound());
+            } catch (JMException e) {}
+        }
+
+        return lowerBounds;
+    }
+
+    public static List<Integer> getSolutionUpperBounds (Solution solution) {
+        List<Integer> upperBounds = new ArrayList<>();
+        for (Variable variable : solution.getDecisionVariables()) {
+            try {
+                upperBounds.add((int) variable.getUpperBound());
+            } catch (JMException e) {}
+        }
+
+        return upperBounds;
+    }
+
+    public static List<Integer> getSolutionValues (Solution solution) {
+        List<Integer> values = new ArrayList<>();
+        for (Variable variable : solution.getDecisionVariables()) {
+            try {
+                values.add((int) variable.getValue());
+            } catch (JMException e) {}
+        }
+
+        return values;
+    }
 
     public static void removeGreaterElements (List<List<Integer>> elements) {
         for (int i = 0; i < elements.size(); i++) {
@@ -34,6 +86,60 @@ public class SolutionUtils {
         for (int i = 0; i < solutionSet.size(); i++) {
             if (solutionSet.get(i).getObjective(ffKLV_OBJECTIVE) <= 1) {
                 solutionSet.remove(i--);
+            }
+        }
+    }
+
+    public static void comparePopulations (SolutionSet population1, SolutionSet population2) {
+        if (population1.size() > 0 && population1.size() == population2.size()) {
+            System.out.println("Populations comparison\n");
+
+            for (int i = 0; i < population1.size(); i++) {
+                System.out.println("Solution " + (i+1));
+
+                List<Integer> lowerBounds1 = getSolutionLowerBounds(population1.get(i));
+                List<Integer> upperBounds1 = getSolutionUpperBounds(population1.get(i));
+                List<Integer> solution1 = getSolutionValues(population1.get(i));
+                double f1_1 = population1.get(i).getObjective(0);
+                double f2_1 = population1.get(i).getObjective(1);
+
+                List<Integer> lowerBounds2 = getSolutionLowerBounds(population2.get(i));
+                List<Integer> upperBounds2 = getSolutionUpperBounds(population2.get(i));
+                List<Integer> solution2 = getSolutionValues(population2.get(i));
+                double f1_2 = population2.get(i).getObjective(0);
+                double f2_2 = population2.get(i).getObjective(1);
+
+                if (lowerBounds1.equals(lowerBounds2)) {
+                    System.out.println("LB: v");
+                } else {
+                    System.out.println("LB: x");
+                }
+
+                if (upperBounds1.equals(upperBounds2)) {
+                    System.out.println("UB: v");
+                } else {
+                    System.out.println("UB: x");
+                }
+
+                if (solution1.equals(solution2)) {
+                    System.out.println("SOL: v");
+                } else {
+                    System.out.println("SOL: x");
+                }
+
+                if (f1_1 == f1_2) {
+                    System.out.println("OB1: v");
+                } else {
+                    System.out.println("OB1: x");
+                }
+
+                if (f2_1 == f2_2) {
+                    System.out.println("OB2: v");
+                } else {
+                    System.out.println("OB2: x");
+                }
+
+                System.out.println();
             }
         }
     }
@@ -89,6 +195,8 @@ public class SolutionUtils {
             }
         }
     }
+
+
 
     private static void printLL (Solution solution) throws JMException {
         System.out.print("[");

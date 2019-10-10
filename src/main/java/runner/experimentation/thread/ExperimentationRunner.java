@@ -48,8 +48,8 @@ public class ExperimentationRunner {
     public void start() {
         List<Result> results = new ArrayList<>();
         List<Integer> algorithmTypes = new ArrayList<>();
-        algorithmTypes.add(AlgorithmType.EXHAUSTIVE_ALGORITHM);
-        algorithmTypes.add(AlgorithmType.OLA_ALGORITHM);
+        //algorithmTypes.add(AlgorithmType.EXHAUSTIVE_ALGORITHM);
+        //algorithmTypes.add(AlgorithmType.OLA_ALGORITHM);
         algorithmTypes.add(AlgorithmType.KGEN_ALGORITHM);
         algorithmTypes.add(AlgorithmType.RANDOM_ALGORITHM);
 
