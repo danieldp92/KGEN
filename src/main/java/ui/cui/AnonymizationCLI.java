@@ -13,6 +13,7 @@ import runner.experimentation.util.StatisticalUtils;
 import ui.UI;
 import ui.cui.arguments.*;
 import ui.cui.arguments_cli.DiscoverCLI;
+import ui.cui.arguments_cli.NoArgumentCLI;
 import utils.FileUtils;
 
 import javax.xml.crypto.Data;
@@ -44,81 +45,80 @@ public class AnonymizationCLI implements UI {
 
     @Override
     public void run(String [] args) throws ArgumentException {
-        Arguments arguments = argumentValidation(args);
-
-        if (arguments.getOutputPath() == null) {
-            String outputDir = FileUtils.getDirOfJAR();
-            arguments.setOutputPath(outputDir);
-        }
-
-
-        if (arguments instanceof ExperimentationArguments) {
-            ExperimentationRunner experimentationRunner = new ExperimentationRunner((ExperimentationArguments) arguments);
-            experimentationRunner.start();
-        }
-
-        else if (arguments instanceof AlgorithmArguments) {
-            Experimentation experimentation = null;
-            AlgorithmArguments algorithmArguments = (AlgorithmArguments) arguments;
-
-            File configFile = new File(algorithmArguments.getConfigPath());
-
-            switch (algorithmArguments.getAlgorithmType()) {
-                case AlgorithmType.EXHAUSTIVE_ALGORITHM:
-                    experimentation = new ExhaustiveExperimentation(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
-                    break;
-                case AlgorithmType.OLA_ALGORITHM:
-                    experimentation = new OLAExperimentation(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
-                    break;
-                case AlgorithmType.KGEN_ALGORITHM:
-                    experimentation = new KGENExperimentation(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
-                    break;
-                case AlgorithmType.RANDOM_ALGORITHM:
-                    experimentation = new RandomSearchExperimentation(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
-                    break;
-            }
-
+        if (args.length == 0) {
             try {
-                experimentation.initDataset(algorithmArguments.getDatasetPath(), algorithmArguments.getConfigPath(), "?");
-                experimentation.execute(1, algorithmArguments.getTreshold());
-            } catch (DatasetNotFoundException  e) {
+                NoArgumentCLI.showCLI();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            Arguments arguments = argumentValidation(args);
 
-            List<Result> results = ResultUtils.loadResultsFromCsv(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
-            List<Stat> stats = StatisticalUtils.getStatsOfResults(results);
-            StatisticalUtils.saveStatsIntoCsv(stats,algorithmArguments.getOutputPath() + configFile.getName() + STAT_NAME);
-        }
-
-        else if (arguments instanceof ConfigArguments) {
-            ConfigArguments configArguments = (ConfigArguments) arguments;
-            ConfigGenerator.generateConfigFileFromCLI(configArguments.getDatasetPath(), configArguments.getOutputPath());
-        }
-
-        else if (arguments instanceof StatArguments) {
-            StatArguments statArguments = (StatArguments) arguments;
-            List<Result> results = ResultUtils.loadResultsFromCsv(statArguments.getResultPath());
-
-            List<Stat> stats = StatisticalUtils.getStatsOfResults(results);
-
-            File statFile = new File(statArguments.getOutputPath() + STAT_NAME);
-            if (statFile.exists()) {
-                statFile.delete();
+            if (arguments.getOutputPath() == null) {
+                String outputDir = FileUtils.getDirOfJAR();
+                arguments.setOutputPath(outputDir);
             }
 
-            StatisticalUtils.saveStatsIntoCsv(stats, statArguments.getOutputPath() + STAT_NAME);
-        }
 
-        else if (arguments instanceof DiscoverArguments) {
-            try {
-                DiscoverCLI.showCLI((DiscoverArguments) arguments);
-            } catch (IOException | DatasetNotFoundException e) {
-                System.out.println(e.getMessage());
-                System.exit(0);
+            if (arguments instanceof ExperimentationArguments) {
+                ExperimentationRunner experimentationRunner = new ExperimentationRunner((ExperimentationArguments) arguments);
+                experimentationRunner.start();
+            } else if (arguments instanceof AlgorithmArguments) {
+                Experimentation experimentation = null;
+                AlgorithmArguments algorithmArguments = (AlgorithmArguments) arguments;
+
+                File configFile = new File(algorithmArguments.getConfigPath());
+
+                switch (algorithmArguments.getAlgorithmType()) {
+                    case AlgorithmType.EXHAUSTIVE_ALGORITHM:
+                        experimentation = new ExhaustiveExperimentation(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
+                        break;
+                    case AlgorithmType.OLA_ALGORITHM:
+                        experimentation = new OLAExperimentation(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
+                        break;
+                    case AlgorithmType.KGEN_ALGORITHM:
+                        experimentation = new KGENExperimentation(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
+                        break;
+                    case AlgorithmType.RANDOM_ALGORITHM:
+                        experimentation = new RandomSearchExperimentation(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
+                        break;
+                }
+
+                try {
+                    experimentation.initDataset(algorithmArguments.getDatasetPath(), algorithmArguments.getConfigPath(), "?");
+                    experimentation.execute(1, algorithmArguments.getTreshold());
+                } catch (DatasetNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                List<Result> results = ResultUtils.loadResultsFromCsv(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
+                List<Stat> stats = StatisticalUtils.getStatsOfResults(results);
+                StatisticalUtils.saveStatsIntoCsv(stats, algorithmArguments.getOutputPath() + configFile.getName() + STAT_NAME);
+            } else if (arguments instanceof ConfigArguments) {
+                ConfigArguments configArguments = (ConfigArguments) arguments;
+                ConfigGenerator.generateConfigFileFromCLI(configArguments.getDatasetPath(), configArguments.getOutputPath());
+            } else if (arguments instanceof StatArguments) {
+                StatArguments statArguments = (StatArguments) arguments;
+                List<Result> results = ResultUtils.loadResultsFromCsv(statArguments.getResultPath());
+
+                List<Stat> stats = StatisticalUtils.getStatsOfResults(results);
+
+                File statFile = new File(statArguments.getOutputPath() + STAT_NAME);
+                if (statFile.exists()) {
+                    statFile.delete();
+                }
+
+                StatisticalUtils.saveStatsIntoCsv(stats, statArguments.getOutputPath() + STAT_NAME);
+            } else if (arguments instanceof DiscoverArguments) {
+                try {
+                    DiscoverCLI.showCLI((DiscoverArguments) arguments);
+                } catch (IOException | DatasetNotFoundException e) {
+                    System.out.println(e.getMessage());
+                    System.exit(0);
+                }
+            } else {
+                showHelpMenu();
             }
-        }
-        else {
-            showHelpMenu();
         }
     }
 

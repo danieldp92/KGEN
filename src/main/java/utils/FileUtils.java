@@ -10,6 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileUtils {
+
+    public static String getFileExtension (String path) {
+        File file = new File(path);
+        return getFileExtension(file);
+    }
+
     public static String getFileExtension (File file) {
         String name = file.getName();
         String [] split = name.split("\\.");
@@ -30,7 +36,6 @@ public class FileUtils {
         }
 
         String outputDir = new File(jarPath).getParent() + File.separator;
-        System.out.println(outputDir);
 
         return outputDir;
     }
@@ -89,5 +94,23 @@ public class FileUtils {
         }
 
         return txt;
+    }
+
+    public static boolean exist (String path) {
+        File file = new File(path);
+        if (file.exists()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean isDirectory (String path) {
+        File file = new File(path);
+        if (file.isDirectory()) {
+            return true;
+        }
+
+        return false;
     }
 }
