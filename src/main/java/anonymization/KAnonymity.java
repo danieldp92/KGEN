@@ -45,6 +45,13 @@ public class KAnonymity {
     private ReentrantLock lock;
 
     public KAnonymity(Dataset dataset, double suppressionThreshold) {
+        this(dataset);
+
+        this.lowerBounds = null;
+        this.lowerBounds = lowerBounds(suppressionThreshold);
+    }
+
+    public KAnonymity(Dataset dataset) {
         this.dataset = dataset;
 
         try {

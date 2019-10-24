@@ -8,6 +8,7 @@ import runner.experimentation.bean.Result;
 import runner.experimentation.type.AlgorithmType;
 import runner.experimentation.util.StatisticalUtils;
 import ui.cui.arguments.ExperimentationArguments;
+import utils.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,19 +55,19 @@ public class ExperimentationRunner {
 
                 switch (algorithmType) {
                     case AlgorithmType.OLA_ALGORITHM:
-                        experimentation = new OLAExperimentation(resultPath + configFile.getName() + RESULT_NAME);
+                        experimentation = new OLAExperimentation(resultPath + FileUtils.getNameWithoutExtension(configFile) + "_" + RESULT_NAME);
 
                         break;
                     case AlgorithmType.EXHAUSTIVE_ALGORITHM:
-                        experimentation = new ExhaustiveExperimentation(resultPath + configFile.getName() + RESULT_NAME);
+                        experimentation = new ExhaustiveExperimentation(resultPath + FileUtils.getNameWithoutExtension(configFile) + "_" + RESULT_NAME);
 
                         break;
                     case AlgorithmType.KGEN_ALGORITHM:
-                        experimentation = new KGENExperimentation(resultPath + configFile.getName() + RESULT_NAME);
+                        experimentation = new KGENExperimentation(resultPath + FileUtils.getNameWithoutExtension(configFile) + "_" + RESULT_NAME);
 
                         break;
                     case AlgorithmType.RANDOM_ALGORITHM:
-                        experimentation = new RandomSearchExperimentation(resultPath + configFile.getName() + RESULT_NAME);
+                        experimentation = new RandomSearchExperimentation(resultPath + FileUtils.getNameWithoutExtension(configFile) + "_" + RESULT_NAME);
 
                         break;
                     default: break;
@@ -91,7 +92,7 @@ public class ExperimentationRunner {
             }
 
             List<Stat> stats = StatisticalUtils.getStatsOfResults(results);
-            StatisticalUtils.saveStatsIntoCsv(stats, this.resultPath + configFile.getName() + STAT_NAME);
+            StatisticalUtils.saveStatsIntoCsv(stats, this.resultPath + FileUtils.getNameWithoutExtension(configFile) + "_" + STAT_NAME);
         }
     }
 }

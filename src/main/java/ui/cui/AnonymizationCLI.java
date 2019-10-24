@@ -71,16 +71,16 @@ public class AnonymizationCLI implements UI {
 
                 switch (algorithmArguments.getAlgorithmType()) {
                     case AlgorithmType.EXHAUSTIVE_ALGORITHM:
-                        experimentation = new ExhaustiveExperimentation(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
+                        experimentation = new ExhaustiveExperimentation(algorithmArguments.getOutputPath() + FileUtils.getNameWithoutExtension(configFile) + "_" + RESULT_NAME);
                         break;
                     case AlgorithmType.OLA_ALGORITHM:
-                        experimentation = new OLAExperimentation(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
+                        experimentation = new OLAExperimentation(algorithmArguments.getOutputPath() + FileUtils.getNameWithoutExtension(configFile) + "_" + RESULT_NAME);
                         break;
                     case AlgorithmType.KGEN_ALGORITHM:
-                        experimentation = new KGENExperimentation(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
+                        experimentation = new KGENExperimentation(algorithmArguments.getOutputPath() + FileUtils.getNameWithoutExtension(configFile) + "_" + RESULT_NAME);
                         break;
                     case AlgorithmType.RANDOM_ALGORITHM:
-                        experimentation = new RandomSearchExperimentation(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
+                        experimentation = new RandomSearchExperimentation(algorithmArguments.getOutputPath() + FileUtils.getNameWithoutExtension(configFile) + "_" + RESULT_NAME);
                         break;
                 }
 
@@ -91,9 +91,9 @@ public class AnonymizationCLI implements UI {
                     e.printStackTrace();
                 }
 
-                List<Result> results = ResultUtils.loadResultsFromCsv(algorithmArguments.getOutputPath() + configFile.getName() + RESULT_NAME);
+                List<Result> results = ResultUtils.loadResultsFromCsv(algorithmArguments.getOutputPath() + FileUtils.getNameWithoutExtension(configFile) + "_" + RESULT_NAME);
                 List<Stat> stats = StatisticalUtils.getStatsOfResults(results);
-                StatisticalUtils.saveStatsIntoCsv(stats, algorithmArguments.getOutputPath() + configFile.getName() + STAT_NAME);
+                StatisticalUtils.saveStatsIntoCsv(stats, algorithmArguments.getOutputPath() + FileUtils.getNameWithoutExtension(configFile) + "_" + STAT_NAME);
             } else if (arguments instanceof ConfigArguments) {
                 ConfigArguments configArguments = (ConfigArguments) arguments;
                 ConfigGenerator.generateConfigFileFromCLI(configArguments.getDatasetPath(), configArguments.getOutputPath());

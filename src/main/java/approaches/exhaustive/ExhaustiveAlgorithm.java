@@ -22,15 +22,7 @@ public class ExhaustiveAlgorithm extends Algorithm {
         this.name = "EXHAUSTIVE";
         this.suppressionThreshold = suppressionTreshold;
 
-        /*ArrayList<Integer> lowerBounds = new ArrayList<>();
-        for (Object o : dataset.getHeader()) {
-            Attribute attribute = (Attribute) o;
-            if (attribute.getType() instanceof QuasiIdentifier) {
-                lowerBounds.add(0);
-            }
-        }*/
-
-        this.kAnonymity = new KAnonymity(dataset, suppressionThreshold);
+        this.kAnonymity = new KAnonymity(dataset);
     }
 
     @Override

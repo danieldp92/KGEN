@@ -21,11 +21,12 @@ public class RandomAlgorithm extends Algorithm {
     public RandomAlgorithm (Dataset dataset, double suppressionThreshold) {
         this.dataset = dataset;
         this.suppressionThreshold = suppressionThreshold;
-        this.kAnonymity = new KAnonymity(this.dataset, suppressionThreshold);
+        this.kAnonymity = new KAnonymity(this.dataset);
         this.name = "RANDOM";
 
         AnonymizationProblem anonymizationProblem = new AnonymizationProblem(this.kAnonymity, suppressionThreshold);
         RandomSearchSetting randomSearchSetting = new RandomSearchSetting(anonymizationProblem);
+
         try {
             this.randomSearch = (RandomSearch) randomSearchSetting.configure();
             this.randomSearch.setRandomAlgorithm(this);

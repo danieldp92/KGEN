@@ -30,7 +30,7 @@ public class OLAAlgorithm extends Algorithm {
 
         this.name = "OLA";
 
-        this.kAnonymity = new KAnonymity(dataset, suppressionThreshold);
+        this.kAnonymity = new KAnonymity(dataset);
     }
 
     @Override

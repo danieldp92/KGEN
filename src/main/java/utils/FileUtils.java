@@ -11,7 +11,18 @@ import java.util.List;
 
 public class FileUtils {
 
-    public static String getFileExtension (String path) {
+    public static String getNameWithoutExtension(File file) {
+        String name = "";
+
+        String [] split = file.getName().split("\\.");
+        for (int i = 0; i < split.length-1; i++) {
+            name += split[i];
+        }
+
+        return name;
+    }
+
+    public static String getFileExtension(String path) {
         File file = new File(path);
         return getFileExtension(file);
     }
@@ -23,7 +34,7 @@ public class FileUtils {
         return split[split.length-1];
     }
 
-    public static String getDirOfJAR () {
+    public static String getDirOfJAR() {
         String jarPath = null;
         try {
             jarPath = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
