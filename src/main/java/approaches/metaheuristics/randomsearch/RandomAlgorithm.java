@@ -2,7 +2,6 @@ package approaches.metaheuristics.randomsearch;
 
 import anonymization.KAnonymity;
 import approaches.Algorithm;
-import approaches.metaheuristics.geneticalgorithm.AnonymizationProblem;
 import approaches.metaheuristics.utils.SolutionUtils;
 import dataset.beans.Dataset;
 import jmetal.core.Solution;
@@ -17,6 +16,7 @@ import java.util.List;
 public class RandomAlgorithm extends Algorithm {
     private RandomSearch randomSearch;
     private int maxEvaluations;
+    private RandomProblem randomProblem;
 
     public RandomAlgorithm (Dataset dataset, double suppressionThreshold) {
         this.dataset = dataset;
@@ -24,8 +24,8 @@ public class RandomAlgorithm extends Algorithm {
         this.kAnonymity = new KAnonymity(this.dataset);
         this.name = "RANDOM";
 
-        AnonymizationProblem anonymizationProblem = new AnonymizationProblem(this.kAnonymity, suppressionThreshold);
-        RandomSearchSetting randomSearchSetting = new RandomSearchSetting(anonymizationProblem);
+        randomProblem = new RandomProblem(this.kAnonymity, suppressionThreshold);
+        RandomSearchSetting randomSearchSetting = new RandomSearchSetting(randomProblem);
 
         try {
             this.randomSearch = (RandomSearch) randomSearchSetting.configure();
@@ -54,12 +54,14 @@ public class RandomAlgorithm extends Algorithm {
 
 
         if (bestSolutions != null && bestSolutions.size() > 0) {
+            // Feasible solutions
+            SolutionUtils.removeInfeasibleSolutions(bestSolutions, kAnonymity, 2, suppressionThreshold);
+
             solutions = new ArrayList<>();
             for (int i = 0; i < bestSolutions.size(); i++) {
                 solutions.add(getSolutionValues(bestSolutions.get(i)));
             }
 
-            //Remove all k-anonymous solutions that are of the same strategy path (except for the minimal k-anonymous node)
             SolutionUtils.removeGreaterElements(solutions);
         }
 

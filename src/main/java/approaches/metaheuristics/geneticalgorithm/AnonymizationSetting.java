@@ -2,7 +2,6 @@ package approaches.metaheuristics.geneticalgorithm;
 
 import approaches.metaheuristics.geneticalgorithm.operator.HorizontalMutation;
 import approaches.metaheuristics.geneticalgorithm.operator.LatticeCrossover;
-import approaches.metaheuristics.geneticalgorithm.operator.MultiObjectiveRouletteSelection;
 import jmetal.core.Algorithm;
 import jmetal.core.Operator;
 import jmetal.core.Problem;
@@ -53,8 +52,9 @@ public class AnonymizationSetting extends Settings {
         algorithm.setInputParameter("crossover", crossoverProbability);
         algorithm.setInputParameter("mutation", mutationProbability);
 
-        Operator selection = new MultiObjectiveRouletteSelection(parameters);
+        //Operator selection = new MultiObjectiveRouletteSelection(parameters);
         //Operator selection = SelectionFactory.getSelectionOperator("BinaryTournament", parameters);
+        Operator selection = SelectionFactory.getSelectionOperator("BinaryTournament", parameters);
         parameters.put("probability", crossoverProbability);
         parameters.put("kAnonymity", ((AnonymizationProblem)problem_).getkAnonymity());
         parameters.put("suppressionThreshold", suppressionThreshold);
@@ -73,6 +73,7 @@ public class AnonymizationSetting extends Settings {
         algorithm.setInputParameter("populationSize", populationSize);
         algorithm.setInputParameter("maxEvaluations", maxEvaluations);
         algorithm.setInputParameter("maxNumberOfThreads", maxNumberOfThreads);
+        algorithm.setInputParameter("suppressionThreshold", suppressionThreshold);
 
         return algorithm;
     }

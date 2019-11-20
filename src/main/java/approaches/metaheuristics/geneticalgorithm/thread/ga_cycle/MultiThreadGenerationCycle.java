@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class MultiThreadCycle extends GAMultiThread {
+public class MultiThreadGenerationCycle extends GAMultiThread {
     // Operators
     private Operator selection;
     private Operator crossover;
@@ -21,8 +21,8 @@ public class MultiThreadCycle extends GAMultiThread {
 
     private int numberOfEvaluations;
 
-    public MultiThreadCycle(int maxNumberOfThreads, int numberOfEvaluations, Operator selection, Operator crossover,
-                            Operator horizontalMutation, Operator mutation) {
+    public MultiThreadGenerationCycle(int maxNumberOfThreads, int numberOfEvaluations, Operator selection, Operator crossover,
+                                      Operator horizontalMutation, Operator mutation) {
         super(maxNumberOfThreads);
 
         this.selection = selection;

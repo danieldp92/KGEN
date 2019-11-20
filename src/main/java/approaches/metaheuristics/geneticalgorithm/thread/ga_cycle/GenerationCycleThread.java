@@ -59,6 +59,7 @@ public class GenerationCycleThread extends GAThread {
             for (GeneralizationSolution solution : offsprings) {
                 ((List<Solution>)returnValue).add(solution);
             }
+
         } catch (JMException e) {}
 
         setFinish(true);

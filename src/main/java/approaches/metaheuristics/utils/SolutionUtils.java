@@ -1,5 +1,6 @@
 package approaches.metaheuristics.utils;
 
+import anonymization.KAnonymity;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 import jmetal.core.Variable;
@@ -80,12 +81,22 @@ public class SolutionUtils {
         }
     }
 
-    public static void removeAllInvalidSolutions (SolutionSet solutionSet) {
-        int ffKLV_OBJECTIVE = 1;
-
+    public static void removeInfeasibleSolutions (SolutionSet solutionSet, KAnonymity kAnonymity, int kMinLev, double suppressionThreshold) {
         for (int i = 0; i < solutionSet.size(); i++) {
-            if (solutionSet.get(i).getObjective(ffKLV_OBJECTIVE) <= 1) {
+            ArrayList<Integer> solution = new ArrayList<>(getSolutionValues(solutionSet.get(i)));
+            boolean isKAnon = kAnonymity.isKAnonymous(solution, kMinLev, suppressionThreshold);
+
+            if (!isKAnon) {
                 solutionSet.remove(i--);
+            }
+        }
+    }
+
+    public static void removeSolutionsThreshold (List<List<Integer>> elements, KAnonymity kAnonymity, double threshold) {
+        for (int i = 0; i < elements.size(); i++) {
+            int hash = elements.get(i).toString().hashCode();
+            if (kAnonymity.getHistoryReports().get(hash).getPercentageOfSuppression() > threshold) {
+                elements.remove(i--);
             }
         }
     }
@@ -196,6 +207,18 @@ public class SolutionUtils {
         }
     }
 
+    public static void printSolutions (List<List<Integer>> solutions) {
+        if (solutions != null && !solutions.isEmpty()) {
+            System.out.println("Print solutions\n");
+
+            int i = 0;
+            for (List<Integer> solution : solutions) {
+                System.out.println("Solution " + ++i);
+                System.out.println(solution.toString());
+                System.out.println();
+            }
+        }
+    }
 
 
     private static void printLL (Solution solution) throws JMException {

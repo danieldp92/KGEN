@@ -62,7 +62,8 @@ public class RandomSearch extends Algorithm {
     //Initialize the variables
     evaluations = 0;
 
-    NonDominatedSolutionList ndl = new NonDominatedSolutionList();
+    //NonDominatedSolutionList ndl = new NonDominatedSolutionList();
+    SolutionSet ndl = new SolutionSet(maxEvaluations);
 
     // Create the initial solutionSet
     Solution newSolution;

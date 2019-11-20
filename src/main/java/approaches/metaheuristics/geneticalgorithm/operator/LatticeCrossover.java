@@ -47,13 +47,21 @@ public class LatticeCrossover extends Crossover {
 
             boolean kAnonParent0 = false;
             boolean kAnonParent1 = false;
-            if (parents[0].getObjective(AnonymizationProblem.ffKLV_OBJECTIVE) > 1) {
+            if (this.kAnonymity.isKAnonymous(getSolutionValues(parents[0]), KAnonymity.MIN_K_LEVEL, suppressionThreshold)) {
+                kAnonParent0 = true;
+            }
+
+            if (this.kAnonymity.isKAnonymous(getSolutionValues(parents[1]), KAnonymity.MIN_K_LEVEL, suppressionThreshold)) {
+                kAnonParent1 = true;
+            }
+
+            /*if (parents[0].getObjective(AnonymizationProblem.ffKLV_OBJECTIVE) > 1) {
                 kAnonParent0 = true;
             }
 
             if (parents[1].getObjective(AnonymizationProblem.ffKLV_OBJECTIVE) > 1) {
                 kAnonParent1 = true;
-            }
+            }*/
 
             if (kAnonParent0 && kAnonParent1) {
                 boolean kAnonMinLatticeNode = false;
@@ -98,6 +106,40 @@ public class LatticeCrossover extends Crossover {
 
         return offsprings;
     }
+    /*public Object execute(Object object) throws JMException {
+        GeneralizationSolution[] parents = (GeneralizationSolution[]) object;
+        GeneralizationSolution min = new GeneralizationSolution(parents[0]);
+        GeneralizationSolution max = new GeneralizationSolution(parents[1]);
+
+        ArrayList<GeneralizationSolution> dynamicOffsprings = new ArrayList<>();
+
+        double random = Math.random();
+        double crossoverProbability = (Double)parameters_.get("probability");
+
+        if (random < crossoverProbability) {
+            //Find min/max nodes
+            for (int i = 0; i < parents[0].getDecisionVariables().length; i++) {
+                double maxValue = Math.max(parents[0].getDecisionVariables()[i].getValue(),
+                        parents[1].getDecisionVariables()[i].getValue());
+                double minValue = Math.min(parents[0].getDecisionVariables()[i].getValue(),
+                        parents[1].getDecisionVariables()[i].getValue());
+
+                min.getDecisionVariables()[i].setValue(minValue);
+                max.getDecisionVariables()[i].setValue(maxValue);
+            }
+        }
+
+        dynamicOffsprings.add(min);
+        dynamicOffsprings.add(max);
+
+        GeneralizationSolution [] offsprings = new GeneralizationSolution[dynamicOffsprings.size()];
+        for (int i = 0; i < dynamicOffsprings.size(); i++) {
+            offsprings[i] = dynamicOffsprings.get(i);
+        }
+
+        return offsprings;
+    }*/
+
 
     private ArrayList<Integer> getSolutionValues (Solution solution) throws JMException {
         ArrayList<Integer> values = new ArrayList<Integer>();

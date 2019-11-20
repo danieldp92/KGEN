@@ -1,4 +1,4 @@
-package approaches.metaheuristics.geneticalgorithm;
+package approaches.metaheuristics.randomsearch;
 
 import anonymization.AnonymizationReport;
 import anonymization.KAnonymity;
@@ -12,15 +12,14 @@ import jmetal.util.JMException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnonymizationProblem extends Problem {
+public class RandomProblem extends Problem {
     public static final int ffLOG_OBJECTIVE = 0;
-    public static final int ffKLV_OBJECTIVE = 2;
-    public static final int ffTH_OBJECTIVE = 1;
 
     private KAnonymity kAnonymity;
     private double suppressionTreshold;
+    private List<String> printableReports;
 
-    public AnonymizationProblem (KAnonymity kAnonymity, double suppressionTreshold) {
+    public RandomProblem (KAnonymity kAnonymity, double suppressionTreshold) {
         //Dataset variables
         this.kAnonymity = kAnonymity;
         this.suppressionTreshold = suppressionTreshold;
@@ -48,13 +47,19 @@ public class AnonymizationProblem extends Problem {
         }
 
         this.solutionType_ = new IntSolutionType(this);
+
+        this.printableReports = new ArrayList<>();
     }
 
     public KAnonymity getkAnonymity () {
         return kAnonymity;
     }
 
-    //Evaluate methods
+    public List<String> getPrintableReports() {
+        return printableReports;
+    }
+
+    @Override
     public void evaluate(Solution solution) throws JMException {
         ArrayList<Integer> levelOfAnonymization = new ArrayList<>();
         for (Variable variable : solution.getDecisionVariables()) {
@@ -69,20 +74,9 @@ public class AnonymizationProblem extends Problem {
         }
 
         double ffLOG = report.getLogMetric();
-        solution.setObjective(ffLOG_OBJECTIVE, 1-ffLOG);
+        solution.setObjective(ffLOG_OBJECTIVE, ffLOG);
 
-        //double ffTH = report.getPercentageOfSuppression();
-        //solution.setObjective(ffTH_OBJECTIVE, ffTH);
-
-        /*
-        double ffKLV = 0;
-        if (report.getPercentageOfSuppression() <= suppressionTreshold) {
-            ffKLV = report.getkValueWithSuppression();
-        } else {
-            ffKLV = report.getkValue();
-        }
-
-        solution.setObjective(1, ffKLV);
-        */
+        printableReports.addAll(ReportUtils.getPrintableReport(report));
+        printableReports.add("");
     }
 }

@@ -1,10 +1,10 @@
 package approaches.metaheuristics.geneticalgorithm;
 
+import anonymization.KAnonymity;
 import approaches.metaheuristics.geneticalgorithm.encoding.GeneralizationSolution;
 import approaches.metaheuristics.geneticalgorithm.thread.evaluation.EvaluationThread;
 import approaches.metaheuristics.geneticalgorithm.thread.evaluation.MultiThreadEvaluation;
-import approaches.metaheuristics.geneticalgorithm.thread.ga_cycle.MultiThreadCycle;
-import approaches.metaheuristics.utils.SolutionUtils;
+import approaches.metaheuristics.geneticalgorithm.thread.ga_cycle.MultiThreadGenerationCycle;
 import jmetal.core.*;
 import jmetal.util.JMException;
 import utils.ArrayUtils;
@@ -23,6 +23,7 @@ public class AnonymizationAlgorithm extends Algorithm {
     private int populationSize;
     private int maxEvaluations;
     private int maxNumberOfThreads;
+    private double suppressionThreshold;
 
     private KGENAlgorithm kgenAlgorithm;
 
@@ -39,7 +40,6 @@ public class AnonymizationAlgorithm extends Algorithm {
 
 
     // INIT ####################################################################################
-
     private void init () {
         selection = operators_.get("selection");
         crossover = operators_.get("crossover");
@@ -49,6 +49,7 @@ public class AnonymizationAlgorithm extends Algorithm {
         populationSize = ((Integer)getInputParameter("populationSize")).intValue();
         maxEvaluations = ((Integer)getInputParameter("maxEvaluations")).intValue();
         maxNumberOfThreads = ((Integer)getInputParameter("maxNumberOfThreads")).intValue();
+        suppressionThreshold = ((Double)getInputParameter("suppressionThreshold")).doubleValue();
 
         ((AnonymizationProblem)problem_).getkAnonymity().cleanHistoryMap();
 
@@ -56,16 +57,12 @@ public class AnonymizationAlgorithm extends Algorithm {
         this.evaluationThreads = new ArrayList<>();
     }
 
-
     // GET & SET ###############################################################################
-
     public void setKgenAlgorithm(KGENAlgorithm kgenAlgorithm) {
         this.kgenAlgorithm = kgenAlgorithm;
     }
 
-
     // EXEC ####################################################################################
-
     public SolutionSet sexecute() throws JMException, ClassNotFoundException {
         init();
 
@@ -179,14 +176,13 @@ public class AnonymizationAlgorithm extends Algorithm {
         return population;
     }
 
-
     public SolutionSet execute() throws JMException, ClassNotFoundException {
         init();
 
         // Threads
         MultiThreadEvaluation multiThreadEvaluation = new MultiThreadEvaluation(maxNumberOfThreads,
                 (AnonymizationProblem) problem_);
-        MultiThreadCycle multiThreadCycle = new MultiThreadCycle(maxNumberOfThreads, populationSize/2,
+        MultiThreadGenerationCycle multiThreadGenerationCycle = new MultiThreadGenerationCycle(maxNumberOfThreads, populationSize/2,
                 selection, crossover, horizontalMutation, mutation);
 
 
@@ -204,7 +200,7 @@ public class AnonymizationAlgorithm extends Algorithm {
         int evaluation = 0;
         while (evaluation < maxEvaluations) {
             // Generation cycle (selection - crossover - mutation are executed by the multithread)
-            SolutionSet offsprings = multiThreadCycle.parallelExecution(population);
+            SolutionSet offsprings = multiThreadGenerationCycle.parallelExecution(population);
             offsprings = multiThreadEvaluation.parallelExecution(offsprings);
 
             offsprings.setCapacity(offsprings.size()+population.size());
@@ -224,18 +220,22 @@ public class AnonymizationAlgorithm extends Algorithm {
 
 
             //Increase penalties
-            for (int j = 0; j < population.size(); j++) {
+            /*for (int j = 0; j < population.size(); j++) {
                 ((GeneralizationSolution)population.get(j)).increasePenalty();
-            }
+            }*/
 
             //Insert best solutions in results
             saveBestSolutions(results, population);
         }
 
         for (int i = 0; i < population.size(); i++) {
-            if (population.get(i).getObjective(AnonymizationProblem.ffKLV_OBJECTIVE) == 1) {
+            ArrayList<Integer> tmpSolution = getSolutionValues(population.get(i));
+            if (!((AnonymizationProblem)problem_).getkAnonymity().isKAnonymous(tmpSolution, KAnonymity.MIN_K_LEVEL, suppressionThreshold)) {
                 population.remove(i--);
             }
+            /*if (population.get(i).getObjective(AnonymizationProblem.ffKLV_OBJECTIVE) == 1) {
+                population.remove(i--);
+            }*/
         }
 
         Set<List<Integer>> tmpResults = new LinkedHashSet<>();
@@ -259,6 +259,85 @@ public class AnonymizationAlgorithm extends Algorithm {
         return population;
     }
 
+    public SolutionSet execute2() throws JMException, ClassNotFoundException {
+        init();
+
+        // Threads
+        MultiThreadEvaluation multiThreadEvaluation = new MultiThreadEvaluation(maxNumberOfThreads,
+                (AnonymizationProblem) problem_);
+        MultiThreadGenerationCycle multiThreadGenerationCycle = new MultiThreadGenerationCycle(maxNumberOfThreads, populationSize/2,
+                selection, crossover, horizontalMutation, mutation);
+
+
+        List<List<Integer>> results = new ArrayList<>();
+        SolutionSet population = new SolutionSet(populationSize);
+
+        //Starting population
+        for (int i = 0; i < populationSize; i++) {
+            GeneralizationSolution newSolution = new GeneralizationSolution(problem_);
+            population.add(newSolution);
+        }
+
+        population = multiThreadEvaluation.parallelExecution(population);
+
+        int evaluation = 0;
+        while (evaluation < maxEvaluations) {
+            // Generation cycle (selection - crossover - mutation are executed by the multithread)
+            SolutionSet offsprings = multiThreadGenerationCycle.parallelExecution(population);
+            offsprings = multiThreadEvaluation.parallelExecution(offsprings);
+
+            offsprings.setCapacity(offsprings.size()+population.size());
+            offsprings.union(population);
+
+            evaluation += populationSize/2;
+
+            kgenAlgorithm.setChanged();
+            kgenAlgorithm.notifyObservers(evaluation);
+
+            // Survival
+            population.clear();
+            for (int i = 0; i < populationSize; i++) {
+                Solution survivalSolution = (Solution) selection.execute(offsprings);
+                population.add(survivalSolution);
+            }
+
+
+            //Increase penalties
+            /*for (int j = 0; j < population.size(); j++) {
+                ((GeneralizationSolution)population.get(j)).increasePenalty();
+            }*/
+
+            //Insert best solutions in results
+            saveBestSolutions(results, population);
+        }
+
+        /*for (int i = 0; i < population.size(); i++) {
+            if (population.get(i).getObjective(AnonymizationProblem.ffKLV_OBJECTIVE) == 1) {
+                population.remove(i--);
+            }
+        }
+
+        Set<List<Integer>> tmpResults = new LinkedHashSet<>();
+        for (List<Integer> result : results) {
+            tmpResults.add(result);
+        }
+
+        population.clear();
+
+        for (List<Integer> result : tmpResults) {
+            GeneralizationSolution newSolution = new GeneralizationSolution(problem_);
+            for (int i = 0; i < result.size(); i++) {
+                newSolution.getDecisionVariables()[i].setValue(result.get(i));
+            }
+
+            population.add(newSolution);
+        }
+
+        population = multiThreadEvaluation.parallelExecution(population);*/
+
+        return population;
+    }
+
 
 
     private ArrayList<Integer> getSolutionValues (Solution solution) throws JMException {
@@ -273,7 +352,8 @@ public class AnonymizationAlgorithm extends Algorithm {
 
     private void saveBestSolutions (List<List<Integer>> results, SolutionSet population) throws JMException {
         for (int i = 0; i < population.size(); i++) {
-            if (population.get(i).getObjective(AnonymizationProblem.ffKLV_OBJECTIVE) > 1) {
+            ArrayList<Integer> tmpSolution = getSolutionValues(population.get(i));
+            if (((AnonymizationProblem)problem_).getkAnonymity().isKAnonymous(tmpSolution, KAnonymity.MIN_K_LEVEL, suppressionThreshold)) {
                 List<Integer> min = getSolutionValues(population.get(i));
                 results.add(min);
 
