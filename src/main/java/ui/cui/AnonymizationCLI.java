@@ -1,5 +1,6 @@
 package ui.cui;
 
+import dataset.beans.Dataset;
 import exception.DatasetNotFoundException;
 import runner.experimentation.*;
 import runner.experimentation.bean.Result;
@@ -14,11 +15,15 @@ import ui.UI;
 import ui.cui.arguments.*;
 import ui.cui.arguments_cli.DiscoverCLI;
 import ui.cui.arguments_cli.NoArgumentCLI;
+import utils.CsvUtils;
+import utils.DatasetUtils;
 import utils.FileUtils;
+import utils.XlsUtils;
 
 import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,19 +73,20 @@ public class AnonymizationCLI implements UI {
                 AlgorithmArguments algorithmArguments = (AlgorithmArguments) arguments;
 
                 File configFile = new File(algorithmArguments.getConfigPath());
+                String resultPath = algorithmArguments.getOutputPath() + FileUtils.getNameWithoutExtension(configFile) + "_" + RESULT_NAME;
 
                 switch (algorithmArguments.getAlgorithmType()) {
                     case AlgorithmType.EXHAUSTIVE_ALGORITHM:
-                        experimentation = new ExhaustiveExperimentation(algorithmArguments.getOutputPath() + FileUtils.getNameWithoutExtension(configFile) + "_" + RESULT_NAME);
+                        experimentation = new ExhaustiveExperimentation(resultPath);
                         break;
                     case AlgorithmType.OLA_ALGORITHM:
-                        experimentation = new OLAExperimentation(algorithmArguments.getOutputPath() + FileUtils.getNameWithoutExtension(configFile) + "_" + RESULT_NAME);
+                        experimentation = new OLAExperimentation(resultPath);
                         break;
                     case AlgorithmType.KGEN_ALGORITHM:
-                        experimentation = new KGENExperimentation(algorithmArguments.getOutputPath() + FileUtils.getNameWithoutExtension(configFile) + "_" + RESULT_NAME);
+                        experimentation = new KGENExperimentation(resultPath);
                         break;
                     case AlgorithmType.RANDOM_ALGORITHM:
-                        experimentation = new RandomSearchExperimentation(algorithmArguments.getOutputPath() + FileUtils.getNameWithoutExtension(configFile) + "_" + RESULT_NAME);
+                        experimentation = new RandomSearchExperimentation(resultPath);
                         break;
                 }
 
@@ -91,9 +97,35 @@ public class AnonymizationCLI implements UI {
                     e.printStackTrace();
                 }
 
-                List<Result> results = ResultUtils.loadResultsFromCsv(algorithmArguments.getOutputPath() + FileUtils.getNameWithoutExtension(configFile) + "_" + RESULT_NAME);
-                List<Stat> stats = StatisticalUtils.getStatsOfResults(results);
-                StatisticalUtils.saveStatsIntoCsv(stats, algorithmArguments.getOutputPath() + FileUtils.getNameWithoutExtension(configFile) + "_" + STAT_NAME);
+                List<Result> results = experimentation.getResults();
+
+                List<Integer> bestSolution = null;
+                double lowestLOG = 1;
+
+                int i = 1;
+                for (Result result : results) {
+                    System.out.println("Solution " + i++ + ": " + result.getSolution().toString());
+                    System.out.println("LOG: " + result.getLogMetric());
+                    System.out.println();
+
+                    if (result.getLogMetric() < lowestLOG) {
+                        bestSolution = result.getSolution();
+                        lowestLOG = result.getLogMetric();
+                    }
+                }
+
+                System.out.println("BEST SOLUTION: " + bestSolution.toString());
+                System.out.println("BEST LOG: " + lowestLOG);
+
+                File resultFile = new File(resultPath);
+                resultFile.delete();
+
+                Dataset dataset = experimentation.getkAnonymity().getAnonymizedDataset(new ArrayList<>(bestSolution));
+                XlsUtils.writeXlsx(algorithmArguments.getOutputPath() + "anonymizedDataset.xlsx", dataset);
+
+                //List<Result> results = ResultUtils.loadResultsFromCsv(algorithmArguments.getOutputPath() + FileUtils.getNameWithoutExtension(configFile) + "_" + RESULT_NAME);
+                //List<Stat> stats = StatisticalUtils.getStatsOfResults(results);
+                //StatisticalUtils.saveStatsIntoCsv(stats, algorithmArguments.getOutputPath() + FileUtils.getNameWithoutExtension(configFile) + "_" + STAT_NAME);
             } else if (arguments instanceof ConfigArguments) {
                 ConfigArguments configArguments = (ConfigArguments) arguments;
                 ConfigGenerator.generateConfigFileFromCLI(configArguments.getDatasetPath(), configArguments.getOutputPath());

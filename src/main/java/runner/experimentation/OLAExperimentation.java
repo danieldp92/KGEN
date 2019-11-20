@@ -20,6 +20,7 @@ public class OLAExperimentation extends Experimentation {
         }
 
         this.olaAlgorithm = new OLAAlgorithm(this.dataset, suppressionTreshold);
+        this.kAnonymity = this.olaAlgorithm.getkAnonymity();
 
         // Run the algorithm in a separate thread. In this way,
         // it's possible to handle the algorithm timeout

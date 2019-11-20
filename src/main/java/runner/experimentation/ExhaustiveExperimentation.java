@@ -20,6 +20,7 @@ public class ExhaustiveExperimentation extends Experimentation{
         }
 
         this.exhaustiveAlgorithm = new ExhaustiveAlgorithm(dataset, suppressionTreshold);
+        this.kAnonymity = this.exhaustiveAlgorithm.getkAnonymity();
 
         long start = System.currentTimeMillis();
 

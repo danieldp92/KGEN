@@ -456,6 +456,39 @@ public class KAnonymity {
         return upperBounds;
     }
 
+    // ANONYMIZATION DATASET ####################################################################
+
+    public Dataset getAnonymizedDataset (ArrayList<Integer> levelOfAnonymization) {
+        Dataset datasetAnonimyzed = null;
+
+        DatasetRow header = dataset.getHeader();
+        ArrayList<DatasetColumn> columnsAnonymized = new ArrayList<DatasetColumn>();
+
+        int indexQuasiIdentifier = 0;
+        for (int i = 0; i < header.size(); i++) {
+            Attribute attribute = (Attribute) header.get(i);
+            ArrayList<DatasetColumn> allGeneralizationOfAttribute = anonymizationMap.get(i);
+            DatasetColumn columnAnonymized = null;
+
+            if (attribute.getType() instanceof QuasiIdentifier) {
+                try {
+                    columnAnonymized = allGeneralizationOfAttribute.get(levelOfAnonymization.get(indexQuasiIdentifier++));
+                } catch (IndexOutOfBoundsException ex) {
+                    ex.printStackTrace();
+                }
+
+            } else {
+                columnAnonymized = allGeneralizationOfAttribute.get(0);
+            }
+
+            columnsAnonymized.add(columnAnonymized);
+        }
+
+        datasetAnonimyzed = new Dataset(header, columnsAnonymized);
+
+        return datasetAnonimyzed;
+    }
+
 
     // PRIVATE METHODS #########################################################################
 

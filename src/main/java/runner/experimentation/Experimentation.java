@@ -29,6 +29,7 @@ public abstract class Experimentation {
     private List<Result> results;
 
     protected Dataset dataset;
+    protected KAnonymity kAnonymity;
     protected List<List<Integer>> solutions;
     protected double executionTime;
 
@@ -37,6 +38,10 @@ public abstract class Experimentation {
     public Experimentation(String resultPath) {
         this.resultPath = resultPath;
         this.results = new ArrayList<>();
+    }
+
+    public KAnonymity getkAnonymity() {
+        return kAnonymity;
     }
 
     public void initDataset (String datasetPath, String configPath, String nullValue) throws DatasetNotFoundException {

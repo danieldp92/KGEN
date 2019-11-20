@@ -29,6 +29,7 @@ public class KGENExperimentation extends Experimentation{
         }
 
         this.kgenAlgorithm = new KGENAlgorithm(this.dataset, suppressionTreshold);
+        this.kAnonymity = this.kgenAlgorithm.getkAnonymity();
 
         for (int i = 1; i <= numberOfRun; i++) {
             ExecutionThread executionThread = new ExecutionThread(kgenAlgorithm, i);

@@ -31,6 +31,7 @@ public class RandomSearchExperimentation extends Experimentation {
         }
 
         this.randomAlgorithm = new RandomAlgorithm(this.dataset, suppressionTreshold);
+        this.kAnonymity = this.randomAlgorithm.getkAnonymity();
 
         for (int i = 1; i <= numberOfRun; i++) {
             ExecutionThread executionThread = new ExecutionThread(randomAlgorithm, i);

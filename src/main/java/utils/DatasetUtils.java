@@ -264,8 +264,6 @@ public class DatasetUtils {
     }
 
 
-
-
     private static boolean equalsAttribute (Attribute attribute1, Attribute attribute2) {
         boolean equals = false;
 
