@@ -1,14 +1,13 @@
 package approaches.metaheuristics.geneticalgorithm.thread.evaluation;
 
 import approaches.metaheuristics.geneticalgorithm.AnonymizationProblem;
-import approaches.metaheuristics.geneticalgorithm.thread.GAMultiThread;
-import jmetal.core.Solution;
+import approaches.metaheuristics.geneticalgorithm.thread.GAThreadPoolExecutor;
 import jmetal.core.SolutionSet;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
-public class MultiThreadEvaluation extends GAMultiThread {
+public class MultiThreadEvaluation extends GAThreadPoolExecutor {
     private AnonymizationProblem problem;
 
     public MultiThreadEvaluation(int maxNumberOfThreads, AnonymizationProblem problem) {
@@ -18,43 +17,22 @@ public class MultiThreadEvaluation extends GAMultiThread {
     }
 
     @Override
-    public SolutionSet parallelExecution(SolutionSet population) {
-        threads = new ArrayList<>();
+    public SolutionSet execution(SolutionSet population) {
+        this.solutions.clear();
+        this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
-        // Set the size of the pool
-        int numberOfThreads = 0;
-        if (maxNumberOfThreads > population.size()) {
-            numberOfThreads = population.size();
-        } else {
-            numberOfThreads = maxNumberOfThreads;
+        for (int indexSolution = 0; indexSolution < population.size(); indexSolution++) {
+            EvaluationThread evaluationThread = new EvaluationThread(this, indexSolution, problem);
+            evaluationThread.configure(indexSolution, population.get(indexSolution));
+
+            this.threadPoolExecutor.execute(evaluationThread);
         }
 
-        int indexSolution = 0;
+        awaitTerminationAfterShutdown(this.threadPoolExecutor);
 
-        while (indexSolution < population.size() || !threads.isEmpty()) {
-            // Add thread to the pool, if there are solutions to process
-            if (threads.size() < numberOfThreads && indexSolution < population.size()) {
-                // Create new thread
-                EvaluationThread evaluationThread = new EvaluationThread(problem);
-                evaluationThread.configure(indexSolution, population.get(indexSolution));
-                evaluationThread.start();
-
-                indexSolution++;
-
-                threads.add(evaluationThread);
-            } else {
-                // Take the first thread that has stopped its execution
-                if (!threads.isEmpty()) {
-                    waitFreeThread();
-
-                    Integer indexThread = getFreeIndexThread();
-                    int index = ((EvaluationThread)threads.get(indexThread)).getIndex();
-                    population.replace(index, (Solution) threads.get(indexThread).getReturnValue());
-
-                    // Remove the thread
-                    threads.remove(indexThread.intValue());
-                }
-            }
+        population.clear();
+        for (int i = 0; i < solutions.size(); i++) {
+            population.add(solutions.get(i));
         }
 
         return population;

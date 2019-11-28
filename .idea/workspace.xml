@@ -55,34 +55,6 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>K_LEVEL</find>
-      <find>datasetReduction</find>
-      <find>match</find>
-      <find>allCom</find>
-      <find>tru</find>
-      <find>configIde</find>
-      <find>System.out.println</find>
-      <find>Controller not configured</find>
-      <find>EXHAUSTIVE</find>
-      <find>ffLOG_OBJECTIVE</find>
-      <find>isKAnonymous</find>
-      <find>PlaceGene</find>
-      <find>MINVEC</find>
-      <find>sameStrat</find>
-      <find>allExa</find>
-      <find>sameStr</find>
-      <find>sameStrategyPath</find>
-      <find>Decimal</find>
-      <find>evalu</find>
-      <find>eval</find>
-      <find>Dataset not found</find>
-    </findStrings>
-    <dirStrings>
-      <dir>C:\Users\20190482\Documents\GitHub\KGEN\src\main\java\lattice</dir>
-    </dirStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -267,6 +239,11 @@
       <workItem from="1574262528815" duration="1248000" />
       <workItem from="1574287561934" duration="2197000" />
       <workItem from="1574289931084" duration="396000" />
+      <workItem from="1574378218145" duration="681000" />
+      <workItem from="1574674333017" duration="21633000" />
+      <workItem from="1574753110425" duration="3287000" />
+      <workItem from="1574950146354" duration="2214000" />
+      <workItem from="1574961703950" duration="629000" />
     </task>
     <servers />
   </component>

@@ -41,7 +41,7 @@ public class AnonymizationSetting extends Settings {
 
         this.suppressionThreshold = suppressionThreshold;
 
-        this.maxNumberOfThreads = 50;
+        this.maxNumberOfThreads = 100;
     }
 
 

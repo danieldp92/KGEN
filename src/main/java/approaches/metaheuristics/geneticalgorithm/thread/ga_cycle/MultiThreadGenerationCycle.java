@@ -1,18 +1,14 @@
 package approaches.metaheuristics.geneticalgorithm.thread.ga_cycle;
 
-import approaches.metaheuristics.geneticalgorithm.encoding.GeneralizationSolution;
-import approaches.metaheuristics.geneticalgorithm.thread.GAMultiThread;
+import approaches.metaheuristics.geneticalgorithm.thread.GAThreadPoolExecutor;
 import approaches.metaheuristics.utils.SolutionUtils;
 import jmetal.core.Operator;
-import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
-public class MultiThreadGenerationCycle extends GAMultiThread {
+public class MultiThreadGenerationCycle extends GAThreadPoolExecutor {
     // Operators
     private Operator selection;
     private Operator crossover;
@@ -34,46 +30,21 @@ public class MultiThreadGenerationCycle extends GAMultiThread {
     }
 
     @Override
-    public SolutionSet parallelExecution(SolutionSet population) {
-        List<Solution> offsprings = new ArrayList<>();
-        threads = new ArrayList<>();
+    public SolutionSet execution(SolutionSet population) {
+        this.solutions.clear();
+        this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
-        // Set the size of the pool
-        int numberOfThreads = 0;
-        if (maxNumberOfThreads > numberOfEvaluations) {
-            numberOfThreads = numberOfEvaluations;
-        } else {
-            numberOfThreads = maxNumberOfThreads;
+        for (int actualEvaluation = 0; actualEvaluation < population.size(); actualEvaluation++) {
+            GenerationCycleThread generationCycleThread = new GenerationCycleThread(this, actualEvaluation, selection, crossover,
+                    horizontalMutation, mutation);
+            generationCycleThread.configure(clonePopulation(population));
+
+            this.threadPoolExecutor.execute(generationCycleThread);
         }
 
-        int actualEvaluation = 0;
+        awaitTerminationAfterShutdown(this.threadPoolExecutor);
 
-        while (actualEvaluation < numberOfEvaluations || !threads.isEmpty()) {
-            // Add thread to the pool, if there are solutions to process
-            if (threads.size() < numberOfThreads && actualEvaluation < numberOfEvaluations) {
-                GenerationCycleThread generationCycleThread = new GenerationCycleThread(selection, crossover,
-                        horizontalMutation, mutation);
-                generationCycleThread.configure(clonePopulation(population));
-                generationCycleThread.start();
-
-                actualEvaluation++;
-
-                threads.add(generationCycleThread);
-            } else {
-                // Take the first thread that has stopped its execution
-                if (!threads.isEmpty()) {
-                    waitFreeThread();
-
-                    Integer indexThread = getFreeIndexThread();
-                    offsprings.addAll((List<Solution>)threads.get(indexThread).getReturnValue());
-
-                    // Remove the thread
-                    threads.remove(indexThread.intValue());
-                }
-            }
-        }
-
-        return SolutionUtils.fromListToSolutionSet(offsprings);
+        return SolutionUtils.fromListToSolutionSet(solutions);
     }
 
     private SolutionSet clonePopulation (SolutionSet population) {

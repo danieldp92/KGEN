@@ -23,6 +23,7 @@ public class LatticeCrossover extends Crossover {
     }
 
     public Object execute(Object object) throws JMException {
+        //System.out.println("LC: Pointer address -> " + this.kAnonymity);
         GeneralizationSolution[] parents = (GeneralizationSolution[]) object;
         GeneralizationSolution min = new GeneralizationSolution(parents[0]);
         GeneralizationSolution max = new GeneralizationSolution(parents[1]);

@@ -230,8 +230,6 @@ public class KAnonymity {
      * @throws Exception
      */
     public AnonymizationReport runKAnonymity (ArrayList<Integer> levelOfAnonymization, int k) throws Exception {
-        boolean memorize = true;
-
         int hash = levelOfAnonymization.toString().hashCode();
 
         // Check if the node has been already analyzed
@@ -245,12 +243,7 @@ public class KAnonymity {
         report = new AnonymizationReport();
         List<Integer> levelOfAnonymizationReport = new ArrayList<>(levelOfAnonymization);
 
-        double logMetricReport = -1;
-        try {
-            logMetricReport = getLOG(levelOfAnonymization);
-        } catch (NoLowerBoundFound ex) {
-            memorize = false;
-        }
+        double logMetricReport = getLOG(levelOfAnonymization);
 
         int kValueReport = 1;
         int kValueWithSuppressionReport = 1;
@@ -317,13 +310,11 @@ public class KAnonymity {
 
 
         // Add the report of this solution to the history
-        if (memorize) {
-            lock.lock();
-            try {
-                this.historyReports.put(hash, report);
-            } finally {
-                lock.unlock();
-            }
+        lock.lock();
+        try {
+            this.historyReports.put(hash, report);
+        } finally {
+            lock.unlock();
         }
 
         return report;
@@ -620,11 +611,7 @@ public class KAnonymity {
         return datasetColumn;
     }
 
-    private double getLOG (ArrayList<Integer> levelOfAnonymization) throws NoLowerBoundFound {
-        if (lowerBounds == null) {
-            throw new NoLowerBoundFound();
-        }
-
+    private double getLOG (ArrayList<Integer> levelOfAnonymization) {
         double sum = 0;
         int maxVariable = 0;
 

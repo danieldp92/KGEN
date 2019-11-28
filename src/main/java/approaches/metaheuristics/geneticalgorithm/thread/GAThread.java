@@ -2,29 +2,17 @@ package approaches.metaheuristics.geneticalgorithm.thread;
 
 import java.util.concurrent.locks.ReentrantLock;
 
-public abstract class GAThread extends Thread {
+public abstract class GAThread implements Runnable {
     protected ReentrantLock lock;
-    protected boolean finish;
+    protected GAThreadPoolExecutor gaThreadPoolExecutor;
+    protected int index;
 
     protected Object returnValue;
 
-    public GAThread() {
+    public GAThread(int index, GAThreadPoolExecutor gaThreadPoolExecutor) {
         this.lock = new ReentrantLock();
-        setFinish(true);
-    }
-
-    public boolean isFinish() {
-        return finish;
-    }
-
-    public void setFinish(boolean finish) {
-        lock.lock();
-
-        try {
-            this.finish = finish;
-        } finally {
-            lock.unlock();
-        }
+        this.index = index;
+        this.gaThreadPoolExecutor = gaThreadPoolExecutor;
     }
 
     public Object getReturnValue() {

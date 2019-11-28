@@ -73,10 +73,10 @@ public class AnonymizationAlgorithm extends Algorithm {
         for (int i = 0; i < populationSize; i++) {
             GeneralizationSolution newSolution = new GeneralizationSolution(problem_);
 
-            EvaluationThread evaluationThread = new EvaluationThread((AnonymizationProblem) problem_);
-            evaluationThread.configure(i, newSolution);
-            evaluationThread.start();
-            this.evaluationThreads.add(evaluationThread);
+            //EvaluationThread evaluationThread = new EvaluationThread((AnonymizationProblem) problem_);
+            //evaluationThread.configure(i, newSolution);
+            //evaluationThread.start();
+            //this.evaluationThreads.add(evaluationThread);
 
             //problem_.evaluate(newSolution);
             //population.add(newSolution);
@@ -195,13 +195,12 @@ public class AnonymizationAlgorithm extends Algorithm {
             population.add(newSolution);
         }
 
-        population = multiThreadEvaluation.parallelExecution(population);
+        population = multiThreadEvaluation.execution(population);
 
         int evaluation = 0;
         while (evaluation < maxEvaluations) {
-            // Generation cycle (selection - crossover - mutation are executed by the multithread)
-            SolutionSet offsprings = multiThreadGenerationCycle.parallelExecution(population);
-            offsprings = multiThreadEvaluation.parallelExecution(offsprings);
+            SolutionSet offsprings = multiThreadGenerationCycle.execution(population);
+            offsprings = multiThreadEvaluation.execution(offsprings);
 
             offsprings.setCapacity(offsprings.size()+population.size());
             offsprings.union(population);
@@ -254,7 +253,7 @@ public class AnonymizationAlgorithm extends Algorithm {
             population.add(newSolution);
         }
 
-        population = multiThreadEvaluation.parallelExecution(population);
+        population = multiThreadEvaluation.execution(population);
 
         return population;
     }
@@ -278,13 +277,13 @@ public class AnonymizationAlgorithm extends Algorithm {
             population.add(newSolution);
         }
 
-        population = multiThreadEvaluation.parallelExecution(population);
+        population = multiThreadEvaluation.execution(population);
 
         int evaluation = 0;
         while (evaluation < maxEvaluations) {
             // Generation cycle (selection - crossover - mutation are executed by the multithread)
-            SolutionSet offsprings = multiThreadGenerationCycle.parallelExecution(population);
-            offsprings = multiThreadEvaluation.parallelExecution(offsprings);
+            SolutionSet offsprings = multiThreadGenerationCycle.execution(population);
+            offsprings = multiThreadEvaluation.execution(offsprings);
 
             offsprings.setCapacity(offsprings.size()+population.size());
             offsprings.union(population);

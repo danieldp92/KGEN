@@ -2,6 +2,7 @@ package approaches.metaheuristics.geneticalgorithm.thread.ga_cycle;
 
 import approaches.metaheuristics.geneticalgorithm.encoding.GeneralizationSolution;
 import approaches.metaheuristics.geneticalgorithm.thread.GAThread;
+import approaches.metaheuristics.geneticalgorithm.thread.GAThreadPoolExecutor;
 import jmetal.core.Operator;
 import jmetal.core.Solution;
 import jmetal.core.SolutionSet;
@@ -9,7 +10,6 @@ import jmetal.util.JMException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class GenerationCycleThread extends GAThread {
     // Operators
@@ -20,8 +20,8 @@ public class GenerationCycleThread extends GAThread {
 
     private SolutionSet population;
 
-    public GenerationCycleThread(Operator selection, Operator crossover, Operator horizontalMutation, Operator mutation) {
-        super();
+    public GenerationCycleThread(GAThreadPoolExecutor gaThreadPoolExecutor, int index, Operator selection, Operator crossover, Operator horizontalMutation, Operator mutation) {
+        super(index, gaThreadPoolExecutor);
 
         this.selection = selection;
         this.crossover = crossover;
@@ -35,7 +35,6 @@ public class GenerationCycleThread extends GAThread {
 
     @Override
     public void run() {
-        setFinish(false);
         returnValue = null;
 
         try {
@@ -62,6 +61,8 @@ public class GenerationCycleThread extends GAThread {
 
         } catch (JMException e) {}
 
-        setFinish(true);
+        for (Solution solution : (List<Solution>)returnValue) {
+            gaThreadPoolExecutor.setSolution(solution);
+        }
     }
 }

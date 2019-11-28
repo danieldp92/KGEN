@@ -63,6 +63,7 @@ public class AnonymizationProblem extends Problem {
 
         AnonymizationReport report = null;
         try {
+            //System.out.println("EV: Pointer address -> " + this.kAnonymity);
             report = this.kAnonymity.runKAnonymity(levelOfAnonymization, this.kAnonymity.MIN_K_LEVEL);
         } catch (Exception e) {
             e.printStackTrace();

@@ -78,9 +78,8 @@ public class StatisticalUtils {
     public static Stat getStatOfResults (List<Result> results, List<Result> optimalResults) {
         Stat stat = null;
 
-        if (!results.isEmpty()) {
+        if (results != null && !results.isEmpty()) {
             Result firstResult = results.get(0);
-
             int maxRun = 0;
 
             Double averageExecTime = null;
@@ -89,7 +88,8 @@ public class StatisticalUtils {
             Double averageSuppression = null;
 
             List<Double> execTimes = new ArrayList<>();
-            List<Double> accuraces = new ArrayList<>();
+            double weightedSum = 0;
+            List<Double> weightedAccuraces = new ArrayList<>();
             List<Double> logs = new ArrayList<>();
             List<Double> suppressions = new ArrayList<>();
 
@@ -97,9 +97,9 @@ public class StatisticalUtils {
                 if (result.getExecutionTime() != null)
                     execTimes.add(result.getExecutionTime());
 
-                if (result.getSolution() != null && optimalResults != null) {
+                /*if (result.getSolution() != null && optimalResults != null) {
                     accuraces.add(getAccuracy(optimalResults, result));
-                }
+                }*/
 
                 if (result.getLogMetric() != null) {
                     logs.add(result.getLogMetric());
@@ -114,9 +114,21 @@ public class StatisticalUtils {
                 }
             }
 
+            // Accuracy
+            if (optimalResults != null && !optimalResults.isEmpty()) {
+                int i = 1;
+                for (Result optimalResult : optimalResults) {
+                    double weight = 1 - optimalResult.getLogMetric();
+
+                    weightedSum += weight;
+                    double weightedAccuracy = weight * getAccuracy(results, optimalResult);
+
+                    weightedAccuraces.add(weightedAccuracy);
+                }
+            }
 
             execTimes.removeAll(Collections.singletonList(null));
-            accuraces.removeAll(Collections.singletonList(null));
+            weightedAccuraces.removeAll(Collections.singletonList(null));
             logs.removeAll(Collections.singletonList(null));
             suppressions.removeAll(Collections.singletonList(null));
 
@@ -124,8 +136,9 @@ public class StatisticalUtils {
                 averageExecTime = ArrayUtils.doubleSum(execTimes) / execTimes.size();
             }
 
-            if (!accuraces.isEmpty()) {
-                averageAccuraces = ArrayUtils.doubleSum(accuraces) / accuraces.size();
+            if (!weightedAccuraces.isEmpty()) {
+                // Weighted aritmetic mean
+                averageAccuraces = ArrayUtils.doubleSum(weightedAccuraces) / weightedSum;
             }
 
             if (!logs.isEmpty()) {
@@ -187,7 +200,7 @@ public class StatisticalUtils {
         return configResultMap;
     }
 
-    private static Double getAccuracy (List<Result> exactResults, Result result) {
+    /*private static Double getAccuracy (List<Result> exactResults, Result result) {
         Double accuracy = null;
 
         if (result != null && result.getSolution() != null && exactResults != null) {
@@ -199,6 +212,44 @@ public class StatisticalUtils {
                             (ArrayUtils.sum(res.getTopNode()) - ArrayUtils.sum(res.getSolution()));
 
                     if (accuracy == null || tmpAccuracy > accuracy) {
+                        accuracy = tmpAccuracy;
+                    }
+                }
+            }
+        }
+
+        return accuracy;
+    }*/
+
+    private static Double getAccuracy (List<Result> results, Result optimalResult) {
+        Double accuracy = new Double(0);
+
+        if (optimalResult != null && optimalResult.getSolution() != null && results != null) {
+            for (Result res : results) {
+                boolean sameStrategyPath = LatticeUtils.sameStrategyPath(res.getSolution(), optimalResult.getSolution());
+                if (sameStrategyPath) {
+                    double tmpAccuracy = 1 - (double)(ArrayUtils.sum(res.getSolution()) - ArrayUtils.sum(optimalResult.getSolution())) /
+                            (ArrayUtils.sum(optimalResult.getTopNode()) - ArrayUtils.sum(optimalResult.getSolution()));
+                    if (tmpAccuracy > accuracy) {
+                        accuracy = tmpAccuracy;
+                    }
+                }
+            }
+        }
+
+        return accuracy;
+    }
+
+    private static Double getWeightedAccuracy (List<Result> results, Result optimalResult) {
+        Double accuracy = new Double(0);
+
+        if (optimalResult != null && optimalResult.getSolution() != null && results != null) {
+            for (Result res : results) {
+                boolean sameStrategyPath = LatticeUtils.sameStrategyPath(res.getSolution(), optimalResult.getSolution());
+                if (sameStrategyPath) {
+                    double tmpAccuracy = 1 - (double)(ArrayUtils.sum(res.getSolution()) - ArrayUtils.sum(optimalResult.getSolution())) /
+                            (ArrayUtils.sum(optimalResult.getTopNode()) - ArrayUtils.sum(optimalResult.getSolution()));
+                    if (tmpAccuracy > accuracy) {
                         accuracy = tmpAccuracy;
                     }
                 }
