@@ -76,7 +76,7 @@ public class ExperimentationRunner {
 
                 //Initialize the dataset
                 try {
-                    experimentation.initDataset(datasetPath, configPath, "?");
+                    experimentation.initDataset(datasetPath, configPath, "?", ",");
                 } catch (DatasetNotFoundException e) {
                     System.out.println("Dataset not found");
                     System.exit(0);

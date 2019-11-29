@@ -247,7 +247,7 @@ public class SolutionUtils {
         System.out.println();
     }
 
-    private static void printSolution (Solution solution) {
+    public static void printSolution (Solution solution) {
         System.out.print("[");
         for (int i = 0; i < solution.getDecisionVariables().length; i++) {
             System.out.print(solution.getDecisionVariables()[i]);

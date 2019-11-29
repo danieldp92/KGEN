@@ -134,7 +134,7 @@ public class DiscoverCLI {
 
         // ##############################################################################
 
-        dataset = DatasetUtils.readAndInit(discoverArguments.getDatasetPath(), discoverArguments.getConfigPath(), "?");
+        dataset = DatasetUtils.readAndInit(discoverArguments.getDatasetPath(), discoverArguments.getConfigPath(), "?", ",");
         KAnonymity kAnonymity = new KAnonymity(dataset);
 
         OLAAlgorithm olaAlgorithm = new OLAAlgorithm(dataset, discoverArguments.getTreshold());

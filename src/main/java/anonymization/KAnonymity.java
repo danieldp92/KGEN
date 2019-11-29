@@ -1,6 +1,5 @@
 package anonymization;
 
-import anonymization.exceptions.NoLowerBoundFound;
 import anonymization.generalization.exception.LevelNotValidException;
 import anonymization.generalization.generator.GeneralizationGraphGenerator;
 import anonymization.generalization.graph.GeneralizationTree;
@@ -63,7 +62,7 @@ public class KAnonymity {
 
         this.upperBounds = upperBounds();
 
-        this.placeGeneralization = new PlaceGeneralization(this.placeCsv);
+        this.placeGeneralization = PlaceGeneralization.getInstance(this.placeCsv);
         this.dateGeneralization = new DateGeneralization();
         this.numericGeneralization = new NumericGeneralization();
 
@@ -513,9 +512,20 @@ public class KAnonymity {
                 // List of all rows that shared with i-row the same attribute (Collection<Integer>), for all the attributes
                 List<HashSet<Integer>> occurrences = new ArrayList<>();
 
+                //System.out.println("SM Size: " + supportMaps.size());
+                if (supportMaps.isEmpty()) {
+                    System.out.println("Solution: " + levelOfAnonymization.toString());
+                }
+
+                int l = 1;
                 for (SupportMap qiSupportMap : supportMaps) {
+                    //System.out.println("Support map " + l++);
+
                     //Search the i-row inside this specific attribute, and see which is the value that contain this row
                     for (Map.Entry<String, Collection<Integer>> entry : qiSupportMap.entrySet()) {
+                        /*System.out.println("\tKey: " + entry.getKey());
+                        System.out.println("\tValue size: " + entry.getValue().size());
+                        System.out.println();*/
                         if (entry.getValue().contains(i)) {
                             occurrences.add(new HashSet<>(entry.getValue()));
                             break;
@@ -523,10 +533,17 @@ public class KAnonymity {
                     }
                 }
 
+                //System.out.println("OC Size: " + occurrences.size());
                 //System.out.println("Time to find the occurrences: " + (System.currentTimeMillis() - start));
                 //start = System.currentTimeMillis();
 
-                HashSet<Integer> commonRows = new HashSet<>(occurrences.get(0));
+                HashSet<Integer> commonRows = null;
+                try {
+                    commonRows = new HashSet<>(occurrences.get(0));
+                } catch (IndexOutOfBoundsException ex) {
+                    System.exit(0);
+                }
+
                 for (int j = 1; j < occurrences.size(); j++) {
                     commonRows.retainAll(occurrences.get(j));
                 }
@@ -632,5 +649,28 @@ public class KAnonymity {
         }
 
         return sum/maxVariable;
+    }
+
+    private void saveAnonymizationMap () {
+        List<String> txt = new ArrayList<>();
+        txt.add("Anonymization map");
+        for (Map.Entry<Integer, ArrayList<DatasetColumn>> entry : this.anonymizationMap.entrySet()) {
+            txt.add("Attribute " + entry.getKey());
+            for (int i = 0; i < entry.getValue().size(); i++) {
+                txt.add("Column " + (i+1));
+                for (Object o : entry.getValue().get(i)) {
+                    Attribute attributeObj = (Attribute) o;
+                    txt.add((String) attributeObj.getValue());
+                }
+                txt.add("\n");
+            }
+            txt.add("\n");
+        }
+
+        try {
+            FileUtils.saveFile((ArrayList<String>) txt, "C:\\Users\\Daniel\\Desktop\\KGEN_JAR\\am.txt");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

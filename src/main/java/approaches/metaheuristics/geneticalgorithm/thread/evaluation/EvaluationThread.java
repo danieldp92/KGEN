@@ -6,6 +6,8 @@ import approaches.metaheuristics.geneticalgorithm.thread.GAThreadPoolExecutor;
 import jmetal.core.Solution;
 import jmetal.util.JMException;
 
+import java.util.Arrays;
+
 
 public class EvaluationThread extends GAThread {
     private AnonymizationProblem problem;

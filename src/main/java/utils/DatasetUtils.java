@@ -15,14 +15,13 @@ import java.io.*;
 import java.util.*;
 
 public class DatasetUtils {
-    private static final String SEPARATOR_TAG = ",";
     private static final int PROPERTY_FIELDS = 4;
 
     private static final String CSV_EXTENSION = "csv";
     private static final String XLXS_EXTENSION = "xlsx";
     private static final String XLS_EXTENSION = "xls";
 
-    public static Dataset readAndInit (String datasetPath, String configPath, String nullValue) throws DatasetNotFoundException, IOPropertiesException {
+    public static Dataset readAndInit (String datasetPath, String configPath, String nullValue, String separator) throws DatasetNotFoundException, IOPropertiesException {
         Dataset dataset = null;
 
         File datasetFile = new File(datasetPath);
@@ -39,7 +38,7 @@ public class DatasetUtils {
                 if (datasetExtension.equals(XLS_EXTENSION) || datasetExtension.equals(XLXS_EXTENSION)) {
                     dataset = DatasetUtils.readFromXls(datasetPath);
                 } else if (datasetExtension.equals(CSV_EXTENSION)) {
-                    dataset = DatasetUtils.readFromCSV(datasetPath, nullValue);
+                    dataset = DatasetUtils.readFromCSV(datasetPath, nullValue, separator);
                 } else {
                     throw new DatasetNotFoundException();
                 }
@@ -58,23 +57,23 @@ public class DatasetUtils {
         return dataset;
     }
 
-    public static Dataset readFromCSV (String path, String nullValue) throws IOException {
+    public static Dataset readFromCSV (String path, String nullValue, String separator) throws IOException {
         File csvFile = new File(path);
         if (!FileUtils.getFileExtension(csvFile).equals("csv")) {
             throw new InvalidCSVFile();
         }
 
         List<String> csv = FileUtils.loadFile(path);
-        return readFromCSV(csv, nullValue);
+        return readFromCSV(csv, nullValue, separator);
     }
 
-    public static Dataset readFromCSV (List<String> csvText, String nullValue) {
+    public static Dataset readFromCSV (List<String> csvText, String nullValue, String separator) {
         Dataset dataset = null;
         DatasetRow header = new DatasetRow();
         ArrayList<DatasetColumn> columns = new ArrayList<DatasetColumn>();
 
         // Header
-        String [] headerAttributes = csvText.remove(0).split(SEPARATOR_TAG);
+        String [] headerAttributes = csvText.remove(0).split(separator);
         for (String headerAttribute : headerAttributes) {
             Attribute attribute = new Attribute(headerAttribute, null);
             header.add(attribute);
@@ -83,7 +82,7 @@ public class DatasetUtils {
 
         // Columns
         for (String line : csvText) {
-            String [] values = line.split(SEPARATOR_TAG);
+            String [] values = line.split(separator);
             for (int i = 0; i < values.length; i++) {
                 String value = values[i];
 

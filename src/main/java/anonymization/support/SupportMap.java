@@ -34,4 +34,15 @@ public class SupportMap extends LinkedHashMap<String, Collection<Integer>> {
 
         return supportMapClone;
     }
+
+    @Override
+    public String toString() {
+        String returnValue = "";
+
+        for (Map.Entry<String, Collection<Integer>> entry : this.entrySet()) {
+            returnValue += "\t\t\t" + entry.getKey() + "\t\t" + entry.getValue().size() + "\n";
+        }
+
+        return returnValue;
+    }
 }

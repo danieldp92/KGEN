@@ -14,7 +14,7 @@ import java.util.*;
 
 public class GeneralizationGraphGenerator {
     public static GeneralizationTree generatePlaceHierarchy (List<String> csvText) {
-        Dataset placeDataset = DatasetUtils.readFromCSV(csvText, "");
+        Dataset placeDataset = DatasetUtils.readFromCSV(csvText, "", ";");
         GeneralizationTree placeTree = generatePlaceHierarchy(placeDataset);
 
         return placeTree;
@@ -70,7 +70,6 @@ public class GeneralizationGraphGenerator {
 
             placeMap.put(region, cities);
         }
-
 
         //Node generation
         int i = 0;

@@ -8,13 +8,24 @@ import anonymization.generalization.utils.TreeUtils;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 
 public class PlaceGeneralization implements IGeneralization{
+    private static PlaceGeneralization placeGeneralization_instance = null;
     private GeneralizationTree placeHierarchy;
 
-    public PlaceGeneralization(List<String> csv) {
+    private PlaceGeneralization(List<String> csv) {
         this.placeHierarchy = GeneralizationGraphGenerator.generatePlaceHierarchy(csv);
+    }
+
+    // Singleton: static method to create instance of PlaceGeneralization class
+    public static PlaceGeneralization getInstance(List<String> csv) {
+        if (placeGeneralization_instance == null) {
+            placeGeneralization_instance = new PlaceGeneralization(csv);
+        }
+
+        return placeGeneralization_instance;
     }
 
     public GeneralizationTree getPlaceHierarchy() {
@@ -47,5 +58,22 @@ public class PlaceGeneralization implements IGeneralization{
 
 
         return generalizedPlace;
+    }
+
+    public String normalize(String value) {
+        String nValue = value.toLowerCase();
+        String [] splitNValue = nValue.split(" ");
+
+        int i = 0;
+        while (i < placeHierarchy.getNodes().size() &&
+                !Arrays.asList(splitNValue).contains(placeHierarchy.getNode(i).getValue().toLowerCase())) {
+            i++;
+        }
+
+        if (i < placeHierarchy.getNodes().size()) {
+            nValue = placeHierarchy.getNode(i).getValue();
+        }
+
+        return nValue;
     }
 }

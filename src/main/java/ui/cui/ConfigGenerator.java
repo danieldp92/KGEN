@@ -28,7 +28,8 @@ public class ConfigGenerator {
         String datasetExt = FileUtils.getFileExtension(new File(datasetPath));
         try {
             if (datasetExt.equals("csv")) {
-                dataset = DatasetUtils.readFromCSV(datasetPath, "?");
+                // TO DO: separator and null value to read from cli
+                dataset = DatasetUtils.readFromCSV(datasetPath, "?", ",");
             } else {
                 dataset = DatasetUtils.readFromXls(datasetPath);
             }

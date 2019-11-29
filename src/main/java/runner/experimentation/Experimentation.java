@@ -2,8 +2,14 @@ package runner.experimentation;
 
 import anonymization.AnonymizationReport;
 import anonymization.KAnonymity;
+import anonymization.generalization.generator.GeneralizationGraphGenerator;
+import anonymization.generalization.graph.GeneralizationTree;
+import anonymization.generalization.type.PlaceGeneralization;
+import dataset.beans.Attribute;
 import dataset.beans.Dataset;
+import dataset.beans.DatasetColumn;
 import dataset.generator.DatasetGenerator;
+import dataset.type.AttributeType;
 import exception.DatasetNotFoundException;
 import exception.IOPropertiesException;
 import runner.experimentation.bean.Result;
@@ -44,7 +50,7 @@ public abstract class Experimentation {
         return kAnonymity;
     }
 
-    public void initDataset (String datasetPath, String configPath, String nullValue) throws DatasetNotFoundException {
+    public void initDataset (String datasetPath, String configPath, String nullValue, String separator) throws DatasetNotFoundException {
         File datasetFile = new File(datasetPath);
 
         if (datasetFile.exists()) {
@@ -60,7 +66,7 @@ public abstract class Experimentation {
                 if (datasetExtension.equals(XLS_EXTENSION) || datasetExtension.equals(XLXS_EXTENSION)) {
                     this.dataset = DatasetUtils.readFromXls(datasetPath);
                 } else if (datasetExtension.equals(CSV_EXTENSION)) {
-                    this.dataset = DatasetUtils.readFromCSV(datasetPath, nullValue);
+                    this.dataset = DatasetUtils.readFromCSV(datasetPath, nullValue, separator);
                 } else {
                     throw new DatasetNotFoundException();
                 }
@@ -76,6 +82,9 @@ public abstract class Experimentation {
                 System.out.println("Dataset not found");
                 e.printStackTrace();
             }
+
+            // Preprocess dataset
+            preprocessDataset(dataset);
         } else {
             throw new DatasetNotFoundException();
         }
@@ -123,6 +132,7 @@ public abstract class Experimentation {
         }
     }
 
+
     private List<Result> getResults (String algorithmName, KAnonymity kAnonymity, int indexRun) {
         List<Result> results = new ArrayList<>();
 
@@ -165,4 +175,36 @@ public abstract class Experimentation {
 
         return results;
     }
+
+    private void preprocessDataset (Dataset dataset) {
+        // Place preprocessing
+        if (dataset.getDatasetSize() > 0) {
+            try {
+                List<String> placeCsvPath = FileUtils.loadFile(this.getClass().getClassLoader().getResourceAsStream("netherland_place_info.csv"));
+                PlaceGeneralization placeGeneralization = PlaceGeneralization.getInstance(placeCsvPath);
+
+                for (int i = 0; i < dataset.getColumns().size(); i++) {
+                    Attribute tmpAttribute = (Attribute) dataset.getColumns().get(i).get(0);
+
+                    if (tmpAttribute.getType().type == AttributeType.TYPE_PLACE) {
+                        // Normalize all places
+                        for (int j = 0; j < dataset.getColumns().get(i).size(); j++) {
+                            Attribute attribute = (Attribute) dataset.getColumns().get(i).get(j);
+                            String value = (String) attribute.getValue();
+
+                            // Normalization process
+                            value = placeGeneralization.normalize(value);
+
+                            ((Attribute) dataset.getColumns().get(i).get(j)).setValue(value);
+                        }
+                    }
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 }
